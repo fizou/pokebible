@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Pokemon Bible</title>
+
+	 <!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+
+    <script src="https://fb.me/react-15.0.1.js"></script>
+    <script src="https://fb.me/react-dom-15.0.1.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+ 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.3/toastr.min.css">
+
+</head>
+<body>
+
+	<!-- Header -->
+	
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	      <span class="navbar-brand"><table><td><img src='images/logo.jpg' height='25px'/><td>&nbsp;PokemonBible</table></span>
+	    </div>
+	
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	      <ul class="nav navbar-nav">
+	        <li class="active">
+	        	<a href="#">
+	        		DashBoard
+	        		<span class="sr-only">(current)</span>
+	        	</a>
+	        </li>
+	        <li>
+	    		<a href="#">Items</a>
+	    	</li>
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+	          	Menu 
+	          	<span class="caret"></span>
+	          </a>
+	          <ul class="dropdown-menu">
+	            <li><a href="#">Tools 1</a></li>
+	            <li><a href="#">Tools 2</a></li>
+	            <li><a href="#">Tools 3</a></li>
+	            <li role="separator" class="divider"></li>
+	            <li><a href="#">Tools 4</a></li>
+	            <li role="separator" class="divider"></li>
+	            <li><a href="#">Tools 5</a></li>
+	          </ul>
+	        </li>
+	      </ul>
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a href="#">Help</a></li>
+	        <li>
+		      <form class="navbar-form navbar-right">
+		        <div class="form-group">
+		          <input type="text" class="form-control" placeholder="Search">
+		        </div>
+		        <button type="submit" class="btn btn-default">Submit</button>
+		      </form>
+	    	</li>
+	        <li>
+	    		<a href="#">Sign-in</a>
+	    	</li>
+	      </ul>
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>	
+	
+	<!-- Content -->
+	
+    <div id='root'></div>
+ 
+	<!-- Footer -->
+
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">&copy; 2017. The Qulbutoke Compagny</span>
+      </div>
+    </footer>
+
+	<!-- Script to other -->
+     
+    <script type="text/babel">
+
+/*
+
+// Static Sample
+
+var Pokemon = React.createClass({
+  render: function() {
+    return (
+      <tr>
+        <td>{this.props.pokemon.name}</td>
+        <td>{this.props.pokemon.type}</td>
+      </tr>);
+  }
+});
+
+var PokemonTable = React.createClass({
+  render: function() {
+    var rows = [];
+    this.props.pokemons.forEach(function(pokemon) {
+      rows.push(<Pokemon pokemon={pokemon} />);
+    });
+    return (
+<div className="container">
+  <table className="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>{rows}</tbody>
+  </table>
+</div>
+	);
+  }
+});
+
+var POKEMONS = [
+  {name: 'Bulbizarre', type: 'Plante'},
+  {name: 'Herbizarre', type: 'Plante'},
+  {name: 'Florizarre', type: 'Plante'},
+  {name: 'Salamèche', type: 'Feu'}
+];
+
+ReactDOM.render(
+  <PokemonTable pokemons={POKEMONS} />, document.getElementById('root')
+);
+
+*/
+
+// Dynamics Sample
+
+var Pokemon = React.createClass({
+  getInitialState: function() {
+    return {display: true };
+  },
+  handleDelete() {
+    var self = this;
+    $.ajax({
+      url: self.props.pokemon._links.self.href,
+      type: 'DELETE',
+      success: function(itemUrl) {
+		toastr.success("Item deleted!");
+        self.setState({display: false});
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        toastr.error(xhr.responseJSON.message);
+      }
+    });
+  },
+  render: function() {
+    if (this.state.display==false) return null;
+    else return (
+      <tr>
+		<td><img src={this.props.pokemon.picture} class="img-thumbnail" height='50px'/></td>
+        <td>{this.props.pokemon.name}</td>
+        <td>{this.props.pokemon.type}</td>
+        <td>
+          <button className="btn btn-info" onClick={this.handleDelete}>Delete</button>
+        </td>
+      </tr>
+    );
+  }
+}); 
+
+var PokemonTable = React.createClass({
+  render: function() {
+    var rows = [];
+    this.props.pokemons.forEach(function(pokemon) {
+      rows.push(<Pokemon pokemon={pokemon} />);
+    });
+    return (
+<div className="container">
+  <table className="table table-striped">
+    <thead>
+      <tr>
+        <th>Picture</th>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>{rows}</tbody>
+  </table>
+</div>
+	);
+  }
+});
+
+var App = React.createClass({
+ 
+  loadPokemonsFromServer: function () {
+    var self = this;
+    $.ajax({
+      url: "http://localhost:8080/api/pokemons"
+    }).then(function (data) {
+      self.setState({pokemons: data._embedded.pokemons});
+    });
+  },
+ 
+  getInitialState: function () {
+    return {pokemons: []};
+  },
+ 
+  componentDidMount: function () {
+    this.loadPokemonsFromServer();
+  },
+ 
+  render() {
+    return ( <PokemonTable pokemons={this.state.pokemons}/> );
+  }
+});
+
+ReactDOM.render(<App />, document.getElementById('root') );
+
+	</script>
+</body>
+</html>

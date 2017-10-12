@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<!-- Header -->
+<div th:replace="fragments/header :: header"/>
+
+<!-- Content -->
+<div class="container">
+    <div class="starter-template">
+        <h1>PokeBible Dashboard</h1>
+        <p>
+		    <div id='root'></div>
+        </p>
+    </div>
+
+</div><!-- /.container -->
+	
+<!-- Script to execute -->
+<script type="text/babel" th:src="@{/js/global.js}"/>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

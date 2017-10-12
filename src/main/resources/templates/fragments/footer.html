@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+</head>
+<body>
+<div th:fragment="footer">
+
+	<footer class="footer">
+	
+	  <div class="navbar navbar-fixed-bottom">
+	    <span class="text-muted pull-right">&copy; 2017. The Qulbutoke Compagny&nbsp;&nbsp;&nbsp;</span>
+		<span class="text-muted" sec:authorize="isAuthenticated()">
+        	&nbsp;&nbsp;&nbsp;
+        	Logged as <span sec:authentication="name"></span>&nbsp;
+        	<span sec:authentication="principal.authorities"></span>
+        </span>
+		<span class="text-muted" sec:authorize="false">
+        	&nbsp;&nbsp;&nbsp;
+        	Logged as anonymous&nbsp;
+        	[NO_ROLE]
+        </span>
+	  </div>
+	</footer>
+	
+</div>
+</body>
+</html>

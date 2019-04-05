@@ -1,12 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Hello world') {
+        stage('Begin compilation') {
             steps {
                 echo 'Hello world !'
             }
         }
-        stage('Good bye') {
+        stage('End compilation') {
             steps {
                 echo 'good bye !'
             }

@@ -5,7 +5,7 @@
 
 	<groupId>com.pokebible</groupId>
 	<artifactId>pokebible</artifactId>
-	<version>1.0.8-SNAPSHOT</version>
+	<version>1.0.9-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>pokebible</name>
@@ -29,17 +29,18 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-		
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-        </dependency>
+
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-rest</artifactId>
+                </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<dependency>
+
+                <dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
@@ -47,16 +48,20 @@
 
 		<!-- Spring security framework -->
 		<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                </dependency>
 		<!-- optional, it brings userful tags to display spring security stuff -->
-        <dependency>
-            <groupId>org.thymeleaf.extras</groupId>
-            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-        </dependency>
+                <dependency>
+                    <groupId>org.thymeleaf.extras</groupId>
+                    <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+                </dependency>
 		
-        <!-- Start in Boot or Tomcat mode -->
+                <!-- Start in Boot or Tomcat mode -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -68,19 +73,37 @@
 			<scope>provided</scope>
 		</dependency>
 		
-        <!-- hot swapping, disable cache for template, enable live reload -->
+                <!-- hot swapping, disable cache for template, enable live reload -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-devtools</artifactId>
 		    <optional>true</optional>
 		</dependency>
 
-        <!-- Optional for bootstrap and other framework -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
-        </dependency>
+                <!-- Optional for bootstrap and other framework -->
+                <dependency>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>bootstrap</artifactId>
+                    <version>3.3.7</version>
+                </dependency>
+
+                <!-- Swagger2 framework -->
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>2.9.2</version>
+		</dependency>
+                <dependency>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-data-rest</artifactId>
+                    <version>2.9.2</version>
+                </dependency>
+		<dependency>
+		    <groupId>io.springfox</groupId>
+    		<artifactId>springfox-swagger-ui</artifactId>
+    		<version>2.9.2</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
@@ -94,6 +117,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
 
 </project>

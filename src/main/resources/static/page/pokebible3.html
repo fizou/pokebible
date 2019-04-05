@@ -1,0 +1,98 @@
+  <head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Pokemon Bible</title>
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	 <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> 
+
+	 <!-- jQuery Datatable-->
+	<!-- link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/ -->
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap.min.css"/>
+	<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
+	
+
+</head>
+<body>
+
+<H1>pokebible3 - jquery Framework + datatable component</H1>
+<HR/>
+     
+    <div id='root'>
+
+<table id="PokemonTable" zclass="display" class="table table-striped table-bordered" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Num</th>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>001</td>
+                <td><img src='../images/Bulbizarre.png' height='30'></td>
+                <td>Bulbizzare</td>
+                <td>Plante / Poison</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    
+    </div>
+
+<script>
+console.log("POKEMON DISPLAY")
+
+/*
+$(document).ready(function() {
+    $('#PokemonTable').DataTable();
+} );
+*/
+
+var dataSet = [
+	["001", "<img src='../images/pokemons/001.png' height='30'/>", "Bulbizarre", "Plante	/ Poison"],
+	["002", "<img src='../images/pokemons/002.png' height='30'/>", "Herbizarre", "Plante / Poison"],
+	["003", "<img src='../images/pokemons/003.png' height='30'/>", "Florizarre", "Plante / Poison"],
+	["004", "<img src='../images/pokemons/004.png' height='30'/>", "Salamèche", "Feu"]
+];
+
+$.getJSON('../api/pokemons', function (jsonData) {
+    
+    //var  jsonData = {"Text":"Please provide a value","Email":"Please provide a value"};
+    console.log(jsonData._embedded.pokemons);
+    var dataSet2 = [];
+    $.each(jsonData._embedded.pokemons,function(key,value){
+        console.log(key+"-"+value.name);
+        var arr = [value.num,value.picture3,value.name,value.type];
+        dataSet2.push(arr);
+    });
+    console.log(dataSet2);    
+    dataSet=dataSet2;
+ 
+	$(document).ready(function() {
+	    $('#PokemonTable').DataTable( {
+	    	"lengthMenu": [[6, 151, 252, -1], [6, 151, 252, "All"]],
+	        data: dataSet,
+	        columns: [
+	            { title: "Num" },
+	            { title: "Picture" },
+	            { title: "Name" },
+	            { title: "Type" }
+	        ]
+	    } );
+	} );
+});
+
+	
+console.log("POKEMON DISPLAY99")
+
+</script>  
+  </body>
+</html>

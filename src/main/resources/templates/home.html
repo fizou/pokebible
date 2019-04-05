@@ -10,15 +10,39 @@
 
 <!-- Content -->
 <div class="container">
+    <div class="Server-template">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th style="width: 150px;">Name</th>
+    </tr>
+    <tr th:each="pokemon : ${pokemonSelection}">
+      <td>
+        <a href="ownerDetails.html"
+          th:href="@{|/owners/${pokemon.num}|}"
+          th:text="|${pokemon.name}|">Name</a>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>       
+    </div>
     <div class="starter-template">
-        <h1>PokeBible Dashboard</h1>
+        <h1>Dashboard</h1>
         <p>
-		    <div id='root'></div>
+            <div id='root'></div>
         </p>
     </div>
 
-</div><!-- /.container -->
-	
+</div>
+
+<!-- get Variable from Context-->
+<script th:inline="javascript">
+var searchString = /*[[${#httpServletRequest.getParameter('searchString')}]]*/ "";
+console.log("getParameter('searchString'): "+searchString);
+</script> 
+
 <!-- Script to execute -->
 <script type="text/babel" th:src="@{/js/global.js}"/>
 

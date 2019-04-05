@@ -2,6 +2,7 @@ package com.pokebible;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +18,7 @@ import java.io.IOException;
 @Component
 public class SecurityDeniedHandler implements AccessDeniedHandler {
 
-    private static Logger logger = LoggerFactory.getLogger(SecurityDeniedHandler.class);
+	Logger logger = LoggerFactory.getLogger(SecurityDeniedHandler.class);
 
     @Override
     public void handle(HttpServletRequest httpServletRequest,
@@ -28,7 +29,7 @@ public class SecurityDeniedHandler implements AccessDeniedHandler {
                 = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth != null) {
-            Tracer.warn("User '" + auth.getName()
+        	logger.warn("SecurityDeniedHandler - Handle - User '" + auth.getName()
                     + "' attempted to access the protected URL: "
                     + httpServletRequest.getRequestURI());
         }

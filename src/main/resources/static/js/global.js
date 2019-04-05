@@ -48,7 +48,6 @@ ReactDOM.render(
 */
 
 // Dynamics Sample
-
 var Pokemon = React.createClass({
   getInitialState: function() {
     return {display: true };
@@ -71,11 +70,11 @@ var Pokemon = React.createClass({
     if (this.state.display==false) return null;
     else return (
       <tr>
-		<td><img src={this.props.pokemon.picture} class="img-thumbnail" height='50px'/></td>
+		<td><img src={this.props.pokemon.picture} class="img-thumbnail" height="30"/></td>
         <td>{this.props.pokemon.name}</td>
         <td>{this.props.pokemon.type}</td>
         <td>
-          <button className="btn btn-info" onClick={this.handleDelete}>Delete</button>
+          <button className="btn btn-info" onClick="{this.handleDelete}">Delete</button>
         </td>
       </tr>
     );
@@ -108,13 +107,29 @@ var PokemonTable = React.createClass({
 
 var App = React.createClass({
  
-  loadPokemonsFromServer: function () {
+  loadDataFromServer: function () {
+	console.log("loadDataFromServer - loading data... ");
     var self = this;
-    $.ajax({
-      url: "api/pokemons"
-    }).then(function (data) {
-      self.setState({pokemons: data._embedded.pokemons});
-    });
+    //var searchString = "Bulbizarre";
+    console.log("Pokebible - searchString: "+searchString);
+    if (searchString!=null&&searchString!="") {
+	    $.ajax({
+	      url: "api/pokemons/search/findByName?name="+encodeURIComponent(searchString)
+	    }).then(function (data) {
+    		console.log("Result search:"+data);
+    		self.setState({pokemons: data._embedded.pokemons});
+	    	//if(!$.trim(data)){ 
+	    	//	console.log("empty search!");
+	        //    toastr.error("Sorry no result to display... Please modify your search.");
+	    	//}
+	    });
+	} else {
+	    $.ajax({
+	      url: "api/pokemons"
+		}).then(function (data) {
+		  self.setState({pokemons: data._embedded.pokemons});
+		});
+	}
   },
  
   getInitialState: function () {
@@ -122,12 +137,18 @@ var App = React.createClass({
   },
  
   componentDidMount: function () {
-    this.loadPokemonsFromServer();
+    this.loadDataFromServer();
   },
  
   render() {
-    return ( <PokemonTable pokemons={this.state.pokemons}/> );
+	console.log("render - Render data... ");
+	console.log(this.state.pokemons);
+	if (this.state.pokemons!="") {
+	    return ( <PokemonTable pokemons={this.state.pokemons}/> );
+	}
+    return ( <div>Loading data...</div>);
   }
+  
 });
 
 ReactDOM.render(<App />, document.getElementById('root') );

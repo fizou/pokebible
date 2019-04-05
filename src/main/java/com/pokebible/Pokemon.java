@@ -1,45 +1,108 @@
 package com.pokebible;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+ 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
- 
+
 @Entity
 public class Pokemon {
  
+    private final static Logger logger = LoggerFactory.getLogger(Pokemon.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
  
+    private String num;
+    public String getNum() {
+        return num;
+    }
+    public void setNum(String num) {
+        this.num = num;
+    }
+
     private String name;
- 
     public String getName() {
         return name;
     }
- 
     public void setName(String name) {
         this.name = name;
     }
     
-    private String type;
-    
     public String getType() {
-        return type;
+    	if (type2!=null&&!type2.equals("")) {
+    		return type1.toUpperCase() + ", " + type2.toUpperCase();
+    	} else {
+    		return type1.toUpperCase();
+    	}
+    	
     }
  
     public void setType(String type) {
-        this.type = type;
+        if (type!=null&&type.indexOf(",")!=-1) {
+        	this.type1 = type.substring(0, type.indexOf(","));
+        	this.type2 = type.substring(type.indexOf(",")+1,type.length());
+        } else {
+	        this.type1 = type;
+        	this.type2 = "";        	
+        }
     }
 
-    public String getPicture() {
-        return "images/"+name+".png";
+    private String type1;
+    
+    public String getType1() {
+        return type1;
+    }
+ 
+    public void setType1(String type1) {
+        this.type1 = type1;
+    }
+
+    private String type2;
+    
+    public String getType2() {
+        return type2;
+    }
+ 
+    public void setType2(String type2) {
+        this.type2 = type2;
     }
     
-    private Pokemon () {}
+    public String getPicture() {
+        return "images/pokemons/"+num+".png";
+    }
+    public String getPicture2() {
+        return "../images/pokemons/"+num+".png";
+    }
+    public String getPicture3() {
+        return "<img src='../images/pokemons/"+num+".png' height='30'/>";
+    }
+
+	public String getPicture4() {
+        return "assets/pokemons/"+num+".png";
+    }
     
-    public Pokemon(String name, String type) {
+    private Pokemon() {
+    	logger.info("Pokemon No args");
+    }
+    
+    public Pokemon(String num, String name, String type) {
+        this.num = num;
         this.name = name;
-        this.type = type;
+        this.setType(type);
+        logger.info("Pokemon 3 args - Num:"+this.num+" Type:"+this.name+" Type1:"+this.type1+" Type2:"+this.type2);
     }    
+
+    public Pokemon(String num, String name_en, String type1, String type2, String name) {
+        this.num = num;
+        this.name = name;
+        this.type1 = type1;
+        this.type2 = type2;
+        logger.info("Pokemon 5 args - Num:"+this.num+" Type:"+this.name+" Type1:"+this.type1+" Type2:"+this.type2);
+    }    
+
 }

@@ -1,11 +1,14 @@
 pipeline {
-    agent {
-        label 'docker'
-    }
+    agent any
     stages {
-        stage ('Script') {
+        stage('Hello world') {
             steps {
                 echo 'Hello world !'
+            }
+        }
+        stage('Good bye') {
+            steps {
+                echo 'good bye !'
             }
         }
     }

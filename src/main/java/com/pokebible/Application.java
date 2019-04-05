@@ -36,7 +36,7 @@ public class Application extends SpringBootServletInitializer {
 
     //For Springboot run
     public static void main(String[] args) {
-        logger.warn("Application - main - Starting Server V0.0 ...");
+        logger.warn("Application - main - Starting Server V1.0 ...");
         SpringApplication.run(Application.class, args);
     }
 	

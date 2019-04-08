@@ -20,4 +20,4 @@ set +x
 echo 'The following command runs and outputs the execution of your Java'
 echo 'application (which Jenkins built using Maven) to the Jenkins UI.'
 set -x
-curl -u admin:admin123 --upload-file target/*.jar http://nexus:8081/repository/com.mycompany.app/${NAME}-${VERSION}.jar
+curl -u admin:admin123 --upload-file target/*.jar http://nexus:8081/repository/com.pokebible/${NAME}-${VERSION}.war

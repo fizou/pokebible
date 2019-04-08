@@ -24,6 +24,21 @@ pipeline {
                 }
             }
         }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Nexus') {
+            steps {
+                sh './jenkins/nexus.sh'
+            }
+        }
         stage('End Deployment') {
             steps {
                 echo 'good bye !'

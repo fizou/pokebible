@@ -1,12 +1,20 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven'
+    }
     stages {
-        stage('Begin compilation') {
+        stage('Begin Deployment') {
             steps {
                 echo 'Hello world !'
             }
         }
-        stage('End compilation') {
+        stage('Build') {
+            steps {
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+        stage('End Deployment') {
             steps {
                 echo 'good bye !'
             }

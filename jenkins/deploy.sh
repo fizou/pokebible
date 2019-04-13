@@ -20,4 +20,4 @@ set +x
 echo 'The following command runs and outputs the execution of your Java'
 echo 'application (which Jenkins built using Maven) to the Jenkins UI...'
 set -x
-curl --upload-file target\${NAME}-${VERSION}.war "http://admin:admin@tomcat:8080/manager/deploy?path=/pokebible&update=true"
+curl --upload-file target/${NAME}-${VERSION}.war "http://admin:admin@tomcat:8080/manager/deploy?path=/pokebible&update=true"

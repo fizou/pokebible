@@ -70,7 +70,7 @@ var Pokemon = React.createClass({
     if (this.state.display==false) return null;
     else return (
       <tr>
-		<td><img src={this.props.pokemon.picture} class="img-thumbnail" height="30"/></td>
+	<td><img src={this.props.pokemon.pictureurl} class="img-thumbnail" height="30"/></td>
         <td>{this.props.pokemon.name}</td>
         <td>{this.props.pokemon.type}</td>
         <td>

@@ -14,13 +14,23 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th style="width: 50px;"></th>
       <th style="width: 150px;">Name</th>
+      <th>Type</th>
     </tr>
     <tr th:each="pokemon : ${pokemonSelection}">
+      <td>
+          <img th:src="@{${pokemon.pictureUrl}}" style="height:30px;" />
+      </td>
       <td>
         <a href="ownerDetails.html"
           th:href="@{|/owners/${pokemon.num}|}"
           th:text="|${pokemon.name}|">Name</a>
+      </td>
+      <td>
+        <a href="ownerDetails.html"
+          th:href="@{|/owners/${pokemon.type}|}"
+          th:text="|${pokemon.type}|">Type</a>
       </td>
     </tr>
   </thead>

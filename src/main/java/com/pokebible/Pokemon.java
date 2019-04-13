@@ -72,18 +72,11 @@ public class Pokemon {
         this.type2 = type2;
     }
     
-    public String getPicture() {
-        return "images/pokemons/"+num+".png";
+    public String getPictureUrl() {
+        return "/images/pokemons/"+num+".png";
     }
-    public String getPicture2() {
-        return "../images/pokemons/"+num+".png";
-    }
-    public String getPicture3() {
-        return "<img src='../images/pokemons/"+num+".png' height='30'/>";
-    }
-
-    public String getPicture4() {
-        return "assets/pokemons/"+num+".png";
+    public String getPictureHtmlTag() {
+        return "<img src='"+getPictureUrl()+"' height='30'/>";
     }
 
     public String toString(){
@@ -91,7 +84,7 @@ public class Pokemon {
     }
     
     public Pokemon() {
-    	logger.debug("Pokemon - No args");
+    	//logger.debug("Pokemon - No args");
     }
     
     public Pokemon(String num, String name, String type) {

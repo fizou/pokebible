@@ -1,5 +1,7 @@
 package com.pokebible;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import static org.junit.Assert.*;
 
@@ -25,13 +27,26 @@ public class ApplicationTests {
     public void contextLoads() {
         logger.warn("ApplicationTests - Begin");
 
+        logger.warn("ApplicationTests - Insert Bulbizarre as double");
         Pokemon pokemon = new Pokemon("001","Bulbizarre","grass,poison");
         //pokemon = null;
         assertNotNull(pokemon);
         
-        List<Pokemon> pokemons = repository.findByName("Bulbizarre");
+        List<Pokemon> pokemons = new ArrayList<>();
+        
+        String queryString="Roucoups";
+        logger.warn("ApplicationTests - findByName("+queryString+")");
+        pokemons = repository.findByName(queryString);
+        
+/*        logger.warn("ApplicationTests - findAll");
+        Iterator<Pokemon> iterator = (Iterator<Pokemon>) repository.findAll();
+        while (iterator.hasNext()){
+            pokemons.add(iterator.next());
+        }
+*/        
+        logger.warn("ApplicationTests - Display Result");
         for (int i=0;i<pokemons.size();i++) {
-            logger.info("ApplicationTests - Pokemon: "+pokemons.get(i).getName()+" - "+pokemons.get(i).getType());
+            logger.info("ApplicationTests - Pokemon: "+pokemons.toString());
         }    
         assertTrue(pokemons.size()!=0);
         

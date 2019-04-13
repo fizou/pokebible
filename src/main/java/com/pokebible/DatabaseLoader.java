@@ -23,7 +23,6 @@ public class DatabaseLoader implements CommandLineRunner {
     public void run(String... strings) throws Exception {
     	logger.warn("DatabaseLoader - run - Filling database");
         
-    	this.repository.save(new Pokemon("001","Bulbizarre","grass,poison"));
     	this.repository.save(new Pokemon("001","Bulbasaur","grass","poison","Bulbizarre"));
     	this.repository.save(new Pokemon("002","Ivysaur","grass","poison","Herbizarre"));
     	this.repository.save(new Pokemon("003","Venusaur","grass","poison","Florizarre"));

@@ -82,19 +82,23 @@ public class Pokemon {
         return "<img src='../images/pokemons/"+num+".png' height='30'/>";
     }
 
-	public String getPicture4() {
+    public String getPicture4() {
         return "assets/pokemons/"+num+".png";
     }
+
+    public String toString(){
+        return "("+this.num+") "+this.name+" - "+this.getType();
+    }
     
-    private Pokemon() {
-    	logger.info("Pokemon No args");
+    public Pokemon() {
+    	logger.debug("Pokemon - No args");
     }
     
     public Pokemon(String num, String name, String type) {
         this.num = num;
         this.name = name;
         this.setType(type);
-        logger.info("Pokemon 3 args - Num:"+this.num+" Type:"+this.name+" Type1:"+this.type1+" Type2:"+this.type2);
+        logger.info("Pokemon - 3 args - "+this.toString());
     }    
 
     public Pokemon(String num, String name_en, String type1, String type2, String name) {
@@ -102,7 +106,7 @@ public class Pokemon {
         this.name = name;
         this.type1 = type1;
         this.type2 = type2;
-        logger.info("Pokemon 5 args - Num:"+this.num+" Type:"+this.name+" Type1:"+this.type1+" Type2:"+this.type2);
+        logger.info("Pokemon - 5 args - "+this.toString());
     }    
 
 }

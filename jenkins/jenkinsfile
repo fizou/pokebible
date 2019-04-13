@@ -29,6 +29,11 @@ pipeline {
                 sh './jenkins/nexus.sh'
             }
         }
+        stage('Deploy') {
+            steps {
+                sh './jenkins/deploy.sh'
+            }
+        }
         stage('End Deployment') {
             steps {
                 echo 'good bye !'

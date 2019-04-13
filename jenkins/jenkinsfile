@@ -4,7 +4,7 @@ pipeline {
         maven 'Maven'
     }
     stages {
-        stage('Begin Deployment 123') {
+        stage('Begin Deployment') {
             steps {
                 echo 'Hello world !'
             }

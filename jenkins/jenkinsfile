@@ -14,7 +14,7 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Test') {
+        stage('Unit Test') {
             steps {
                 sh 'mvn test'
             }
@@ -22,6 +22,11 @@ pipeline {
                 always {
                     junit 'target/surefire-reports/*.xml'
                 }
+            }
+        }
+        stage('Sonar Test') {
+            steps {
+                sh 'sonar:sonar -Dsonar.projectKey=pokebible -Dsonar.host.url=http://localhost:9000 -Dsonar.login=d8ad64a57770392308093f4704e4e53caca9dee8'
             }
         }
         stage('Nexus') {

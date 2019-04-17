@@ -29,14 +29,14 @@ public class Controllers {
     }
     
     @RequestMapping("/")
-    String root() {
+    public String root() {
 	logger.warn("Controllers - root");
         //return "index.html";
         return "home";
     }
     
     @RequestMapping("/home")
-    String home(@RequestParam(defaultValue="") String searchString) {
+    public String home(@RequestParam(defaultValue="") String searchString) {
 
 	logger.warn("Controllers - home - SearchString: '"+searchString+"'");
 		
@@ -57,7 +57,7 @@ public class Controllers {
         return "help";
     }
 
-	@RequestMapping("/login")
+    @RequestMapping("/login")
     String login() {
 	logger.warn("Controllers - login");
         return "login";

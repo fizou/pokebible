@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Sonar Test') {
             steps {
-                sh 'sonar:sonar -Dsonar.projectKey=pokebible -Dsonar.host.url=http://sonar:9000 -Dsonar.login=d8ad64a57770392308093f4704e4e53caca9dee8'
+                sh 'org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.projectKey=pokebible -Dsonar.host.url=http://sonar:9000 -Dsonar.login=d8ad64a57770392308093f4704e4e53caca9dee8'
             }
         }
         stage('Nexus') {

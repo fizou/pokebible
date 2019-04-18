@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Sonar Test') {
             steps {
-                sh 'mvn -Dsonar.projectKey=pokebible -Dsonar.host.url=http://sonar:9000 -Dsonar.login=d8ad64a57770392308093f4704e4e53caca9dee8 org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar'
+                sh '/var/jenkins_home/tools/hudson.tasks.Maven_MavenInstallation/Maven/bin/mvn -Dsonar.login=d8ad64a57770392308093f4704e4e53caca9dee8 -Dsonar.projectKey=pokebible -Dsonar.host.url=http://sonar:9000 sonar:sonar'
             }
         }
         stage('Nexus') {

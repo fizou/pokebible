@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo 'The following script command add the java application to the Nexus'
+echo 'The following script deploy the java application to the Tomcat'
 set -x
 mvn jar:jar install:install help:evaluate -Dexpression=project.name
 set +x
@@ -17,7 +17,6 @@ set -x
 VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[^\[]"`
 set +x
 
-echo 'The following command runs and outputs the execution of your Java'
-echo 'application (which Jenkins built using Maven) to the Jenkins UI...'
+echo 'Final Step...'
 set -x
-curl -u admin:admin --upload-file target/${NAME}-${VERSION}.war "http://tomcat:8080/manager/deploy?path=/pokebible&update=true"
+curl --upload-file target/${NAME}-${VERSION}.war "http://admin:admin@tomcat:8080/manager/deploy?path=/pokebible&update=true"

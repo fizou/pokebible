@@ -19,4 +19,4 @@ set +x
 
 echo 'Final Step...'
 set -x
-curl --upload-file target/${NAME}-${VERSION}.war "http://admin:admin@tomcat:8080/manager/deploy?path=/pokebible&update=true"
+curl -u admin:admin --upload-file target/${NAME}-${VERSION}.war "http://tomcat:8080/manager/text/deploy?path=/pokebible&update=true"

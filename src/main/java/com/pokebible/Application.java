@@ -15,34 +15,48 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Predicates;
-import com.pokebible.*;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
+import springfox.documentation.builders.ApiInfoBuilder;
 
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
-    private final static Logger logger = LoggerFactory.getLogger(SpringBootServletInitializer.class);
+    private static final Logger loggerApplication = LoggerFactory.getLogger(SpringBootServletInitializer.class);
 
-    //For Springboot run
+    @Autowired
+    public BuildProperties buildProperties;
+
+    @PostConstruct
+    private void postConstructBuildProperties() {
+       loggerApplication.debug("Application - postConstructBuildProperties - Name : {}",buildProperties.getName());
+       loggerApplication.debug("Application - postConstructBuildProperties - Version : {}",buildProperties.getVersion());
+       loggerApplication.debug("Application - postConstructBuildProperties - Build Time : {}",buildProperties.getTime());
+       loggerApplication.warn("Application - Starting Application '{}' v{} ({})",buildProperties.getName(),buildProperties.getVersion(),buildProperties.getTime());
+    }
+    
     public static void main(String[] args) {
-        logger.warn("Application - main - Starting Server V1.3 ...");
+        loggerApplication.warn("Application - main - Starting Application...");
         SpringApplication.run(Application.class, args);
     }
-	
+    
     //For Tomcat run
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        loggerApplication.warn("Application - configure - Configure Application ");
         return application.sources(Application.class);
     }
     
@@ -52,6 +66,18 @@ public class Application extends SpringBootServletInitializer {
     //@ComponentScan("com.pokebible")
     @Import({springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration.class})
     public class SwaggerConfig {                                    
+
+        ApiInfo apiInfo() {
+            return new ApiInfoBuilder()
+                .title("PokeBible API")
+                .description("Access to PokeBible database with REST API")
+                .license("Apache 2.0")
+                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+                .termsOfServiceUrl("")
+                .version("1.0.0")
+                .contact(new Contact("", "", "fizou@yahoo.com"))
+                .build();
+        }
 
         @Bean
         public Docket api() { 
@@ -67,6 +93,7 @@ public class Application extends SpringBootServletInitializer {
 //            .pathMapping("/")
 //            .genericModelSubstitutes(ResponseEntity.class)
 //            .tags(new Tag("Pokemon Service", "All apis relating to pokemons"))
+              .apiInfo(apiInfo())
             ;
         }
         

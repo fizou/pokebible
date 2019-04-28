@@ -1,9 +1,7 @@
 package com.pokebible;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -18,13 +16,13 @@ import io.swagger.annotations.ApiParam;
 @RepositoryRestResource()
 public interface PokemonRepository extends CrudRepository<Pokemon, Long> {
 
-	  // Default API (Auto generate)  
+	// Default API (Auto generate)  
 	
-	  // Specifics API   
-	  @ApiOperation("find all pokemon by name")
-	  List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
-	  
-	  //@Query("select c from pokemon c where c.name = :name")
-	  //List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
+        // Specifics API   
+	@ApiOperation("find all pokemon by name")
+	List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
+	 
+	//@Query("select c from pokemon c where c.name = :name")
+	//List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
 
 }

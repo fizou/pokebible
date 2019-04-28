@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleCORSFilter implements Filter {
 
-Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
+private static final Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
 
 public SimpleCORSFilter() {
-	logger.info("SimpleCORSFilter - init");
+	logger.info("SimpleCORSFilter - Contructor");
 }
 
 @Override
@@ -29,7 +29,7 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) res;
 
-    logger.debug("SimpleCORSFilter - doFilter on url: "+request.getRequestURI());
+    //logger.debug("SimpleCORSFilter - doFilter on url: "+request.getRequestURI());
 
     response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     response.setHeader("Access-Control-Allow-Credentials", "true");
@@ -42,10 +42,12 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 
 @Override
 public void init(FilterConfig filterConfig) {
+    logger.debug("SimpleCORSFilter - init");
 }
 
 @Override
 public void destroy() {
+    logger.debug("SimpleCORSFilter - destroy");
 }
 
 }

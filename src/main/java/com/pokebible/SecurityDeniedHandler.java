@@ -18,12 +18,14 @@ import java.io.IOException;
 @Component
 public class SecurityDeniedHandler implements AccessDeniedHandler {
 
-	Logger logger = LoggerFactory.getLogger(SecurityDeniedHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityDeniedHandler.class);
 
     @Override
     public void handle(HttpServletRequest httpServletRequest,
                        HttpServletResponse httpServletResponse,
                        AccessDeniedException e) throws IOException, ServletException {
+
+	logger.debug("SecurityDeniedHandler - handle");
 
         Authentication auth
                 = SecurityContextHolder.getContext().getAuthentication();

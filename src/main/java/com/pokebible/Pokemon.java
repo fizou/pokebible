@@ -11,8 +11,27 @@ import javax.persistence.Id;
 @Entity
 public class Pokemon {
  
-    private final static Logger logger = LoggerFactory.getLogger(Pokemon.class);
+    private static final Logger logger = LoggerFactory.getLogger(Pokemon.class);
 
+    public static final String TYPE_NORMAL = "Normal";
+    public static final String TYPE_GRASS = "Grass";
+    public static final String TYPE_FIRE = "Fire";
+    public static final String TYPE_WATER = "Water";
+    public static final String TYPE_FIGHTING = "Fighting";
+    public static final String TYPE_FLYING = "Flying";
+    public static final String TYPE_POISON = "Posion";
+    public static final String TYPE_GROUND = "Ground";
+    public static final String TYPE_ROCK = "Rock";
+    public static final String TYPE_BUG = "Bug";
+    public static final String TYPE_GHOST = "Ghost";
+    public static final String TYPE_ELECTRIC = "Electric";
+    public static final String TYPE_PSYCHIC = "Psychic";
+    public static final String TYPE_ICE = "Ice";
+    public static final String TYPE_DRAGON = "Dragon";
+    public static final String TYPE_DARK = "Dark";
+    public static final String TYPE_STEEL = "Steel";
+    public static final String TYPE_FAERY = "Faery";
+        
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -43,9 +62,9 @@ public class Pokemon {
     }
  
     public void setType(String type) {
-        if (type!=null&&type.indexOf(",")!=-1) {
-        	this.type1 = type.substring(0, type.indexOf(","));
-        	this.type2 = type.substring(type.indexOf(",")+1,type.length());
+        if (type!=null&&type.indexOf(',')!=-1) {
+        	this.type1 = type.substring(0, type.indexOf(','));
+        	this.type2 = type.substring(type.indexOf(',')+1,type.length());
         } else {
 	        this.type1 = type;
         	this.type2 = "";        	
@@ -91,15 +110,15 @@ public class Pokemon {
         this.num = num;
         this.name = name;
         this.setType(type);
-        logger.info("Pokemon - 3 args - "+this.toString());
+        logger.info("Pokemon - 3 args - {}", this);
     }    
 
-    public Pokemon(String num, String name_en, String type1, String type2, String name) {
+    public Pokemon(String num, String nameEn, String type1, String type2, String name) {
         this.num = num;
-        this.name = name;
+        this.name = nameEn;
         this.type1 = type1;
         this.type2 = type2;
-        logger.info("Pokemon - 5 args - "+this.toString());
+        logger.info("Pokemon - 5 args - {}", this);
     }    
 
 }

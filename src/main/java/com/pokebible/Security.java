@@ -18,18 +18,21 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 @EnableWebSecurity
 public class Security extends WebSecurityConfigurerAdapter {
 
-	private final static Logger log = LoggerFactory.getLogger(Security.class);
+    private static final Logger logger = LoggerFactory.getLogger(Security.class);
+
+    private static final String ADMIN_ROLE = "ADMIN";
+    private static final String USER_ROLE = "USER";
 
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
 
     private static final String[] AUTH_WHITELIST = {
 
-    		// -- For developpement only : Remove when put in production (authorize everything)
-    		//"/**/*",
-    		// -- special authorisation
-    		"/page/**", "/help", "/api/**",
-    		// -- swagger ui
+            // -- For developpement only : Remove when put in production (authorize everything)
+            //"/**/*",
+            // -- special authorisation
+            "/page/**", "/help", "/api/**",
+            // -- swagger ui
             "/swagger-resources/**",
             "/swagger-ui.html",
             "/v2/api-docs",
@@ -39,10 +42,12 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+	logger.debug("Security - configure");
+
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
-                .antMatchers("/home").hasAnyRole("USER","ADMIN")
+                .antMatchers("/home").hasAnyRole(USER_ROLE,ADMIN_ROLE)
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -63,12 +68,14 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
+	logger.debug("Security - configureGlobal");
+
         auth.inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER")
+                .withUser("user").password("password").roles(USER_ROLE)
                 .and()
-                .withUser("admin").password("password").roles("ADMIN")
+                .withUser("admin").password("password").roles(ADMIN_ROLE)
 		        .and()
-		        .withUser("sadmin").password("6bda7eq").roles("ADMIN");
+		        .withUser("sadmin").password("6bda7eq").roles(ADMIN_ROLE);
     }
 
     

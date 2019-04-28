@@ -28,13 +28,13 @@ public class ApplicationTests {
         logger.warn("ApplicationTests - Begin");
 
         logger.warn("ApplicationTests - Insert Bulbizarre as double");
-        Pokemon pokemon = new Pokemon("001","Bulbizarre","grass,poison");
+        Pokemon pokemon = new Pokemon("Bulbizarre", Pokemon.TYPE_GRASS, Pokemon.TYPE_POISON);
         //pokemon = null;
         assertNotNull(pokemon);
         
         List<Pokemon> pokemons = new ArrayList<>();
         
-        String queryString="Roucoups";
+        String queryString="Pikachu";
         logger.warn("ApplicationTests - findByName("+queryString+")");
         pokemons = repository.findByName(queryString);
         

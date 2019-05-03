@@ -18,9 +18,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Predicates;
+import java.util.Locale;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import springfox.documentation.builders.ApiInfoBuilder;
 
 import springfox.documentation.builders.PathSelectors;
@@ -34,23 +41,25 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-
+    
     private static final Logger loggerApplication = LoggerFactory.getLogger(SpringBootServletInitializer.class);
 
+    //For Springboot run
+    public static void main(String[] args) {
+        loggerApplication.warn("Application - main - Starting Application...");
+        SpringApplication.run(Application.class, args);
+    }
+
+    //Display Application Version at startup
     @Autowired
     public BuildProperties buildProperties;
 
     @PostConstruct
     private void postConstructBuildProperties() {
-       loggerApplication.debug("Application - postConstructBuildProperties - Name : {}",buildProperties.getName());
-       loggerApplication.debug("Application - postConstructBuildProperties - Version : {}",buildProperties.getVersion());
-       loggerApplication.debug("Application - postConstructBuildProperties - Build Time : {}",buildProperties.getTime());
-       loggerApplication.warn("Application - Starting Application '{}' v{} ({})",buildProperties.getName(),buildProperties.getVersion(),buildProperties.getTime());
-    }
-    
-    public static void main(String[] args) {
-        loggerApplication.warn("Application - main - Starting Application...");
-        SpringApplication.run(Application.class, args);
+        loggerApplication.debug("Application - postConstructBuildProperties - Name : {}",buildProperties.getName());
+        loggerApplication.debug("Application - postConstructBuildProperties - Version : {}",buildProperties.getVersion());
+        loggerApplication.debug("Application - postConstructBuildProperties - Build Time : {}",buildProperties.getTime());
+        loggerApplication.warn("Application - Starting Application '{}' v{} ({})",buildProperties.getName(),buildProperties.getVersion(),buildProperties.getTime());
     }
     
     //For Tomcat run
@@ -68,6 +77,7 @@ public class Application extends SpringBootServletInitializer {
     public class SwaggerConfig {                                    
 
         ApiInfo apiInfo() {
+            loggerApplication.warn("Application - SwaggerConfig - Starting Api Swagger UI...");
             return new ApiInfoBuilder()
                 .title("PokeBible API")
                 .description("Access to PokeBible database with REST API")
@@ -98,6 +108,33 @@ public class Application extends SpringBootServletInitializer {
         }
         
     }
+
+/*
+@Bean
+public LocaleResolver localeResolver() {
+    loggerApplication.warn("Application - localeResolver - localeResolver...");
+    SessionLocaleResolver slr = new SessionLocaleResolver();
+    slr.setDefaultLocale(Locale.FRENCH);
+    return slr;
+}
+
+@Bean
+    public MessageSource messageSource() {
+        final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasenames("classpath:messages");
+        messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setCacheSeconds(5);
+        return messageSource;
+    }    
+    
+   @Bean
+   public LocaleResolver localeResolver(){
+        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+        localeResolver.setDefaultLocale(Locale.US);
+        return  localeResolver;
+    }
+*/
     
 /*
     // See controllers.java 

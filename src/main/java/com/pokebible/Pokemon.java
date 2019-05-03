@@ -19,7 +19,7 @@ public class Pokemon {
     public static final String TYPE_WATER = "Water";
     public static final String TYPE_FIGHTING = "Fighting";
     public static final String TYPE_FLYING = "Flying";
-    public static final String TYPE_POISON = "Posion";
+    public static final String TYPE_POISON = "Poison";
     public static final String TYPE_GROUND = "Ground";
     public static final String TYPE_ROCK = "Rock";
     public static final String TYPE_BUG = "Bug";
@@ -76,7 +76,13 @@ public class Pokemon {
     public String getType1() {
         return type1;
     }
- 
+    public String getType1PictureUrl() {
+        if (type1.equals("")) {
+            return "/images/types/none.gif";
+        } else {
+            return "/images/types/"+type1.toLowerCase()+".gif";
+        }
+    }
     public void setType1(String type1) {
         this.type1 = type1;
     }
@@ -85,6 +91,13 @@ public class Pokemon {
     
     public String getType2() {
         return type2;
+    }
+    public String getType2PictureUrl() {
+        if (type2.equals("")) {
+            return "/images/types/none.gif";
+        } else {
+        return "/images/types/"+type2.toLowerCase()+".gif";
+        }
     }
  
     public void setType2(String type2) {

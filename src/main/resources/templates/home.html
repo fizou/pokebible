@@ -8,43 +8,48 @@
 <!-- Header -->
 <div th:replace="fragments/header :: header"/>
 
-<!-- Content -->
+<!-- Content Distribute by Server -->
 <div class="container">
-    <div class="Server-template">
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th style="width: 50px;"></th>
-      <th style="width: 150px;">Name</th>
-      <th>Type</th>
-    </tr>
-    <tr th:each="pokemon : ${pokemonSelection}">
-      <td>
-          <img th:src="@{${pokemon.pictureUrl}}" style="height:30px;" />
-      </td>
-      <td>
-        <a href="ownerDetails.html"
-          th:href="@{|/owners/${pokemon.num}|}"
-          th:text="|${pokemon.name}|">Name</a>
-      </td>
-      <td>
-        <a href="ownerDetails.html"
-          th:href="@{|/owners/${pokemon.type}|}"
-          th:text="|${pokemon.type}|">Type</a>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>       
-    </div>
     <div class="starter-template">
-        <h1>Dashboard</h1>
+        <h1 th:text="#{home.title}">home.title</h1>
         <p>
             <div id='root'></div>
         </p>
     </div>
+    <div class="Server-template">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 50px;"></th>
+              <th style="width: 50px;">Num</th>
+              <th style="width: 50%;">Name</th>
+              <th style="width: 50%;">Type</th>
+            </tr>
+            <tr th:each="pokemon : ${pokemonSelection}">
+              <td>
+                  <img th:src="|a${pokemon.pictureUrl}|" style="height:30px;"/>
+              </td>
+              <td>
+                <span th:text="${pokemon.num}">Num</span>
+              </td>
+              <td>
+                <a href="ownerDetails.html"
+                  th:href="@{|/owners/${pokemon.num}|}"
+                  th:text="${pokemon.name}">Name</a>
+              </td>
+              <td>
+                <span th:text="${pokemon.type}">Type</span>
+                <img th:src="|a${pokemon.type1PictureUrl}|" style="height:14px;"/>
+                <img th:src="|a${pokemon.type2PictureUrl}|" style="height:14px;"/>
+              </td>
 
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>       
+    </div>
+    
 </div>
 
 <!-- get Variable from Context-->

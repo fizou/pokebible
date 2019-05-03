@@ -18,14 +18,6 @@ public class Controllers {
 	
     private static final Logger logger = LoggerFactory.getLogger(Controllers.class);
 
-    @Autowired
-    private PokemonRepository repository;
-
-    @ModelAttribute("pokemonSelection")
-    public Iterable<Pokemon> pokemonSelection() {
-        return this.repository.findAll();
-    }
-    
     @GetMapping(path = "/")
     public String root() {
 	logger.warn("Controllers - root");
@@ -33,13 +25,28 @@ public class Controllers {
         return "home";
     }
     
+    @Autowired
+    private PokemonRepository repository;
+
+    @ModelAttribute("pokemonSelection")
+    public Iterable<Pokemon> pokemonSelection(@RequestParam(defaultValue="") String searchString) {
+
+	logger.warn("Controllers - pokemonSelection - SearchString: {}", searchString);
+		
+        if (searchString.equals("")){
+            return this.repository.findAll();
+        } else {
+            return repository.findByName(searchString);
+        }
+
+    }
+    
     @GetMapping(path = "/home")
+    @PostMapping(path = "/home")
     public String home(@RequestParam(defaultValue="") String searchString) {
 
-	logger.warn("Controllers - home - SearchString: {}",searchString);
-		
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
+        
 	if (auth != null) {
             logger.warn("Controllers - home - User: {} User", auth.getName());
 	} else {
@@ -60,13 +67,15 @@ public class Controllers {
 	logger.warn("Controllers - login");
         return "login";
     }
-	
-    @GetMapping(path = "/testRunning")
-    @PostMapping(path = "/testRunning")
+
+    @Autowired
+    Messages messages;
+    
+    @GetMapping(path = "/monitoring")
     @ResponseBody
     public String testRunning() {
-	logger.warn("Controllers - testRunning");
-        return "<H1>Pokemon Bible</H1><HR/>is running well...";
+	logger.warn("Controllers - test - message.properties "+messages.get("monitoring.title"));
+        return "<H1>"+messages.get("monitoring.title")+"</H1><HR>"+messages.get("monitoring.keySentence")+"...";
     }
 	
 }

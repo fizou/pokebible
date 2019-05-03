@@ -20,7 +20,7 @@ public class Controllers {
 
     @GetMapping(path = "/")
     public String root() {
-	logger.warn("Controllers - root");
+	logger.debug("Controllers - root");
         //return "index.html";
         return "home";
     }
@@ -31,7 +31,7 @@ public class Controllers {
     @ModelAttribute("pokemonSelection")
     public Iterable<Pokemon> pokemonSelection(@RequestParam(defaultValue="") String searchString) {
 
-	logger.warn("Controllers - pokemonSelection - SearchString: {}", searchString);
+	logger.debug("Controllers - pokemonSelection - SearchString: {}", searchString);
 		
         if (searchString.equals("")){
             return this.repository.findAll();
@@ -48,9 +48,9 @@ public class Controllers {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
 	if (auth != null) {
-            logger.warn("Controllers - home - User: {} User", auth.getName());
+            logger.info("Controllers - home - User: {} User", auth.getName());
 	} else {
-            logger.warn("Controllers - home - User: Anonymous User");
+            logger.info("Controllers - home - User: Anonymous User");
 	}
 		
         return "home";
@@ -58,13 +58,13 @@ public class Controllers {
     
     @GetMapping(path = "/help")
     public String about() {
-	logger.warn("Controllers - help");
+	logger.debug("Controllers - help");
         return "help";
     }
 
     @GetMapping(path = "/login")
     public String login() {
-	logger.warn("Controllers - login");
+	logger.debug("Controllers - login");
         return "login";
     }
 
@@ -74,7 +74,7 @@ public class Controllers {
     @GetMapping(path = "/monitoring")
     @ResponseBody
     public String testRunning() {
-	logger.warn("Controllers - test - message.properties "+messages.get("monitoring.title"));
+	logger.debug("Controllers - test - message.properties "+messages.get("monitoring.title"));
         return "<H1>"+messages.get("monitoring.title")+"</H1><HR>"+messages.get("monitoring.keySentence")+"...";
     }
 	

@@ -20,7 +20,7 @@ public class SimpleCORSFilter implements Filter {
 private static final Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
 
 public SimpleCORSFilter() {
-	logger.info("SimpleCORSFilter - Contructor");
+	logger.debug("SimpleCORSFilter - Contructor");
 }
 
 @Override

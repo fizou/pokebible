@@ -46,7 +46,7 @@ public class Application extends SpringBootServletInitializer {
 
     //For Springboot run
     public static void main(String[] args) {
-        loggerApplication.warn("Application - main - Starting Application...");
+        loggerApplication.info("Application - main - Starting Application...");
         SpringApplication.run(Application.class, args);
     }
 
@@ -59,13 +59,13 @@ public class Application extends SpringBootServletInitializer {
         loggerApplication.debug("Application - postConstructBuildProperties - Name : {}",buildProperties.getName());
         loggerApplication.debug("Application - postConstructBuildProperties - Version : {}",buildProperties.getVersion());
         loggerApplication.debug("Application - postConstructBuildProperties - Build Time : {}",buildProperties.getTime());
-        loggerApplication.warn("Application - Starting Application '{}' v{} ({})",buildProperties.getName(),buildProperties.getVersion(),buildProperties.getTime());
+        loggerApplication.info("Application - Starting Application '{}' v{} ({})",buildProperties.getName(),buildProperties.getVersion(),buildProperties.getTime());
     }
     
     //For Tomcat run
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        loggerApplication.warn("Application - configure - Configure Application ");
+        loggerApplication.info("Application - configure - Configure Application ");
         return application.sources(Application.class);
     }
     
@@ -77,7 +77,7 @@ public class Application extends SpringBootServletInitializer {
     public class SwaggerConfig {                                    
 
         ApiInfo apiInfo() {
-            loggerApplication.warn("Application - SwaggerConfig - Starting Api Swagger UI...");
+            loggerApplication.info("Application - SwaggerConfig - Starting Api Swagger UI...");
             return new ApiInfoBuilder()
                 .title("PokeBible API")
                 .description("Access to PokeBible database with REST API")
@@ -109,35 +109,9 @@ public class Application extends SpringBootServletInitializer {
         
     }
 
-/*
-@Bean
-public LocaleResolver localeResolver() {
-    loggerApplication.warn("Application - localeResolver - localeResolver...");
-    SessionLocaleResolver slr = new SessionLocaleResolver();
-    slr.setDefaultLocale(Locale.FRENCH);
-    return slr;
-}
-
-@Bean
-    public MessageSource messageSource() {
-        final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:messages");
-        messageSource.setUseCodeAsDefaultMessage(true);
-        messageSource.setDefaultEncoding("UTF-8");
-        messageSource.setCacheSeconds(5);
-        return messageSource;
-    }    
-    
-   @Bean
-   public LocaleResolver localeResolver(){
-        SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.US);
-        return  localeResolver;
-    }
-*/
     
 /*
-    // See controllers.java 
+    // Deprecate : See controllers.java 
     @RestController
     public class CustomController {
      

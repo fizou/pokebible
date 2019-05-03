@@ -23,7 +23,7 @@ public class DatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-    	logger.warn("DatabaseLoader - run - Filling database");
+    	logger.info("DatabaseLoader - run - Filling database");
         
     	this.repository.save(new Pokemon("001","Bulbasaur",Pokemon.TYPE_GRASS,Pokemon.TYPE_POISON,"Bulbizarre"));
     	this.repository.save(new Pokemon("002","Ivysaur",Pokemon.TYPE_GRASS,Pokemon.TYPE_POISON,"Herbizarre"));

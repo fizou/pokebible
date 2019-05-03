@@ -25,9 +25,9 @@ public class ApplicationTests {
    
     @Test
     public void contextLoads() {
-        logger.warn("ApplicationTests - Begin");
+        logger.debug("ApplicationTests - Begin");
 
-        logger.warn("ApplicationTests - Insert Bulbizarre as double");
+        logger.info("ApplicationTests - Insert Bulbizarre as double");
         Pokemon pokemon = new Pokemon("Bulbizarre", Pokemon.TYPE_GRASS, Pokemon.TYPE_POISON);
         //pokemon = null;
         assertNotNull(pokemon);
@@ -35,22 +35,22 @@ public class ApplicationTests {
         List<Pokemon> pokemons = new ArrayList<>();
         
         String queryString="Pikachu";
-        logger.warn("ApplicationTests - findByName("+queryString+")");
+        logger.info("ApplicationTests - findByName("+queryString+")");
         pokemons = repository.findByName(queryString);
         
-/*        logger.warn("ApplicationTests - findAll");
+/*        logger.info("ApplicationTests - findAll");
         Iterator<Pokemon> iterator = (Iterator<Pokemon>) repository.findAll();
         while (iterator.hasNext()){
             pokemons.add(iterator.next());
         }
 */        
-        logger.warn("ApplicationTests - Display Result");
+        logger.info("ApplicationTests - Display Result");
         for (int i=0;i<pokemons.size();i++) {
             logger.info("ApplicationTests - Pokemon: "+pokemons.toString());
         }    
         assertTrue(pokemons.size()!=0);
         
-        logger.warn("ApplicationTests - End");
+        logger.debug("ApplicationTests - End");
     }
 
 }

@@ -1,21 +1,21 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-head"/>
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"/>
+<div th:replace="fragments/header :: header-body"/>
 
 <div class="container">
 
     <div class="starter-template">
         <h1>Help on PokeBible</h1>
         <p>
-        	<BR/>To use this service you must be logon as a user or an admin:
+        	<BR/>To use this service you must be logon as an simple user or an admin:
         	<ul>
-        		<li>admin / password</li>
         		<li>user / password</li>
+        		<li>admin / password</li>
         	</ul>
         </p>
     </div>

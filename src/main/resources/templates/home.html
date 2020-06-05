@@ -1,19 +1,18 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <div th:replace="fragments/header :: header-css"/>
+    <div th:replace="fragments/header :: header-head"/>
 </head>
 <body>
 
-<!-- Header -->
-<div th:replace="fragments/header :: header"/>
+<div th:replace="fragments/header :: header-body"/>
 
 <!-- Content Distribute by Server -->
 <div class="container">
     <div class="starter-template">
         <h1 th:text="#{home.title}">home.title</h1>
         <p>
-            <div id='root'></div>
+            <div id='root2'></div>
         </p>
     </div>
     <div class="Server-template">
@@ -27,7 +26,7 @@
             </tr>
             <tr th:each="pokemon : ${pokemonSelection}">
               <td>
-                  <img th:src="|a${pokemon.pictureUrl}|" style="height:30px;"/>
+                  <img th:src="|${pokemon.pictureUrl}|" style="height:30px;"/>
               </td>
               <td>
                 <span th:text="${pokemon.num}">Num</span>
@@ -39,8 +38,8 @@
               </td>
               <td>
                 <span th:text="${pokemon.type}">Type</span>
-                <img th:src="|a${pokemon.type1PictureUrl}|" style="height:14px;"/>
-                <img th:src="|a${pokemon.type2PictureUrl}|" style="height:14px;"/>
+                <img th:src="|${pokemon.type1PictureUrl}|" style="height:14px;"/>
+                <img th:src="|${pokemon.type2PictureUrl}|" style="height:14px;"/>
               </td>
 
             </tr>

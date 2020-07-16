@@ -30,7 +30,7 @@ public class Pokemon {
     public static final String TYPE_DRAGON = "Dragon";
     public static final String TYPE_DARK = "Dark";
     public static final String TYPE_STEEL = "Steel";
-    public static final String TYPE_FAERY = "Faery";
+    public static final String TYPE_FAIRY = "Fairy";
         
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

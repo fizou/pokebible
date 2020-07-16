@@ -59,12 +59,12 @@ public class DatabaseLoader implements CommandLineRunner {
     	this.repository.save(new Pokemon("032","Nidoran M",Pokemon.TYPE_POISON,"","Nidoran M"));
     	this.repository.save(new Pokemon("033","Nidorino",Pokemon.TYPE_POISON,"","Nidorino"));
     	this.repository.save(new Pokemon("034","Nidoking",Pokemon.TYPE_POISON,Pokemon.TYPE_GROUND,"Nidoking"));
-    	this.repository.save(new Pokemon("035","Clefairy",Pokemon.TYPE_FAERY,"","Mélofée"));
-    	this.repository.save(new Pokemon("036","Clefable",Pokemon.TYPE_FAERY,"","Mélodelfe"));
+    	this.repository.save(new Pokemon("035","Clefairy",Pokemon.TYPE_FAIRY,"","Mélofée"));
+    	this.repository.save(new Pokemon("036","Clefable",Pokemon.TYPE_FAIRY,"","Mélodelfe"));
     	this.repository.save(new Pokemon("037","Vulpix",Pokemon.TYPE_FIRE,"","Goupix"));
     	this.repository.save(new Pokemon("038","Ninetales",Pokemon.TYPE_FIRE,"","Feunard"));
-    	this.repository.save(new Pokemon("039","Jigglypuff",Pokemon.TYPE_NORMAL,Pokemon.TYPE_FAERY,"Rondoudou"));
-    	this.repository.save(new Pokemon("040","Wigglytuff",Pokemon.TYPE_NORMAL,Pokemon.TYPE_FAERY,"Grodoudou"));
+    	this.repository.save(new Pokemon("039","Jigglypuff",Pokemon.TYPE_NORMAL,Pokemon.TYPE_FAIRY,"Rondoudou"));
+    	this.repository.save(new Pokemon("040","Wigglytuff",Pokemon.TYPE_NORMAL,Pokemon.TYPE_FAIRY,"Grodoudou"));
     	this.repository.save(new Pokemon("041","Zubat",Pokemon.TYPE_POISON,Pokemon.TYPE_FLYING,"Nosferapti"));
     	this.repository.save(new Pokemon("042","Golbat",Pokemon.TYPE_POISON,Pokemon.TYPE_FLYING,"Nosferalto"));
     	this.repository.save(new Pokemon("043","Oddish",Pokemon.TYPE_GRASS,Pokemon.TYPE_POISON,"Mystherbe"));
@@ -146,7 +146,7 @@ public class DatabaseLoader implements CommandLineRunner {
     	this.repository.save(new Pokemon("119","Seaking",Pokemon.TYPE_WATER,"","Poissoroy"));
     	this.repository.save(new Pokemon("120","Staryu",Pokemon.TYPE_WATER,"","Stari"));
     	this.repository.save(new Pokemon("121","Starmie",Pokemon.TYPE_WATER,Pokemon.TYPE_PSYCHIC,"Staross"));
-    	this.repository.save(new Pokemon("122","Mr. Mime",Pokemon.TYPE_PSYCHIC,Pokemon.TYPE_FAERY,"M. Mime"));
+    	this.repository.save(new Pokemon("122","Mr. Mime",Pokemon.TYPE_PSYCHIC,Pokemon.TYPE_FAIRY,"M. Mime"));
     	this.repository.save(new Pokemon("123","Scyther",Pokemon.TYPE_BUG,Pokemon.TYPE_FLYING,"Insécateur"));
     	this.repository.save(new Pokemon("124","Jynx",Pokemon.TYPE_ICE,Pokemon.TYPE_PSYCHIC,"Lippoutou"));
     	this.repository.save(new Pokemon("125","Electabuzz",Pokemon.TYPE_ELECTRIC,"","Élektek"));

@@ -1,2 +1,2 @@
 # pokebible
-Pokebible is a Spring Boot Demo Application with Tymleaf, Security, Jpa, React... frameworks 
+Pokebible is a Spring-Boot demo application with Tymleaf, Security, Jpa, React... frameworks 

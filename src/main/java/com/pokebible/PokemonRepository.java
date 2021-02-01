@@ -20,9 +20,9 @@ public interface PokemonRepository extends CrudRepository<Pokemon, Long> {
 	
         // Specifics API   
 	@ApiOperation("find all pokemon by name")
-	List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
-	 
-	//@Query("select c from pokemon c where c.name = :name")
 	//List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
+	 
+	@Query("select c from Pokemon c where c.name like CONCAT('x ',:name,'%')")
+	List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
 
 }

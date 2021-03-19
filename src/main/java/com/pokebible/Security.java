@@ -26,6 +26,9 @@ public class Security extends WebSecurityConfigurerAdapter {
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
 
+    @Autowired
+    CustomAuthenticationProvider customAuthProvider;
+    
     private static final String[] AUTH_WHITELIST = {
 
             // -- For developpement only : Remove when put in production (authorize everything)
@@ -69,13 +72,16 @@ public class Security extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
 	logger.debug("Security - configureGlobal");
-
+/*
         auth.inMemoryAuthentication()
                 .withUser("user").password("password").roles(USER_ROLE)
                 .and()
                 .withUser("admin").password("password").roles(ADMIN_ROLE)
 		.and()
 		.withUser("sadmin").password("6bda7eq").roles(ADMIN_ROLE);
+*/
+        auth.authenticationProvider(customAuthProvider);
+
     }
 
     

@@ -34,9 +34,9 @@ public class Controllers {
 	logger.debug("Controllers - pokemonSelection - SearchString: {}", searchString);
 		
         if (searchString.equals("")){
-            return this.repository.findAll();
+            return repository.findAll();
         } else {
-            return repository.findByName(searchString);
+            return repository.findByNameContainingIgnoreCase(searchString);
         }
 
     }

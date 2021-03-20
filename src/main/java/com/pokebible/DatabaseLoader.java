@@ -175,8 +175,8 @@ public class DatabaseLoader implements CommandLineRunner {
     	this.repository.save(new Pokemon("148","Dragonair",Pokemon.TYPE_DRAGON,"","Draco"));
     	this.repository.save(new Pokemon("149","Dragonite",Pokemon.TYPE_DRAGON,Pokemon.TYPE_FLYING,"Dracolosse"));
     	this.repository.save(new Pokemon("150","Mewtwo",Pokemon.TYPE_PSYCHIC,"","Mewtwo"));
-/*
     	this.repository.save(new Pokemon("151","Mew",Pokemon.TYPE_PSYCHIC,"","Mew"));
+/*
     	this.repository.save(new Pokemon("152","Chikorita",Pokemon.TYPE_GRASS,"","Germignon"));
     	this.repository.save(new Pokemon("153","Bayleef",Pokemon.TYPE_GRASS,"","Macronium"));
     	this.repository.save(new Pokemon("154","Meganium",Pokemon.TYPE_GRASS,"","Méganium"));

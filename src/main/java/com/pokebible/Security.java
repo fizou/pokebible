@@ -27,7 +27,7 @@ public class Security extends WebSecurityConfigurerAdapter {
     private AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    CustomAuthenticationProvider customAuthProvider;
+    SecurityAuthenticationProvider customAuthProvider;
     
     private static final String[] AUTH_WHITELIST = {
 
@@ -72,7 +72,9 @@ public class Security extends WebSecurityConfigurerAdapter {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 
 	logger.debug("Security - configureGlobal");
+        
 /*
+        // Authentification HardCoded
         auth.inMemoryAuthentication()
                 .withUser("user").password("password").roles(USER_ROLE)
                 .and()
@@ -80,6 +82,7 @@ public class Security extends WebSecurityConfigurerAdapter {
 		.and()
 		.withUser("sadmin").password("6bda7eq").roles(ADMIN_ROLE);
 */
+        // Authentification Custom
         auth.authenticationProvider(customAuthProvider);
 
     }

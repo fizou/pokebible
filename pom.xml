@@ -5,7 +5,7 @@
 
 	<groupId>com.pokebible</groupId>
 	<artifactId>pokebible</artifactId>
-	<version>1.0.9-SNAPSHOT</version>
+	<version>1.0.10-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<name>pokebible</name>
@@ -103,8 +103,15 @@
                     <artifactId>springfox-swagger-ui</artifactId>
                     <version>2.9.2</version>
 		</dependency>
-		
-	</dependencies>
+                
+                <!-- Apache http framework -->
+                <dependency>
+                 <groupId>org.apache.httpcomponents</groupId>
+                 <artifactId>fluent-hc</artifactId>
+                 <version>4.3.6</version>
+                 <type>jar</type>
+                </dependency>
+               </dependencies>
 
 	<build>
 		<plugins>

@@ -27,29 +27,40 @@ public class ApplicationTests {
     public void contextLoads() {
         logger.debug("ApplicationTests - Begin");
 
+        logger.info("ApplicationTests - Pokedex ("+repository.count()+")");
+        assertTrue(repository.count()!=0);
+
         logger.info("ApplicationTests - Insert Bulbizarre as double");
-        Pokemon pokemon = new Pokemon("Bulbizarre", Pokemon.TYPE_GRASS, Pokemon.TYPE_POISON);
+        //Pokemon pokemon = new Pokemon("Bulbizarre", Pokemon.TYPE_GRASS, Pokemon.TYPE_POISON);
+    	this.repository.save(new Pokemon("001","Bulbasaur",Pokemon.TYPE_GRASS,Pokemon.TYPE_POISON,"Bulbizarre"));
         //pokemon = null;
-        assertNotNull(pokemon);
+
+        logger.info("ApplicationTests - Pokedex after insert("+repository.count()+")");
+        assertTrue(repository.count()!=0);
+
+        logger.info("ApplicationTests - Read All Pokedex");
         
-        List<Pokemon> pokemons = new ArrayList<>();
+        /*
         
+        int cpt=0;
+        Iterator<Pokemon> iterator = (Iterator<Pokemon>) this.repository.findAll();
+        while (iterator.hasNext()){
+            logger.debug("ApplicationTests - "+iterator.next().getNum()+" "+iterator.next().getName());
+            cpt++;
+        }
+        logger.info("ApplicationTests - Display Result size "+cpt);
+        assertTrue(cpt!=0);
+
+
         String queryString="Pikachu";
         logger.info("ApplicationTests - findByName("+queryString+")");
-        pokemons = repository.findByName(queryString);
+        List<Pokemon> pokemons = repository.findByName(queryString);
         
-/*        logger.info("ApplicationTests - findAll");
-        Iterator<Pokemon> iterator = (Iterator<Pokemon>) repository.findAll();
-        while (iterator.hasNext()){
-            pokemons.add(iterator.next());
-        }
-*/        
-        logger.info("ApplicationTests - Display Result");
-        for (int i=0;i<pokemons.size();i++) {
-            logger.info("ApplicationTests - Pokemon: "+pokemons.toString());
-        }    
+        logger.info("ApplicationTests - Display Result size "+pokemons.size());
         assertTrue(pokemons.size()!=0);
-        
+
+        */
+
         logger.debug("ApplicationTests - End");
     }
 

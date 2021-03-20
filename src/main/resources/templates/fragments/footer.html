@@ -10,8 +10,8 @@
         <div class="navbar navbar-fixed-bottom" style="background-color: whitesmoke;">
 	    <span class="text-muted pull-right">&copy; 2017. The Qulbutoke Compagny&nbsp;&nbsp;&nbsp;</span>
 		<span class="text-muted" sec:authorize="isAuthenticated()">
-
-COUCOU
+                    &nbsp;&nbsp;&nbsp;Logged as <span sec:authentication="name"></span>&nbsp;
+                    <span sec:authorize="hasRole('ROLE_USER')">[USER]</span><span sec:authorize="hasRole('ROLE_ADMIN')">[ADMIN]</span>
                 </span>
 		<span class="text-muted" sec:authorize="false">
                     &nbsp;&nbsp;&nbsp;Logged as anonymous&nbsp; [NO_ROLE]

@@ -16,9 +16,9 @@ import java.io.IOException;
 
 // handle 403 page
 @Component
-public class SecurityDeniedHandler implements AccessDeniedHandler {
+public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityDeniedHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessDeniedHandler.class);
 
     @Override
     public void handle(HttpServletRequest httpServletRequest,

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org">
 <head>
     <div th:replace="fragments/header :: header-head"/>
 </head>
@@ -10,45 +10,23 @@
 <!-- Content Distribute by Server -->
 <div class="container">
     <div class="starter-template">
-        <h1 th:text="#{home.title}">home.title</h1>
-        <p>
-            <div id='root2'></div>
-        </p>
+        <h1 th:text="#{detail.title}">detail.title</h1>
     </div>
     <div class="Server-template">
         <table class="table table-striped">
-          <thead>
-            <tr>
-              <th style="width: 50px;"></th>
-              <th style="width: 50px;">Num</th>
-              <th style="width: 50%;">Name</th>
-              <th style="width: 50%;">Type</th>
-            </tr>
-            <tr th:each="pokemon : ${pokemonSelection}">
-              <td>
-                  <img th:src="|${pokemon.pictureUrl}|" style="height:30px;"/>
-              </td>
-              <td>
-                <span th:text="${pokemon.num}">Num</span>
-              </td>
-              <td>
-                <a href="ownerDetails.html"
-                  th:href="@{|/detail/${pokemon.num}|}"
-                  th:text="${pokemon.name}">Name</a>
-              </td>
-              <td>
+            <td>
+                <img th:src="|${pokemon.pictureUrl}|" style="height:110px;"/>
+            </td>
+            <td>
+                <div id='root2' th:text="${pokemon.num}">pokemonNum</div>
+                <div id='root2' th:text="${pokemon.name}">pokemonName</div>
+                <br/>
                 <span th:text="${pokemon.type}">Type</span>
                 <img th:src="|${pokemon.type1PictureUrl}|" style="height:14px;"/>
                 <img th:src="|${pokemon.type2PictureUrl}|" style="height:14px;"/>
-              </td>
-
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
+            </td>
         </table>       
     </div>
-    
 </div>
 
 <!-- get Variable from Context-->

@@ -5,8 +5,8 @@
 
 	<groupId>com.pokebible</groupId>
 	<artifactId>pokebible</artifactId>
-	<version>1.0.11-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<version>1.0.12-SNAPSHOT</version>
+	<packaging>jar</packaging>
 
 	<name>pokebible</name>
 	<description>Pokemon Bible</description>
@@ -72,7 +72,7 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+                
                 <!-- hot swapping, disable cache for template, enable live reload -->
 		<dependency>
 		    <groupId>org.springframework.boot</groupId>

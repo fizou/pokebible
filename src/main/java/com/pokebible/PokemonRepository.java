@@ -24,6 +24,9 @@ public interface PokemonRepository extends CrudRepository<Pokemon, Long> {
 	 
 	@Query("select c from Pokemon c where c.name like CONCAT('',:name,'%')")
 	List<Pokemon> findByName(@Param("name") @ApiParam(value="Name of the pokemon") String name);
+
+	//@Query("select c from Pokemon c where c.num = :num")
+        //List<Pokemon> findByNum(@Param("num") @ApiParam(value="Num of the pokemon") String num);
         
         List<Pokemon> findByNameContainingIgnoreCase(String name);
 

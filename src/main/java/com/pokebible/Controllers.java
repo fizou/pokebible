@@ -7,16 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class Controllers {
 	
     private static final Logger logger = LoggerFactory.getLogger(Controllers.class);
+
+    @Autowired
+    private PokemonRepository repository;
 
     @GetMapping(path = "/")
     public String root() {
@@ -25,9 +31,6 @@ public class Controllers {
         return "home";
     }
     
-    @Autowired
-    private PokemonRepository repository;
-
     @ModelAttribute("pokemonSelection")
     public Iterable<Pokemon> pokemonSelection(@RequestParam(defaultValue="") String searchString) {
 
@@ -55,7 +58,30 @@ public class Controllers {
 		
         return "home";
     }
+/*
+    @GetMapping("/detail")
+    public void detail(Model model) {
+	logger.debug("Controllers - detail - ");
+        model.addAttribute("attribute1", "attributeValue1");
+        
+        //return "detail";
+        //return "detail"; 
+        //return "ID: " + id;
+    }    
+*/
     
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable String id, Model model) {
+	logger.debug("Controllers - detail - "+id);
+        
+        Pokemon pokemon = repository.findOne(new Long(id));
+                
+        model.addAttribute("pokemon", pokemon);
+        
+        return "detail"; 
+        //return "ID: " + id;
+    }    
+
     @GetMapping(path = "/help")
     public String about() {
 	logger.debug("Controllers - help");
@@ -68,6 +94,7 @@ public class Controllers {
         return "login";
     }
 
+    // Monitoring Page : Without Template page (ResponseBody) and with messages taken from translation label file
     @Autowired
     Messages messages;
     

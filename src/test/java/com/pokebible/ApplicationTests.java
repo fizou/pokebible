@@ -42,9 +42,7 @@ public class ApplicationTests {
         assertTrue(cpt!=0);
 
         logger.info("ApplicationTests - Insert Bulbizarre as double");
-        //Pokemon pokemon = new Pokemon("Bulbizarre", Pokemon.TYPE_GRASS, Pokemon.TYPE_POISON);
-    	this.repository.save(new Pokemon("001","Bulbasaur",Pokemon.TYPE_GRASS,Pokemon.TYPE_POISON,"Bulbizarre"));
-        //pokemon = null;
+    	this.repository.save(new Pokemon("001","Bulbasaur",Pokemon.Type.GRASS,Pokemon.Type.POISON,"Bulbizarre"));
 
         logger.info("ApplicationTests - Pokedex after insert("+repository.count()+")");
         assertTrue(repository.count()!=0);

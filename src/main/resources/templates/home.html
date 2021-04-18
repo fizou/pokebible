@@ -7,22 +7,24 @@
 
 <div th:replace="fragments/header :: header-body"/>
 
-<!-- Content Distribute by Server -->
+<!-- Content Distributed by Server -->
 <div class="container">
     <div class="starter-template">
         <h1 th:text="#{home.title}">home.title</h1>
-        <p>
-            <div id='root2'></div>
-        </p>
     </div>
     <div class="Server-template">
-        <table class="table table-striped">
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/new" class="btn btn-primary" data-toggle="modal" data-target="#ModalNew"><i class="fas fa-plus-square ml-2"> </i> Add Pokemon</a>
+            <br/>&nbsp;
+        </div>
+        <table class="table table-striped" border="0">
           <thead>
             <tr>
               <th style="width: 50px;"></th>
               <th style="width: 50px;">Num</th>
               <th style="width: 50%;">Name</th>
               <th style="width: 50%;">Type</th>
+              <th style="width: 50%;" sec:authorize="hasRole('ROLE_ADMIN')">Action</th>
             </tr>
             <tr th:each="pokemon : ${pokemonSelection}">
               <td>
@@ -33,13 +35,17 @@
               </td>
               <td>
                 <a href="ownerDetails.html"
-                  th:href="@{|/detail/${pokemon.num}|}"
+                  th:href="@{|/detail/${pokemon.id}|}"
                   th:text="${pokemon.name}">Name</a>
               </td>
               <td>
                 <span th:text="${pokemon.type}">Type</span>
                 <img th:src="|${pokemon.type1PictureUrl}|" style="height:14px;"/>
                 <img th:src="|${pokemon.type2PictureUrl}|" style="height:14px;"/>
+              </td>
+              <td sec:authorize="hasRole('ROLE_ADMIN')" style="white-space:nowrap">
+                <a id="editButton" th:href="@{/get/{id}(id=${pokemon.id})}" class="btn btn-primary"><i class="fas fa-edit ml-2"></i> Edit</a> &nbsp;
+                <a id="deleteButton" th:href="@{/delete/{id}(id=${pokemon.id})}" class="btn btn-primary"><i class="fas fa-trash ml-2"></i> Delete</a>
               </td>
 
             </tr>
@@ -51,14 +57,182 @@
     
 </div>
 
+<div class="modal fade" id="ModalNew" tabindex="-1" role="dialog" aria-labelledby="ModalNewLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form action="#" th:action="@{/save}" th:object="${pokemon}" method="post">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalNewLabel">New Pokemon</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <label for="email" class="col-form-label">Num</label> <input type="text" th:field="*{num}" class="form-control" id="ModalNewNum" placeholder="Num"/> <span th:if="${#fields.hasErrors('num')}" th:errors="*{num}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="col-form-label">Name</label> <input type="text" th:field="*{name}" class="form-control" id="ModalNewName" placeholder="Name"/> <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="email" class="col-form-label">Type 1</label>
+                        <select class="form-control" th:field="*{type1}" id="ModalNewType1">
+                            <!---option value="">Select a type</option-->
+                            <option th:each="type : ${pokemon.AllTypes}"
+                                    th:value="${type.Label}"
+                                    th:text="${type.Name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="email" class="col-form-label">Type 2</label>
+                        <select class="form-control" th:field="*{type2}" id="ModalNewType2">
+                            <!---option value="">Select a type</option-->
+                            <option th:each="type : ${pokemon.AllTypes}"
+                                    th:value="${type.Label}"
+                                    th:text="${type.Name}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEditLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form action="#" th:action="@{/save}" th:object="${pokemon}" method="post">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalEditLabel">Edit Pokemon</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-md-8">
+                        <label for="name" class="col-form-label">Id</label> <input type="text" th:field="*{id}" class="form-control" id="ModalEditId" placeholder="Id" readonly="readonly"/> <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="email" class="col-form-label">Num</label> <input type="text" th:field="*{num}" class="form-control" id="ModalEditNum" placeholder="Num"/> <span th:if="${#fields.hasErrors('num')}" th:errors="*{num}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="name" class="col-form-label">Name</label> <input type="text" th:field="*{name}" class="form-control" id="ModalEditName" placeholder="Name"/> <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="email" class="col-form-label">Type 1</label>
+                        <select class="form-control" th:field="*{type1}" id="ModalEditType1">
+                            <!---option value="">Select a type</option-->
+                            <option th:each="type : ${pokemon.AllTypes}"
+                                    th:value="${type.Label}"
+                                    th:text="${type.Name}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-8">
+                        <label for="email" class="col-form-label">Type 2</label>
+                        <select class="form-control" th:field="*{type2}" id="ModalEditType2">
+                            <!---option value="">Select a type</option-->
+                            <option th:each="type : ${pokemon.AllTypes}"
+                                    th:value="${type.Label}"
+                                    th:text="${type.Name}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalDelete" tabindex="-1" role="dialog" aria-labelledby="ModalDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="ModalDeleteLabel">Delete Pokemon</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              Do you really want to <span id="idModalDelete">delete X</span>?
+          </div>
+          <div class="modal-footer">
+            <a id="confirmDelete" href="/delete/x" class="btn btn-primary">Yes</a>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+  </div>
+</div>
+
+<script>
+    $('document').ready( function(){
+        console.log("Home - Ready");
+
+        // Edit Button
+        $('.table #editButton').on('click', function(event){
+            console.log("Home - editButton - click");
+            // Cancel any action
+            event.preventDefault();
+            // Get href from list edit button
+            var href=$(this).attr('href');
+            console.log("Home - editButton - href="+href);
+            // Access to controller to get pokemon information and put them in the form
+            $.get(href, function(pokemon, status) {
+                console.log("Home - editButton - status="+status);
+                console.log("Home - editButton - pokemon="+pokemon);
+                console.log(pokemon);
+                $('#ModalEditId').val(pokemon.id);
+                $('#ModalEditNum').val(pokemon.num);
+                $('#ModalEditName').val(pokemon.name);
+                $('#ModalEditType1').val(pokemon.type1);
+                $('#ModalEditType2').val(pokemon.type2);
+
+                // Show Edit Modal
+                $('#ModalEdit').modal();
+            });
+        });
+
+        // Delete Button
+        $('.table #deleteButton').on('click', function(event){
+            console.log("Home - deleteButton - click");
+            // Cancel any action
+            event.preventDefault();
+            // Get href from list delete button
+            var href=$(this).attr('href');
+            console.log("Home - deleteButton - href="+href);
+            // put id in Text label confirmation
+            $('#idModalDelete').text(href.replaceAll('/', ' '));
+            // Put href on Modal button
+            $('#confirmDelete').attr('href',href)
+            // Show Delete Modal
+            $('#ModalDelete').modal();
+        });
+
+
+    });
+
+</script>
+
+
 <!-- get Variable from Context-->
 <script th:inline="javascript">
 var searchString = /*[[${#httpServletRequest.getParameter('searchString')}]]*/ "";
 console.log("getParameter('searchString'): "+searchString);
 </script> 
-
-<!-- Script to execute -->
-<script type="text/babel" th:src="@{/js/global.js}"/>
 
 <!-- Footer -->
 <div th:replace="fragments/footer :: footer"/>

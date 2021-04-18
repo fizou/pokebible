@@ -1,5 +1,7 @@
 package com.pokebible;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
  
@@ -13,28 +15,63 @@ public class Pokemon {
  
     private static final Logger logger = LoggerFactory.getLogger(Pokemon.class);
 
-    public static final String TYPE_NORMAL = "Normal";
-    public static final String TYPE_GRASS = "Grass";
-    public static final String TYPE_FIRE = "Fire";
-    public static final String TYPE_WATER = "Water";
-    public static final String TYPE_FIGHTING = "Fighting";
-    public static final String TYPE_FLYING = "Flying";
-    public static final String TYPE_POISON = "Poison";
-    public static final String TYPE_GROUND = "Ground";
-    public static final String TYPE_ROCK = "Rock";
-    public static final String TYPE_BUG = "Bug";
-    public static final String TYPE_GHOST = "Ghost";
-    public static final String TYPE_ELECTRIC = "Electric";
-    public static final String TYPE_PSYCHIC = "Psychic";
-    public static final String TYPE_ICE = "Ice";
-    public static final String TYPE_DRAGON = "Dragon";
-    public static final String TYPE_DARK = "Dark";
-    public static final String TYPE_STEEL = "Steel";
-    public static final String TYPE_FAIRY = "Fairy";
+    // Pokemon Type: NORMAL, GRASS, ... 
+    public enum Type 
+    {
+
+        NONE(""),     
+        NORMAL("Normal"),     
+        GRASS("Grass"),       
+        FIRE("Fire"),         
+        WATER("Water"),       
+        FIGHTING("Fighting"), 
+        FLYING("Flying"),     
+        POISON("Poison"),     
+        GROUND("Ground"),     
+        ROCK("Rock"),         
+        BUG("Bug"),           
+        GHOST("Ghost"),       
+        ELECTRIC("Electric"), 
+        PSYCHIC("Psychic"),   
+        ICE("Ice"),           
+        DRAGON("Dragon"),     
+        DARK("Dark"),         
+        STEEL("Steel"),       
+        FAIRY("Fairy");       
+
+        private String label;
+
+        private Type(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getName() {
+            return name();
+        }
+    }
+    public ArrayList<Type> getAllTypes() {
+        ArrayList<Type> listType = new ArrayList<Type>();
+        for(Type type : Type.values())
+        {
+            listType.add(type);
+        }
+        return listType;
+    }
         
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
  
     private String num;
     public String getNum() {
@@ -56,13 +93,17 @@ public class Pokemon {
     	if (type2!=null&&!type2.equals("")) {
     		return type1.toUpperCase() + ", " + type2.toUpperCase();
     	} else {
+                if (type1!=null) {
     		return type1.toUpperCase();
+                } else {
+                    return "";                    
+                }
     	}
     	
     }
  
     public void setType(String type) {
-        if (type!=null&&type.indexOf(',')!=-1) {
+        if (type.indexOf(',')!=-1) {
         	this.type1 = type.substring(0, type.indexOf(','));
         	this.type2 = type.substring(type.indexOf(',')+1,type.length());
         } else {
@@ -77,6 +118,7 @@ public class Pokemon {
         return type1;
     }
     public String getType1PictureUrl() {
+        if (type1==null) return "";
         if (type1.equals("")) {
             return "/images/types/none.gif";
         } else {
@@ -86,6 +128,13 @@ public class Pokemon {
     public void setType1(String type1) {
         this.type1 = type1;
     }
+    public boolean isType1Of(String type) {
+        if (getType1().equals(type)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     private String type2;
     
@@ -93,6 +142,7 @@ public class Pokemon {
         return type2;
     }
     public String getType2PictureUrl() {
+        if (type1==null) return "";
         if (type2.equals("")) {
             return "/images/types/none.gif";
         } else {
@@ -126,11 +176,19 @@ public class Pokemon {
         logger.info("Pokemon - 3 args - {}", this);
     }    
 
-    public Pokemon(String num, String nameEn, String type1, String type2, String name) {
+    public Pokemon(String num, String nameEn, Type type1, Type type2) {
         this.num = num;
         this.name = nameEn;
-        this.type1 = type1;
-        this.type2 = type2;
+        this.type1 = type1.getLabel();
+        this.type2 = type2.getLabel();
+        logger.info("Pokemon - 4 args - {}", this);
+    }    
+
+    public Pokemon(String num, String nameEn, Type type1, Type type2, String nameFr) {
+        this.num = num;
+        this.name = nameEn;
+        this.type1 = type1.getLabel();
+        this.type2 = type2.getLabel();
         logger.info("Pokemon - 5 args - {}", this);
     }    
 

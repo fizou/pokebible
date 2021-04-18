@@ -20,7 +20,7 @@ public class SimpleCORSFilter implements Filter {
 private static final Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
 
 public SimpleCORSFilter() {
-	logger.debug("SimpleCORSFilter - Contructor");
+    logger.debug("SimpleCORSFilter - Contructor");
 }
 
 @Override
@@ -29,10 +29,11 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) res;
 
-    //logger.debug("SimpleCORSFilter - doFilter on url: "+request.getRequestURI());
+    logger.debug("SimpleCORSFilter - doFilter on url: "+request.getRequestURI());
 
     response.setHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
     response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Mathilde", "pancake");
     response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, PATCH");
     response.setHeader("Access-Control-Max-Age", "3600");
     response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me");

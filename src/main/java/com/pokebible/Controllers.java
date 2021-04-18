@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class Controllers {
@@ -26,9 +27,10 @@ public class Controllers {
 
     @GetMapping(path = "/")
     public String root() {
+        
 	logger.debug("Controllers - root");
-        //return "index.html";
-        return "home";
+        // Cancel return of static "index.html" and replace it by home
+        return "redirect:/home";
     }
     
     @ModelAttribute("pokemonSelection")
@@ -46,7 +48,9 @@ public class Controllers {
     
     @GetMapping(path = "/home")
     @PostMapping(path = "/home")
-    public String home(@RequestParam(defaultValue="") String searchString) {
+    public String home(@RequestParam(defaultValue="") String searchString, Model model) {
+
+	logger.debug("Controllers - home - SearchString: {}", searchString);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         
@@ -56,19 +60,13 @@ public class Controllers {
             logger.info("Controllers - home - User: Anonymous User");
 	}
 		
+        // get product attribute For modals New and Edit windows
+        Pokemon pokemon = new Pokemon();
+        //product = productService.get(1);
+        model.addAttribute("pokemon", pokemon);
+
         return "home";
     }
-/*
-    @GetMapping("/detail")
-    public void detail(Model model) {
-	logger.debug("Controllers - detail - ");
-        model.addAttribute("attribute1", "attributeValue1");
-        
-        //return "detail";
-        //return "detail"; 
-        //return "ID: " + id;
-    }    
-*/
     
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable String id, Model model) {
@@ -82,6 +80,43 @@ public class Controllers {
         //return "ID: " + id;
     }    
 
+    @RequestMapping("/get/{id}")
+    @ResponseBody
+    public Pokemon get(@PathVariable (name="id") long id) {
+        
+	logger.debug("Controllers - get - id: "+id);
+
+        Pokemon pokemon = repository.findOne(id);
+        
+        return pokemon;
+    
+    }
+    
+    @RequestMapping(value="/save", method = RequestMethod.POST)
+    public String saveProduct(@ModelAttribute("pokemon") Pokemon pokemon) {
+    
+	logger.debug("Controllers - saveProduct");
+        
+        repository.save(pokemon);
+                
+        return "redirect:/home";
+    
+    }
+
+    @RequestMapping("/delete/{id}")
+    public String delete(@PathVariable (name="id") long id) {
+        
+	logger.debug("Controllers - delete - id: "+id);
+
+        Pokemon pokemon = repository.findOne(id);
+        repository.delete(pokemon);
+        
+        return "redirect:/home";
+    
+    }    
+    
+    // Other Page 
+    
     @GetMapping(path = "/help")
     public String about() {
 	logger.debug("Controllers - help");
@@ -94,7 +129,7 @@ public class Controllers {
         return "login";
     }
 
-    // Monitoring Page : Without Template page (ResponseBody) and with messages taken from translation label file
+    // Monitoring Page : Without Template page (@ResponseBody) and with messages taken from translation label file
     @Autowired
     Messages messages;
     
@@ -104,5 +139,6 @@ public class Controllers {
 	logger.debug("Controllers - test - message.properties "+messages.get("monitoring.title"));
         return "<H1>"+messages.get("monitoring.title")+"</H1><HR>"+messages.get("monitoring.keySentence")+"...";
     }
+    
 	
 }

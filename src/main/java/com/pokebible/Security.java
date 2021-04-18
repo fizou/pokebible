@@ -47,7 +47,10 @@ public class Security extends WebSecurityConfigurerAdapter {
 
 	logger.debug("Security - configure");
 
-        http.csrf().disable()
+        http
+                .headers().disable()
+                .cors().disable()
+                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .antMatchers("/home").hasAnyRole(USER_ROLE,ADMIN_ROLE)

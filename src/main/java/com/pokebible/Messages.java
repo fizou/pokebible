@@ -11,7 +11,7 @@ import java.util.Locale;
 /**
  * Helper to simplify accessing i18n messages in code.
  * 
- * This finds messages automatically found from src/main/resources (files named messages_*.properties)
+ * This finds messages automatically found from src/main/resources in files named messages_*.properties.
  * 
  * This example uses hard-coded English locale.
  *

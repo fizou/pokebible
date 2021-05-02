@@ -1,9 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.pokebible;
+package com.pokebible.security;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,9 +18,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SecurityAuthenticationProvider implements AuthenticationProvider {
+public class AuthenticationProviderImpl implements AuthenticationProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityAuthenticationProvider.class);
+    /*
+     * Custom authentification based on: 
+     *    Give the ROLE_USER to user/password credential
+     *    Give the ROLE_ADMIN to admin/password credential
+     * 
+     */
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationProviderImpl.class);
     
     @Override
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
@@ -33,15 +35,21 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
         String username = auth.getName();
         String password = auth.getCredentials().toString();
         
+        logger.info("Username: "+username);
+        logger.info("Password: "+password);
+        
         if ("user".equals(username) && "password".equals(password)) {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
+            logger.info("Role affected: ROLE_USER");
             return new UsernamePasswordAuthenticationToken(username, password, grantedAuths);
         } else if ("admin".equals(username) && "password".equals(password)) {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            logger.info("Role affected: ROLE_ADMIN");
             return new UsernamePasswordAuthenticationToken(username, password, grantedAuths);
         } else {
+            logger.error("Access Refused: User Unknown");
             throw new BadCredentialsException("External system authentication failed");
         }
         

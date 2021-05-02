@@ -8,22 +8,22 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DatabaseLoader implements CommandLineRunner {
+public class PokemonRepositoryDataLoader implements CommandLineRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(DatabaseLoader.class);
+    private static final Logger logger = LoggerFactory.getLogger(PokemonRepositoryDataLoader.class);
 
     private final PokemonRepository repository;
 
-    @Autowired
-    public DatabaseLoader(PokemonRepository repository) {
-        logger.debug("DatabaseLoader - Constructor");
-
+    public PokemonRepositoryDataLoader(PokemonRepository repository) {
+        
+        logger.debug("Constructor");
         this.repository = repository;
     }
 
     @Override
     public void run(String... strings) throws Exception {
-    	logger.info("DatabaseLoader - run - Filling database");
+
+        logger.info("Filling Pokemon database...");
         
     	this.repository.save(new Pokemon("001","Bulbasaur",Pokemon.Type.GRASS,Pokemon.Type.POISON,"Bulbizarre"));
     	this.repository.save(new Pokemon("002","Ivysaur",Pokemon.Type.GRASS,Pokemon.Type.POISON,"Herbizarre"));
@@ -745,5 +745,6 @@ public class DatabaseLoader implements CommandLineRunner {
     	this.repository.save(new Pokemon("717","Yveltal",Pokemon.Type.DARK,Pokemon.Type.FLYING,"Yveltal"));
     	this.repository.save(new Pokemon("718","Zygarde",Pokemon.Type.DRAGON,Pokemon.Type.GROUND,"Zygarde"));
 */        
+        logger.info("Database loaded with "+this.repository.findAllByOrderByNumberAsc().size()+" elements.");
     }
 }

@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="fragments/header :: header-head"/>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    
+<head th:replace="fragments/header :: header-head">
+    <title/>
 </head>
-<body>
 
+<body>
+<!-- Header -->
 <div th:replace="fragments/header :: header-body"/>
 
+<!-- Page Content -->
 <div class="container">
     <div class="starter-template">
         <h1>Enter your credentials</h1>
@@ -47,7 +52,8 @@
 
 </div>
 
-<div th:replace="fragments/footer :: footer"/>
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer-body"/>
 
 </body>
 </html>

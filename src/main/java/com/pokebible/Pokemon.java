@@ -1,7 +1,7 @@
 package com.pokebible;
 
+import com.pokebible.validator.PokemonNumberUniqueConstraint;
 import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
  
@@ -9,10 +9,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.*;
+import com.pokebible.validator.OnInsertGroup;
 
 @Entity
 public class Pokemon {
  
+   /*
+    * Pokemon Entity : Num, Name, type (type1 and type2), picture url, ...
+    *   
+    */
+
     private static final Logger logger = LoggerFactory.getLogger(Pokemon.class);
 
     // Pokemon Type: NORMAL, GRASS, ... 
@@ -73,15 +81,22 @@ public class Pokemon {
         this.id = id;
     }
  
-    private String num;
-    public String getNum() {
-        return num;
+    @NotBlank(message="This field is required.")
+    @Length(min=3, max=3, message="Lenght must be 3.")
+    @Pattern(regexp = "[0-9]+",  message="Only numeric format (001, 002, ...)  is accepted.")
+    @PokemonNumberUniqueConstraint(groups = OnInsertGroup.class) // Unique cosntraint on insert only. However we couldn't update the pokemon with its current number ;)
+    private String number;
+    
+    public String getNumber() {
+        return number;
     }
-    public void setNum(String num) {
-        this.num = num;
+    public void setNumber(String number) {
+        this.number = number;
     }
 
+    @NotBlank (message="This field is required.")
     private String name;
+    
     public String getName() {
         return name;
     }
@@ -89,107 +104,126 @@ public class Pokemon {
         this.name = name;
     }
     
-    public String getType() {
-    	if (type2!=null&&!type2.equals("")) {
-    		return type1.toUpperCase() + ", " + type2.toUpperCase();
-    	} else {
-                if (type1!=null) {
-    		return type1.toUpperCase();
-                } else {
-                    return "";                    
-                }
-    	}
-    	
-    }
- 
-    public void setType(String type) {
-        if (type.indexOf(',')!=-1) {
-        	this.type1 = type.substring(0, type.indexOf(','));
-        	this.type2 = type.substring(type.indexOf(',')+1,type.length());
-        } else {
-	        this.type1 = type;
-        	this.type2 = "";        	
-        }
-    }
-
+    @NotBlank (message="This field is required.")
+    @Pattern(regexp = "^(?!NONE$).*$",  message="This field is required.")
     private String type1;
     
     public String getType1() {
-        return type1;
-    }
-    public String getType1PictureUrl() {
-        if (type1==null) return "";
-        if (type1.equals("")) {
-            return "/images/types/none.gif";
+        if (type1==null||type1.equals("")) {
+            return Type.NONE.getName();
         } else {
-            return "/images/types/"+type1.toLowerCase()+".gif";
+            return type1;
         }
     }
+    public String getType1Label() {
+        return Type.valueOf(getType1()).label;
+    }
+    public String getType1PictureUrl() {
+        return "/images/types/"+getType1().toLowerCase()+".png";
+    }
     public void setType1(String type1) {
-        this.type1 = type1;
+    	if (type1==null||type1.equals("")) {
+            this.type1 = Type.NONE.getName();
+        } else {
+            this.type1 = type1;
+        }
     }
     public boolean isType1Of(String type) {
-        if (getType1().equals(type)) {
-            return true;
-        } else {
+        if (type==null||!getType1().equals(type)) {
             return false;
+        } else {
+            return true;
         }
     }
 
     private String type2;
     
     public String getType2() {
-        return type2;
-    }
-    public String getType2PictureUrl() {
-        if (type1==null) return "";
-        if (type2.equals("")) {
-            return "/images/types/none.gif";
+        if (type2==null||type2.equals("")) {
+            return Type.NONE.getName();
         } else {
-        return "/images/types/"+type2.toLowerCase()+".gif";
+            return type2;
         }
     }
- 
+    public String getType2Label() {
+        return Type.valueOf(getType2()).label;
+    }
+    public String getType2PictureUrl() {
+        return "/images/types/"+getType2().toLowerCase()+".png";
+    }
     public void setType2(String type2) {
-        this.type2 = type2;
+    	if (type2==null||type2.equals("")) {
+            this.type2 = Type.NONE.getName();
+        } else {
+            this.type2 = type2;
+        }
+    }
+    public boolean isType2Of(String type) {
+        if (type==null||!getType2().equals(type)) {
+            return false;
+        } else {
+            return true;
+        }
     }
     
     public String getPictureUrl() {
-        return "/images/pokemons/"+num+".png";
+        return "/images/pokemons/"+getNumber()+".png";
     }
     public String getPictureHtmlTag() {
         return "<img src='"+getPictureUrl()+"' height='30'/>";
     }
 
+    public String getType() {
+        return getType1() + ", " + getType2();
+    }
+ 
+    public void setType(String type) {
+        if (type==null||type.equals("")) {
+            setType1("");
+            setType2("");
+        }
+        if (type.indexOf(',')!=-1) {
+            setType1(type.substring(0, type.indexOf(',')));
+            setType2(type.substring(type.indexOf(',')+1,type.length()));
+        } else {
+            setType1(type);
+            setType2("");        	
+        }
+    }
+
     public String toString(){
-        return "("+this.num+") "+this.name+" - "+this.getType();
+        return "("+this.number+") "+this.name+" - "+this.getType();
     }
     
     public Pokemon() {
-    	//logger.debug("Pokemon - No args");
+        setNumber("");
+        setName("");
+        setType1("");
+        setType2("");
+    	//logger.debug("Contructor - No args");
     }
     
     public Pokemon(String num, String name, String type) {
-        this.num = num;
-        this.name = name;
-        this.setType(type);
-        logger.info("Pokemon - 3 args - {}", this);
+        setNumber(num);
+        setName(name);
+        setType(type);
+        logger.debug("Contructor - 3 args - {}", this);
     }    
 
     public Pokemon(String num, String nameEn, Type type1, Type type2) {
-        this.num = num;
-        this.name = nameEn;
-        this.type1 = type1.getLabel();
-        this.type2 = type2.getLabel();
-        logger.info("Pokemon - 4 args - {}", this);
+        setNumber(num);
+        setName(name);
+        setType1(type1.getName());
+        setType2(type2.getName());
+        logger.debug("Contructor - 4 args - {}", this);
     }    
 
     public Pokemon(String num, String nameEn, Type type1, Type type2, String nameFr) {
-        this.num = num;
+        this.number = num;
         this.name = nameEn;
-        this.type1 = type1.getLabel();
-        this.type2 = type2.getLabel();
-        logger.info("Pokemon - 5 args - {}", this);
+        this.type1 = type1.getName();
+        this.type2 = type2.getName();
+        logger.debug("Contructor - 5 args - {}", this);
     }    
 
 }

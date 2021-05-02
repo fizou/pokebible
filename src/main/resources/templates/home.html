@@ -1,37 +1,69 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="fragments/header :: header-head"/>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    
+<head th:replace="fragments/header :: header-head">
+    <title/>
 </head>
+
 <body>
 
+<!-- Header -->
 <div th:replace="fragments/header :: header-body"/>
 
-<!-- Content Distributed by Server -->
+<!-- Page Content -->
 <div class="container">
     <div class="starter-template">
         <h1 th:text="#{home.title}">home.title</h1>
     </div>
     <div class="Server-template">
         <div sec:authorize="hasRole('ROLE_ADMIN')">
-            <a href="/new" class="btn btn-primary" data-toggle="modal" data-target="#ModalNew"><i class="fas fa-plus-square ml-2"> </i> Add Pokemon</a>
+            <a id="newButton" href="/new" class="btn btn-primary" data-toggle="modal" data-target="#ModalNew"><i class="fas fa-plus-square ml-2"> </i> Add Pokemon</a>
             <br/>&nbsp;
         </div>
+        
         <table class="table table-striped" border="0">
           <thead>
             <tr>
-              <th style="width: 50px;"></th>
-              <th style="width: 50px;">Num</th>
-              <th style="width: 50%;">Name</th>
-              <th style="width: 50%;">Type</th>
-              <th style="width: 50%;" sec:authorize="hasRole('ROLE_ADMIN')">Action</th>
+              <th style="width: 10%;"></th>
+              <th style="width: 10%;">
+                    <a th:if="(${sortField!='Number'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Number', sortDirection='asc', searchString=${searchString})}">
+                        Number 
+                    </a>
+                    <a th:if="(${sortField=='Number'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i> Number</NOBR></a>
+              </th>
+              <th style="width: 40%;">
+                    <a th:if="(${sortField!='Name'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Name', sortDirection='asc', searchString=${searchString})}">
+                        Name 
+                    </a>
+                    <a th:if="(${sortField=='Name'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Name</NOBR></a>
+              </th>
+              <th style="width: 30%;">
+                  Type (
+                    <a th:if="(${sortField!='Type1'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Type1', sortDirection='asc', searchString=${searchString})}">
+                        Type1 
+                    </a>
+                    <a th:if="(${sortField=='Type1'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Type1</NOBR></a>
+                  ,
+                    <a th:if="(${sortField!='Type2'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Type2', sortDirection='asc', searchString=${searchString})}">
+                        Type2 
+                    </a>
+                    <a th:if="(${sortField=='Type2'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Type2</NOBR></a>
+                  )
+              </th>
+              <th style="width: 20%;" sec:authorize="hasRole('ROLE_ADMIN')">
+                  Action
+              </th>
             </tr>
-            <tr th:each="pokemon : ${pokemonSelection}">
+          </thead>
+          <tbody>
+            <tr th:each="pokemon : ${pokemonPage}">
               <td>
-                  <img th:src="|${pokemon.pictureUrl}|" style="height:30px;"/>
+                  <img th:src="@{${pokemon.pictureUrl}}" style="height:30px;"/>
               </td>
               <td>
-                <span th:text="${pokemon.num}">Num</span>
+                <span th:text="${pokemon.number}">Number</span>
               </td>
               <td>
                 <a href="ownerDetails.html"
@@ -39,27 +71,56 @@
                   th:text="${pokemon.name}">Name</a>
               </td>
               <td>
-                <span th:text="${pokemon.type}">Type</span>
-                <img th:src="|${pokemon.type1PictureUrl}|" style="height:14px;"/>
-                <img th:src="|${pokemon.type2PictureUrl}|" style="height:14px;"/>
+                <!--span th:text="${pokemon.type}">Type</span-->
+                <img th:src="@{${pokemon.type1PictureUrl}}" style="height:25px;" th:title="${pokemon.type1Label}" th:alt="${pokemon.type1}"/>
+                <img th:src="@{${pokemon.type2PictureUrl}}" style="height:25px;" th:title="${pokemon.type2Label}" th:alt="${pokemon.type2}"/>
               </td>
               <td sec:authorize="hasRole('ROLE_ADMIN')" style="white-space:nowrap">
                 <a id="editButton" th:href="@{/get/{id}(id=${pokemon.id})}" class="btn btn-primary"><i class="fas fa-edit ml-2"></i> Edit</a> &nbsp;
-                <a id="deleteButton" th:href="@{/delete/{id}(id=${pokemon.id})}" class="btn btn-primary"><i class="fas fa-trash ml-2"></i> Delete</a>
+                <a id="deleteButton" th:href="@{/get/{id}(id=${pokemon.id})}" class="btn btn-primary"><i class="fas fa-trash ml-2"></i> Delete</a>
               </td>
 
             </tr>
-          </thead>
-          <tbody>
           </tbody>
         </table>       
+
+        <nav th:if="${pokemonPage.totalPages > 0}" aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" href="#" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.previousOrFirstPageable.getPageNumber}+1, sortField=${sortField}, sortDirection=${sortDirection}, searchString=${searchString})}">
+                        Previous
+                    </a>
+                </li>
+                <th:block th:each="pageNumber : ${pageNumbers}">
+                    <li class="page-item active" th:if="${pokemonPage.Number+1==pageNumber}" aria-current="page">
+                        <li class="page-item active" aria-current="page" th:if="${pokemonPage.Number+1==pageNumber}">
+                          <span class="page-link" th:text=${pageNumber} th:if="${pokemonPage.Number+1==pageNumber}">
+                            Current
+                          </span>
+                        </li>
+                    </li>
+                    <li class="page-item" th:if="${pokemonPage.Number+1!=pageNumber}" >
+                        <a class="page-link" th:text=${pageNumber} th:href="@{/home(size=${pokemonPage.size}, page=${pageNumber}, sortField=${sortField}, sortDirection=${sortDirection}, searchString=${searchString})}">
+                            0
+                        </a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" href="#" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}+1, sortField=${sortField}, sortDirection=${sortDirection}, searchString=${searchString})}">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>        
+
+        
     </div>
     
 </div>
 
 <div class="modal fade" id="ModalNew" tabindex="-1" role="dialog" aria-labelledby="ModalNewLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form action="#" th:action="@{/save}" th:object="${pokemon}" method="post">
+    <form action="#" id="ModalNewForm" th:action="@{/add}" th:object="${pokemon}" method="post">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="ModalNewLabel">New Pokemon</h5>
@@ -70,28 +131,33 @@
           <div class="modal-body">
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <label for="email" class="col-form-label">Num</label> <input type="text" th:field="*{num}" class="form-control" id="ModalNewNum" placeholder="Num"/> <span th:if="${#fields.hasErrors('num')}" th:errors="*{num}" class="text-danger"></span>
+                        <label for="email" class="col-form-label">Number</label>
+                        <input id="ModalNewNumber" type="text" th:field="*{number}" th:class="${#fields.hasErrors('number')} ? 'form-control is-invalid' : 'form-control'" placeholder="Number"/>
+                        <div id="ModalNewNumberError" th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="invalid-feedback d-block"></div>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="name" class="col-form-label">Name</label> <input type="text" th:field="*{name}" class="form-control" id="ModalNewName" placeholder="Name"/> <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        <label for="name" class="col-form-label">Name</label>
+                        <input id="ModalNewName" type="text" th:field="*{name}" th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'" placeholder="Name"/>
+                        <span id="ModalNewNameError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="form-group col-md-8">
                         <label for="email" class="col-form-label">Type 1</label>
-                        <select class="form-control" th:field="*{type1}" id="ModalNewType1">
+                        <select id="ModalNewType1"  th:field="*{type1}" th:class="${#fields.hasErrors('type1')} ? 'form-control is-invalid' : 'form-control'">
                             <!---option value="">Select a type</option-->
                             <option th:each="type : ${pokemon.AllTypes}"
-                                    th:value="${type.Label}"
-                                    th:text="${type.Name}">
+                                    th:value="${type.Name}"
+                                    th:text="${type.Label}">
                             </option>
                         </select>
+                        <span id="ModalNewType1Error" th:if="${#fields.hasErrors('type1')}" th:errors="*{type1}" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="form-group col-md-8">
-                        <label for="email" class="col-form-label">Type 2</label>
-                        <select class="form-control" th:field="*{type2}" id="ModalNewType2">
+                        <label for="email" class="col-form-label">Type 2 (Optionnal)</label>
+                        <select id="ModalNewType2" th:field="*{type2}" class="form-control">
                             <!---option value="">Select a type</option-->
                             <option th:each="type : ${pokemon.AllTypes}"
-                                    th:value="${type.Label}"
-                                    th:text="${type.Name}">
+                                    th:value="${type.Name}"
+                                    th:text="${type.Label}">
                             </option>
                         </select>
                     </div>
@@ -108,7 +174,7 @@
 
 <div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEditLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form action="#" th:action="@{/save}" th:object="${pokemon}" method="post">
+    <form action="#" id="ModalEditForm" th:action="@{/update}" th:object="${pokemon}" method="post">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="ModalEditLabel">Edit Pokemon</h5>
@@ -119,31 +185,37 @@
           <div class="modal-body">
                 <div class="row">
                     <div class="form-group col-md-8">
-                        <label for="name" class="col-form-label">Id</label> <input type="text" th:field="*{id}" class="form-control" id="ModalEditId" placeholder="Id" readonly="readonly"/> <span th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="text-danger"></span>
+                        <label for="name" class="col-form-label">Id</label>
+                        <input id="ModalEditId" type="text" th:field="*{id}" class="form-control" placeholder="Id" readonly="readonly"/>
                     </div>
                     <div class="form-group col-md-8">
-                        <label for="email" class="col-form-label">Num</label> <input type="text" th:field="*{num}" class="form-control" id="ModalEditNum" placeholder="Num"/> <span th:if="${#fields.hasErrors('num')}" th:errors="*{num}" class="text-danger"></span>
+                        <label for="email" class="col-form-label">Number</label>
+                        <input id="ModalEditNumber" type="text" th:field="*{number}" th:class="${#fields.hasErrors('number')} ? 'form-control is-invalid' : 'form-control'" placeholder="Number"/>
+                        <span id="ModalEditNumberError" th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="name" class="col-form-label">Name</label> <input type="text" th:field="*{name}" class="form-control" id="ModalEditName" placeholder="Name"/> <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        <label for="name" class="col-form-label">Name</label>
+                        <input id="ModalEditName" type="text" th:field="*{name}" th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid' : 'form-control'" placeholder="Name"/>
+                        <span id="ModalEditNameError" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="form-group col-md-8">
                         <label for="email" class="col-form-label">Type 1</label>
-                        <select class="form-control" th:field="*{type1}" id="ModalEditType1">
+                        <select id="ModalEditType1" th:field="*{type1}" th:class="${#fields.hasErrors('type1')} ? 'form-control is-invalid' : 'form-control'" >
                             <!---option value="">Select a type</option-->
                             <option th:each="type : ${pokemon.AllTypes}"
-                                    th:value="${type.Label}"
-                                    th:text="${type.Name}">
+                                    th:value="${type.Name}"
+                                    th:text="${type.Label}">
                             </option>
                         </select>
+                        <span id="ModalEditType1Error" th:if="${#fields.hasErrors('type1')}" th:errors="*{type1}" class="invalid-feedback d-block"></span>
                     </div>
                     <div class="form-group col-md-8">
-                        <label for="email" class="col-form-label">Type 2</label>
-                        <select class="form-control" th:field="*{type2}" id="ModalEditType2">
+                        <label for="email" class="col-form-label">Type 2 (Optionnal)</label>
+                        <select id="ModalEditType2" th:field="*{type2}" class="form-control" >
                             <!---option value="">Select a type</option-->
                             <option th:each="type : ${pokemon.AllTypes}"
-                                    th:value="${type.Label}"
-                                    th:text="${type.Name}">
+                                    th:value="${type.Name}"
+                                    th:text="${type.Label}">
                             </option>
                         </select>
                     </div>
@@ -151,7 +223,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary">Update</button>
           </div>
         </div>
     </form>
@@ -168,20 +240,137 @@
             </button>
           </div>
           <div class="modal-body">
-              Do you really want to <span id="idModalDelete">delete X</span>?
+              Do you really want to delete <span id="idModalDeletePokemonLabel">Pokemon (XXX)</span> ?
           </div>
           <div class="modal-footer">
-            <a id="confirmDelete" href="/delete/x" class="btn btn-primary">Yes</a>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <a id="confirmDelete" href="/delete/x" class="btn btn-primary">Confirm</a>
           </div>
         </div>
   </div>
 </div>
 
+<div id="ToastSuccess" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="5000" style="position: absolute; top: 5rem; right: 1rem;">
+    <div class="toast-header">
+        <svg th:if="${toastTitle=='Success'}" id='ToastSvgSuccess' viewBox="0 0 426.667 426.667" width="18" height="18"><path d="M213.333 0C95.518 0 0 95.514 0 213.333s95.518 213.333 213.333 213.333c117.828 0 213.333-95.514 213.333-213.333S331.157 0 213.333 0zm-39.134 322.918l-93.935-93.931 31.309-31.309 62.626 62.622 140.894-140.898 31.309 31.309-172.203 172.207z" fill="#6ac259"/></svg>
+        <svg th:if="${toastTitle=='Error'}" id='ToastSvgError' viewBox="0 0 51.976 51.976" width="18" height="18"><path d="M44.373 7.603c-10.137-10.137-26.632-10.138-36.77 0-10.138 10.138-10.137 26.632 0 36.77s26.632 10.138 36.77 0c10.137-10.138 10.137-26.633 0-36.77zm-8.132 28.638a2 2 0 0 1-2.828 0l-7.425-7.425-7.778 7.778a2 2 0 1 1-2.828-2.828l7.778-7.778-7.425-7.425a2 2 0 1 1 2.828-2.828l7.425 7.425 7.071-7.071a2 2 0 1 1 2.828 2.828l-7.071 7.071 7.425 7.425a2 2 0 0 1 0 2.828z" fill="#D80027"/></svg>
+        <svg th:if="${toastTitle=='Warning'}" id='ToastSvgWarn' viewBox="0 0 310.285 310.285" width="18" height="18"><path d="M264.845 45.441C235.542 16.139 196.583 0 155.142 0 113.702 0 74.743 16.139 45.44 45.441 16.138 74.743 0 113.703 0 155.144c0 41.439 16.138 80.399 45.44 109.701 29.303 29.303 68.262 45.44 109.702 45.44s80.399-16.138 109.702-45.44c29.303-29.302 45.44-68.262 45.44-109.701.001-41.441-16.137-80.401-45.439-109.703zm-132.673 3.895a12.587 12.587 0 0 1 9.119-3.873h28.04c3.482 0 6.72 1.403 9.114 3.888 2.395 2.485 3.643 5.804 3.514 9.284l-4.634 104.895c-.263 7.102-6.26 12.933-13.368 12.933H146.33c-7.112 0-13.099-5.839-13.345-12.945L128.64 58.594c-.121-3.48 1.133-6.773 3.532-9.258zm23.306 219.444c-16.266 0-28.532-12.844-28.532-29.876 0-17.223 12.122-30.211 28.196-30.211 16.602 0 28.196 12.423 28.196 30.211.001 17.591-11.456 29.876-27.86 29.876z" fill="#FFDA44"/></svg>
+        <svg th:if="${toastTitle=='Information'}" id='ToastSvgInfo' viewBox="0 0 23.625 23.625" width="18" height="18"><path d="M11.812 0C5.289 0 0 5.289 0 11.812s5.289 11.813 11.812 11.813 11.813-5.29 11.813-11.813S18.335 0 11.812 0zm2.459 18.307c-.608.24-1.092.422-1.455.548a3.838 3.838 0 0 1-1.262.189c-.736 0-1.309-.18-1.717-.539s-.611-.814-.611-1.367c0-.215.015-.435.045-.659a8.23 8.23 0 0 1 .147-.759l.761-2.688c.067-.258.125-.503.171-.731.046-.23.068-.441.068-.633 0-.342-.071-.582-.212-.717-.143-.135-.412-.201-.813-.201-.196 0-.398.029-.605.09-.205.063-.383.12-.529.176l.201-.828c.498-.203.975-.377 1.43-.521a4.225 4.225 0 0 1 1.29-.218c.731 0 1.295.178 1.692.53.395.353.594.812.594 1.376 0 .117-.014.323-.041.617a4.129 4.129 0 0 1-.152.811l-.757 2.68a7.582 7.582 0 0 0-.167.736 3.892 3.892 0 0 0-.073.626c0 .356.079.599.239.728.158.129.435.194.827.194.185 0 .392-.033.626-.097.232-.064.4-.121.506-.17l-.203.827zm-.134-10.878a1.807 1.807 0 0 1-1.275.492c-.496 0-.924-.164-1.28-.492a1.57 1.57 0 0 1-.533-1.193c0-.465.18-.865.533-1.196a1.812 1.812 0 0 1 1.28-.497c.497 0 .923.165 1.275.497.353.331.53.731.53 1.196 0 .467-.177.865-.53 1.193z" fill="#006DF0"/></svg>
+        <span>&nbsp;</span>
+        <strong th:text="${toastTitle}" class="mr-auto">Title</strong>
+        <small>now</small>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+        <span th:text="${toastMessage}" >Message</span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    
+    // Thymleaf model vars to JS vars
+    var modalNewHasErrors = [[${modalNewHasErrors}]];
+    console.log("Home - modalNewHasErrors set to "+modalNewHasErrors);
+    var modalEditHasErrors = [[${modalEditHasErrors}]];
+    console.log("Home - modalEditHasErrors set to "+modalEditHasErrors);
+
+    var toastTitle= [[${toastTitle}]];
+    console.log("Home - toastTitle set to "+toastTitle);
+    var toastMessage= [[${toastMessage}]];
+    console.log("Home - toastMessage set to "+toastMessage);
+
+/*]]>*/
+</script>
+    
 <script>
     $('document').ready( function(){
+        
         console.log("Home - Ready");
+        
+        console.log("Home - toastTitle "+toastTitle);
+        console.log("Home - toastMessage "+toastMessage);
+        if(toastTitle) { 
+            $('.toast').toast('show');
+        }
+        
+        console.log("Home - modalNewHasErrors "+modalNewHasErrors);
+        if(modalNewHasErrors) { 
+            $("#ModalNew").modal("show");
+        }
 
+        console.log("Home - modalEditHasErrors "+modalEditHasErrors);
+        if(modalEditHasErrors) { 
+            $("#ModalEdit").modal("show");
+        }
+
+/*
+        $(function() {
+          $("#ModalNewForm").validate({
+                    rules: {
+                        number: {
+                            required: true,
+                            number: true,
+                            minlength: 4,
+                            maxlength: 4
+                        },
+                        action: "required"
+                    },
+                    messages: {
+                        number: {
+                            required: "This field is required.",
+                            number: "This field must be numeric like 001, 151, ...",
+                            minlength: "This field must be set with at least 3 numeric characters.",
+                            minlength: "This field must be set with a maximum of 3 numeric characters."
+                        },
+                        action: "Please provide some data"
+                    },
+				errorElement: "em",
+				errorPlacement: function ( error, element ) {
+					// Add the `help-block` class to the error element
+					error.addClass( "help-block" );
+
+					if ( element.prop( "type" ) === "checkbox" ) {
+						error.insertAfter( element.parent( "label" ) );
+					} else {
+						error.insertAfter( element );
+					}
+				},
+				highlight: function ( element, errorClass, validClass ) {
+					$( element ).parents( ".col-md-8" ).addClass( "has-error" ).removeClass( "has-success" );
+				},
+				unhighlight: function (element, errorClass, validClass) {
+					$( element ).parents( ".col-md-8" ).addClass( "has-success" ).removeClass( "has-error" );
+				}
+            });
+        });
+*/
+        // New Button
+        $('#newButton').on('click', function(event) {
+            console.log("Home - newButton - click");
+
+            //reset Field
+            $('#ModalNewId').val("");
+            $('#ModalNewNumber').val("");
+            $('#ModalNewName').val("");
+            $('#ModalNewType1').val("");
+            $('#ModalNewType2').val("");
+
+            //reset previous errors on modal
+            $('#ModalNewNumber').removeClass("is-invalid");
+            $('#ModalNewNumberError').text("");
+            $('#ModalNewName').removeClass("is-invalid");
+            $('#ModalNewNameError').text("");
+            $('#ModalNewType1').removeClass("is-invalid");
+            $('#ModalNewType1Error').text("");
+
+            // Show Edit Modal
+            $('#ModalNew').modal();
+        });
+        
         // Edit Button
         $('.table #editButton').on('click', function(event){
             console.log("Home - editButton - click");
@@ -195,11 +384,21 @@
                 console.log("Home - editButton - status="+status);
                 console.log("Home - editButton - pokemon="+pokemon);
                 console.log(pokemon);
+                
+                //set Field
                 $('#ModalEditId').val(pokemon.id);
-                $('#ModalEditNum').val(pokemon.num);
+                $('#ModalEditNumber').val(pokemon.number);
                 $('#ModalEditName').val(pokemon.name);
                 $('#ModalEditType1').val(pokemon.type1);
                 $('#ModalEditType2').val(pokemon.type2);
+
+                //reset previous errors
+                $('#ModalEditNumber').removeClass("is-invalid");
+                $('#ModalEditNumberError').text("");
+                $('#ModalEditName').removeClass("is-invalid");
+                $('#ModalEditNameError').text("");
+                $('#ModalEditType1').removeClass("is-invalid");
+                $('#ModalEditType1Error').text("");
 
                 // Show Edit Modal
                 $('#ModalEdit').modal();
@@ -211,15 +410,24 @@
             console.log("Home - deleteButton - click");
             // Cancel any action
             event.preventDefault();
-            // Get href from list delete button
+            // Get href from delete button
             var href=$(this).attr('href');
             console.log("Home - deleteButton - href="+href);
-            // put id in Text label confirmation
-            $('#idModalDelete').text(href.replaceAll('/', ' '));
-            // Put href on Modal button
-            $('#confirmDelete').attr('href',href)
-            // Show Delete Modal
-            $('#ModalDelete').modal();
+            // Access to controller to get pokemon information and put them in the form
+            $.get(href, function(pokemon, status) {
+                console.log("Home - editButton - status="+status);
+                console.log("Home - editButton - pokemon="+pokemon);
+                console.log(pokemon);
+                
+                //set Field
+                $('#idModalDeletePokemonLabel').text(pokemon.name+" ("+pokemon.number+")");
+                // Put href on Modal button
+                $('#confirmDelete').attr('href',href.replace('get','delete'))
+
+                // Show Delete Modal
+                $('#ModalDelete').modal();
+                
+            });
         });
 
 
@@ -227,15 +435,8 @@
 
 </script>
 
-
-<!-- get Variable from Context-->
-<script th:inline="javascript">
-var searchString = /*[[${#httpServletRequest.getParameter('searchString')}]]*/ "";
-console.log("getParameter('searchString'): "+searchString);
-</script> 
-
 <!-- Footer -->
-<div th:replace="fragments/footer :: footer"/>
+<div th:replace="fragments/footer :: footer-body"/>
 
 </body>
 </html>

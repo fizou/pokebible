@@ -1,30 +1,36 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://thymeleaf.org">
-<head>
-    <div th:replace="fragments/header :: header-head"/>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    
+<head th:replace="fragments/header :: header-head">
+    <title/>
 </head>
-<body>
 
+<body>
+<!-- Header -->
 <div th:replace="fragments/header :: header-body"/>
 
-<!-- Content Distribute by Server -->
+<!-- Page Content -->
 <div class="container">
     <div class="starter-template">
         <h1 th:text="#{detail.title}">detail.title</h1>
     </div>
     <div class="Server-template">
-        <table class="table table-striped">
-            <td>
-                <img th:src="|${pokemon.pictureUrl}|" style="height:110px;"/>
-            </td>
-            <td>
-                <div id='root2' th:text="${pokemon.num}">pokemonNum</div>
-                <div id='root2' th:text="${pokemon.name}">pokemonName</div>
-                <br/>
-                <span th:text="${pokemon.type}">Type</span>
-                <img th:src="|${pokemon.type1PictureUrl}|" style="height:14px;"/>
-                <img th:src="|${pokemon.type2PictureUrl}|" style="height:14px;"/>
-            </td>
+        <table class="table table-striped" border="0">
+            <tr>
+                <td width="20%" align='center'>
+                    <img th:src="@{${pokemon.pictureUrl}}" style="height:110px;"/>
+                </td>
+                <td>
+                    <div id='root2' th:text="${pokemon.number}">pokemonNumber</div>
+                    <div id='root2' th:text="${pokemon.name}">pokemonName</div>
+                    <br/>
+                    <!--span th:text="${pokemon.type}">Type</span-->
+                    <img th:src="@{${pokemon.type1PictureUrl}}" style="height:25px;" th:title="${pokemon.type1}" th:alt="${pokemon.type1}"/>
+                    <img th:src="@{${pokemon.type2PictureUrl}}" style="height:25px;" th:title="${pokemon.type2}" th:alt="${pokemon.type2}"/>
+                </td>
+            </tr>
         </table>       
     </div>
 </div>
@@ -39,7 +45,7 @@ console.log("getParameter('searchString'): "+searchString);
 <script type="text/babel" th:src="@{/js/global.js}"/>
 
 <!-- Footer -->
-<div th:replace="fragments/footer :: footer"/>
+<div th:replace="fragments/footer :: footer-body"/>
 
 </body>
 </html>

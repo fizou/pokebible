@@ -5,79 +5,82 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.google.common.base.Predicates;
-import java.util.Locale;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.context.MessageSource;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import springfox.documentation.builders.ApiInfoBuilder;
-
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
+//
+// Application: Main Class of SpringBoot - Everything Start Here ;)
+//
+// Notes for Tomcat run instead spring boot jar launch :
+// 1) put <packaging>war</packaging> in pom.xml 
+// 2) Uncomment following dependency in pom.xml
+// <dependency>
+//  <groupId>org.springframework.boot</groupId>
+//  <artifactId>spring-boot-starter-tomcat</artifactId>
+//  <scope>provided</scope>
+// </dependency>
+// 3) Uncomment this code
+//  @SpringBootApplication
+//  public class Application extends SpringBootServletInitializer {
+// 4) Comment this code
+//  @SpringBootApplication
+//  public class Application {
+// 5) To Run in war mode on Tomcat in NETBEANS 
+// 5.1 Create a Tomcat Server
+// 5.2 Select Tomcat Server in Run Menu
+// 5.3 Indicate /pokebible in Context Path
+// 5.4 Restart Netbeans interface
+// 6) To reRun in jar without in NETBEANS 
+// 6.1 Undo the Change (You can let the POM dependency)
+// 6.2 Restart Netbeans interface
+    
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-    
-    private static final Logger loggerApplication = LoggerFactory.getLogger(SpringBootServletInitializer.class);
+
+     private static final Logger loggerApplication = LoggerFactory.getLogger(Application.class);
 
     //For Springboot run
     public static void main(String[] args) {
-        loggerApplication.info("Application - main - Starting Application...");
+        loggerApplication.info("main - Starting Application...");
         SpringApplication.run(Application.class, args);
     }
 
-    //Display Application Version at startup
+    //Display message and buildProperties version at startup
     @Autowired
     public BuildProperties buildProperties;
 
     @PostConstruct
     private void postConstructBuildProperties() {
-        loggerApplication.debug("Application - postConstructBuildProperties - Name : {}",buildProperties.getName());
-        loggerApplication.debug("Application - postConstructBuildProperties - Version : {}",buildProperties.getVersion());
-        loggerApplication.debug("Application - postConstructBuildProperties - Build Time : {}",buildProperties.getTime());
-        loggerApplication.info("Application - Starting Application '{}' v{} ({})",buildProperties.getName(),buildProperties.getVersion(),buildProperties.getTime());
+        loggerApplication.debug("Name : {}",buildProperties.getName());
+        loggerApplication.debug("Version : {}",buildProperties.getVersion());
+        loggerApplication.debug("Build Time : {}",buildProperties.getTime());
+        
+        loggerApplication.info("Starting Application '{}' v{} ({})",buildProperties.getName(), buildProperties.getVersion(), buildProperties.getTime());
     }
     
-    //For Tomcat run
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        loggerApplication.info("Application - configure - Configure Application ");
-        return application.sources(Application.class);
-    }
-    
-    //For Swagger run
+    // Activate Swagger Interface on http://server/swagger-ui/
     @Configuration
-    @EnableSwagger2
-    //@ComponentScan("com.pokebible")
-    @Import({springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration.class})
+    @EnableSwagger2WebMvc
+    @Import(SpringDataRestConfiguration.class)
     public class SwaggerConfig {                                    
 
         ApiInfo apiInfo() {
-            loggerApplication.info("Application - SwaggerConfig - Starting Api Swagger UI...");
             return new ApiInfoBuilder()
                 .title("PokeBible API")
                 .description("Access to PokeBible database with REST API")
@@ -91,35 +94,27 @@ public class Application extends SpringBootServletInitializer {
 
         @Bean
         public Docket api() { 
+            loggerApplication.info("Starting Swagger UI");
+            
+            //return new Docket(DocumentationType.SWAGGER_2)
+            //  .select()
+            //  .apis(RequestHandlerSelectors.any())
+            //  .paths(PathSelectors.any())
+            //  .build();
+
             return new Docket(DocumentationType.SWAGGER_2)  
               .select()                                  
               .apis(RequestHandlerSelectors.any())              
-              .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.data.rest.webmvc")))
-//              .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.boot")))
-//              .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework.cloud")))
-//              .paths(PathSelectors.any())                          
+            //  .apis(RequestHandlerSelectors.basePackage("com.pokebible"))
+            //  .paths(PathSelectors.regex("/pokebible/api.*"))
               .paths(PathSelectors.regex("/api.*"))
+            //  .paths(PathSelectors.any())
               .build() 
-//            .pathMapping("/")
-//            .genericModelSubstitutes(ResponseEntity.class)
-//            .tags(new Tag("Pokemon Service", "All apis relating to pokemons"))
+            //  .pathMapping("/pokebible")
               .apiInfo(apiInfo())
             ;
         }
         
     }
-
-    
-/*
-    // Deprecate : See controllers.java 
-    @RestController
-    public class CustomController {
-     
-        @RequestMapping(value = "/custom", method = RequestMethod.POST)
-        public String custom() {
-            return "custom";
-        }
-    }
-*/
 
 }

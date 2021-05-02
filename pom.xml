@@ -5,16 +5,16 @@
 
 	<groupId>com.pokebible</groupId>
 	<artifactId>pokebible</artifactId>
-	<version>1.0.12-SNAPSHOT</version>
+	<version>1.0.14-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>pokebible</name>
+	<name>Pokebible</name>
 	<description>Pokemon Bible</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.7.RELEASE</version>
+		<version>2.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -26,17 +26,38 @@
 
 	<dependencies>
             
-		<!-- Thymleaf Template engine -->
+                <!-- Add Web and test springboot dependency -->
+		<dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-test</artifactId>
+                    <scope>test</scope>
+		</dependency>
+
+                <!-- Start in Tomcat mode -->
+		<dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                    <scope>provided</scope>
+		</dependency>
+                <!-- -->
+                                
+                <!-- hot swapping, disable cache for template, enable live reload -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-devtools</artifactId>
+		    <optional>true</optional>
+		</dependency>
+
+                <!-- Thymleaf Template engine -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-
-		<!-- Spring REST API -->
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-data-rest</artifactId>
-                </dependency>
 
 		<!-- Spring Database -->
 		<dependency>
@@ -49,18 +70,80 @@
 			<scope>runtime</scope>
 		</dependency>
 
+                <!-- Field validation Ex : @NotBlank in entity or @Valid in controller -->
+                <dependency>
+                    <groupId>javax.validation</groupId>
+                    <artifactId>validation-api</artifactId>
+                    <version>2.0.1.Final</version>
+                    <type>jar</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                    <version>5.4.29.Final</version>
+                    <type>jar</type>
+                </dependency>
+                <dependency>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-validator</artifactId>
+                    <version>5.3.6.Final</version>
+                    <type>jar</type>
+                </dependency>
+                
+		<!-- Spring REST API -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-rest</artifactId>
+                </dependency>
+
+                <!-- Swagger UI for REST API -->
+                <dependency>
+                    <groupId>io.springfox</groupId>
+                    <artifactId>springfox-boot-starter</artifactId>
+                    <version>3.0.0</version>
+                </dependency>
+                
 		<!-- Spring security framework -->
 		<dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-security</artifactId>
                 </dependency>
-		<!-- optional, it brings userful tags to display spring security stuff -->
+                <dependency>
+                   <groupId>org.thymeleaf.extras</groupId>
+                   <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+                   <version>3.0.4.RELEASE</version>
+               </dependency>
+
+                <!-- Actuator for http HealthCheck -->
+                <dependency>
+                  <groupId>org.springframework.boot</groupId>
+                  <artifactId>spring-boot-starter-actuator</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.micrometer</groupId>
+                    <artifactId>micrometer-core</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>io.micrometer</groupId>
+                    <artifactId>micrometer-registry-prometheus</artifactId>
+                </dependency>
+
+                <!-- Apache http framework for http requests -->
+                <dependency>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>fluent-hc</artifactId>
+                    <version>4.3.6</version>
+                    <type>jar</type>
+                </dependency>
+
+               <!-- optional, it brings userful tags to display spring security stuff 
                 <dependency>
                     <groupId>org.thymeleaf.extras</groupId>
-                    <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+                    <artifactId>theleaf-extras-springsecurity4</artifactId>
+                    <version>3.0.4.RELEASE</version>
                 </dependency>
-		
-                <!-- Start in Boot or Tomcat mode -->
+		-->
+                <!-- Start in Boot or Tomcat mode 
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-web</artifactId>
@@ -75,22 +158,17 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                     <scope>provided</scope>
 		</dependency>
-                
-                <!-- hot swapping, disable cache for template, enable live reload -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-devtools</artifactId>
-		    <optional>true</optional>
-		</dependency>
-
-                <!-- Optional for bootstrap and other framework -->
+                -->
+ 
+                <!-- Optional for bootstrap and other framework
                 <dependency>
                     <groupId>org.webjars</groupId>
                     <artifactId>bootstrap</artifactId>
                     <version>3.3.7</version>
                 </dependency>
+                -->
 
-                <!-- Swagger2 framework -->
+                <!-- Swagger2 framework 
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-swagger2</artifactId>
@@ -106,15 +184,16 @@
                     <artifactId>springfox-swagger-ui</artifactId>
                     <version>2.9.2</version>
 		</dependency>
-                
-                <!-- Apache http framework for http requests -->
-                <dependency>
-                 <groupId>org.apache.httpcomponents</groupId>
-                 <artifactId>fluent-hc</artifactId>
-                 <version>4.3.6</version>
-                 <type>jar</type>
-                </dependency>
-               </dependencies>
+                -->
+                <!--
+	 <dependency>
+	  <groupId>org.springframework.boot</groupId>
+	  <artifactId>spring-boot-autoconfigure</artifactId>
+	  <version>2.4.4</version>
+	  <type>jar</type>
+	 </dependency>
+-->
+</dependencies>
 
 	<build>
 		<plugins>

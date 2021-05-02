@@ -1,74 +1,98 @@
-<html xmlns:th="http://thymeleaf.org">
-<head>
-    <div th:fragment="header-head">
-        <!-- this is the header code -->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:fragment="header-head">
+    
+    <!-- this is the header-head code -->
+    <title>PokeBible</title>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- Jquery -->
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.min.js}"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" th:href="@{/css/all.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/all.min.js}"></script>
+
+    <!-- This project -->
+    <link rel="stylesheet" th:href="@{/css/main.css}" href="/css/main.css" />
+    <script type="text/javascript" th:src="@{/js/global.js}"></script>
         
-        <title>PokeBible</title>
-
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"/>
-
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"/>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"/>
-
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous"/>
-
-        <link rel="stylesheet" th:href="@{/css/main.css}" href="/css/main.css" />
-        
-    </div>
 </head>
 <body>
-    <div th:fragment="header-body">
-        <!-- this is header-body -->
-        
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <a class="navbar-brand" href="/"><img src='/images/logo.jpg' height='25px'/> PokeBible</a>
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item active">
-                        <a class="nav-link" th:href="@{/home}" href="#">Home<span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item active" sec:authorize="hasRole('ADMIN')">
-                        <a class="nav-link" href="/monitoring">Monitoring</a>
-                    </li>
-                    <li class="nav-item dropdown active">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            API
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="swagger-ui.html#/Pokemon_Entity">Swagger API interface</a>
-                            <a class="dropdown-item" href="v2/api-docs">JSON Description</a>
-                            <a class="dropdown-item" href="api/profile/pokemons">ALPS Description</a>
-                        </div>
-                  </li>
-                </ul>
+<div th:fragment="header-body">
 
-                <form th:action="@{/home}" class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2" name="searchString" id="searchString" th:value="${#httpServletRequest.getParameter('searchString')}" type="search" placeholder="Search" aria-label="Search"/>
-                  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>                
-                
-                <ul class="navbar-nav my-2 my-lg-0">
-                    <li class="nav-item active">
-                        <a class="dropdown-item" th:href="@{/help}">Help</a>
-                    </li>
-                    <li class="nav-item active" sec:authorize="isAuthenticated()">
-                        <a class="dropdown-item" th:href="@{/logout}">Logout</a>
-                    </li>
-                    <li class="nav-item active" sec:authorize="!isAuthenticated()">
-                        <a class="dropdown-item" th:href="@{/login}">Sign-in</a>
-                    </li>
-                </ul>
+    <!-- this is header-body code -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <!--nav class="navbar navbar-expand-lg navbar-dark bg-primary"-->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" th:href="@{/}"><img th:src='@{/images/logo.jpg}' height='25px'/> PokeBible</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/home}" href="#">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tools
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link" th:href="@{/monitoring}">Monitoring</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-link" th:href="@{/h2-console}">Admin Database H2</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="nav-link" th:href="@{/actuator/health}">Healthcheck</a>
+                        <a class="nav-link" th:href="@{/actuator/metrics/com.fizou.pokebible.counter?availableTags=type%3Aread}">Metrics</a>
+                        <a class="nav-link" th:href="@{/actuator/info}">Version Information</a>
+                    </div>
+                </li>
+                 <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        API
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" th:href="@{/swagger-ui/#/Pokemon%20Entity}">Swagger API interface</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" th:href="@{/v2/api-docs}">JSON Description</a>
+                        <a class="dropdown-item" th:href="@{/api/profile/pokemons}">ALPS Description</a>
+                    </div>
+                </li>
+            </ul>
 
-            </div>
-        </nav>        
-        
-    </div>
+            <form th:action="@{/home}" class="form-inline my-2 my-lg-0">
+                <input type="hidden" name="sortField" id="sortField"  th:value="${sortField}"/>
+                <input type="hidden" name="sortFieldDirection" id="sortFieldDirection" th:value="${sortFieldDirection}"/>
+                <input class="form-control mr-sm-2" name="searchString" id="searchString" th:value="${searchString}" type="search" placeholder="Search" aria-label="Search"/>
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>                
+
+            <ul class="navbar-nav my-2 my-lg-0">
+                <li class="nav-item active">
+                    <a class="dropdown-item" th:href="@{/help}">Help</a>
+                </li>
+                <li class="nav-item active" sec:authorize="isAuthenticated()">
+                    <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                </li>
+                <li class="nav-item active" sec:authorize="!isAuthenticated()">
+                    <a class="dropdown-item" th:href="@{/login}">Sign-in</a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>        
+
+</div>
 
 </body>
 </html>

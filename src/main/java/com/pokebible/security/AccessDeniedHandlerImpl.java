@@ -1,4 +1,4 @@
-package com.pokebible;
+package com.pokebible.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-// handle 403 page
 @Component
-public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
+public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityAccessDeniedHandler.class);
+    /*
+     * Handle HTTP 403 (Acces Denied security exception) that go normaly to an error page, and redirect it on login page
+     * 
+     */
+
+    private static final Logger logger = LoggerFactory.getLogger(AccessDeniedHandlerImpl.class);
 
     @Override
     public void handle(HttpServletRequest httpServletRequest,
@@ -27,13 +31,9 @@ public class SecurityAccessDeniedHandler implements AccessDeniedHandler {
 
 	logger.debug("SecurityDeniedHandler - handle");
 
-        Authentication auth
-                = SecurityContextHolder.getContext().getAuthentication();
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null) {
-        	logger.warn("SecurityDeniedHandler - Handle - User '" + auth.getName()
-                    + "' attempted to access the protected URL: "
-                    + httpServletRequest.getRequestURI());
+        	logger.warn("User '" + auth.getName() + "' attempted to access the protected URL: " + httpServletRequest.getRequestURI());
         }
 
         //httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");

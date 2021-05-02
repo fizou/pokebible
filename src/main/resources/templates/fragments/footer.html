@@ -1,28 +1,31 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:fragment="footer-head">
+    <title/>
+    <!-- this is the footer-header code -->
 </head>
 <body>
-<div th:fragment="footer">
-    <!-- this is the footer code -->
+    
+<div th:fragment="footer-body">
+    <!-- this is the footer-body code -->
     <footer class="footer">
 
-        <!-- Script to execute -->
-        <script type="text/babel" th:src="@{/js/global.js}"/>
-
         <div class="navbar fixed-bottom" style="background-color: whitesmoke;">
-	    <span class="text-muted pull-right">&copy; 2017-2021. The Qulbutoke Compagny&nbsp;&nbsp;&nbsp;</span>
-		<span class="text-muted" sec:authorize="isAuthenticated()">
+            <span class="text-muted pull-right">&copy; 2017-2021. The Qulbutoke Compagny&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-muted" sec:authorize="isAuthenticated()">
                     &nbsp;&nbsp;&nbsp;Logged as <span sec:authentication="name"></span>&nbsp;
-                    <span sec:authorize="hasRole('ROLE_USER')">[USER]</span><span sec:authorize="hasRole('ROLE_ADMIN')">[ADMIN]</span>
+                    <span sec:authorize="hasRole('ROLE_USER')">[ROLE_USER]</span><span sec:authorize="hasRole('ROLE_ADMIN')">[ROLE_ADMIN]</span>
                 </span>
-		<span class="text-muted" sec:authorize="false">
+                <span class="text-muted" sec:authorize="false">
                     &nbsp;&nbsp;&nbsp;Logged as anonymous&nbsp; [NO_ROLE]
                 </span>
         </div>
 
     </footer>
-    
 </div>
+
 </body>
 </html>

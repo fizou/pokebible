@@ -1,29 +1,34 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="fragments/header :: header-head"/>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    
+<head th:replace="fragments/header :: header-head">
+    <title/>
 </head>
-<body>
 
+<body>
+<!-- Header -->
 <div th:replace="fragments/header :: header-body"/>
 
+<!-- Page Content -->
 <div class="container">
     <div class="starter-template">
         <h1>Help on PokeBible</h1>
     </div>
     <div class="Server-template">
-        <p>
-        	<BR/>To use this service you must be logon as an simple user or an admin. The credentials are:
-        	<ul>
-        		<li>user / password: Simple user with read access</li>
-        		<li>admin / password: Admin user with CRUD rights</li>
-        	</ul>
-        </p>
+        <BR/>To use this service you must be logon as an simple user or an admin.
+        <BR/> <BR/>The credentials are:
+        <ul>
+                <li>user / password: Simple user with read access</li>
+                <li>admin / password: Admin user with CRUD rights</li>
+        </ul>
     </div>
 
-</div><!-- /.container -->
+</div>
 
-<div th:replace="fragments/footer :: footer"/>
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer-body"/>
 
 </body>
 </html>

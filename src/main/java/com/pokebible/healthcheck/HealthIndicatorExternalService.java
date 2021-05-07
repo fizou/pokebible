@@ -14,23 +14,24 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component("externalservice")
-public class ExternalService implements HealthIndicator {
+public class HealthIndicatorExternalService implements HealthIndicator {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExternalService.class);
+    private static final Logger logger = LoggerFactory.getLogger(HealthIndicatorExternalService.class);
 
     //private static final String URL = "https://cleanuri.com/api/v1/shorten"; //OK
-    private static final String URL = "https://test"; //KO
+    private static final String URL = "https://q-routing-mpa.prosodie.com/ro52/ui"; //KO
 
     @Override
     public Health health() {
         logger.info("Starting External Service HealthCheck...");
         try {
             // check if url shortener service url is reachable
-            Socket socket = new Socket(new java.net.URL(URL).getHost(),80);
+            Socket socket = new Socket(new java.net.URL(URL).getHost(),443);
 
             logger.debug("HealthCheck External Service UP");
             return Health
                     .up()
+                    .withDetail("url", URL)
                     .build();
         } catch (Exception e) {
             

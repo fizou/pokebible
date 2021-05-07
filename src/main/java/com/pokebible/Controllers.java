@@ -9,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class Controllers {
@@ -79,7 +76,7 @@ public class Controllers {
         String pageFilter = searchString.orElse("");
         logger.debug("Calculated - pageFilter: '{}'",  pageFilter);
 
-        Page<Pokemon> pokemonPage = service.findPaginated(currentPage, pageSize, pageSortField, pageSortDirection, pageFilter);
+        Page<Pokemon> pokemonPage = service.findPokemonPaginated(currentPage, pageSize, pageSortField, pageSortDirection, pageFilter);
 
         model.addAttribute("pokemonPage", pokemonPage);
         logger.debug("Pagination Result - pokemonPage: {}",  pokemonPage);
@@ -111,7 +108,7 @@ public class Controllers {
         logger.debug("attribute - pageFilter: '{}'",  pageFilter);
         
         // Error on Add / Update. Comming here by a redirect  
-        logger.info("attribute - org.springframework.validation.BindingResult.pokemon: '{}'",  model.getAttribute("org.springframework.validation.BindingResult.pokemon"));
+        logger.debug("attribute - org.springframework.validation.BindingResult.pokemon: '{}'",  model.getAttribute("org.springframework.validation.BindingResult.pokemon"));
 
         // Pokemon Model attribute can be not empty if there is some error on Add / Update. Comming here by a redirect 
         if (!model.containsAttribute("pokemon")) {
@@ -273,14 +270,15 @@ public class Controllers {
         return "<H1>"+messages.get("monitoring.title")+"</H1><HR>"+messages.get("monitoring.keySentence")+"...";
     }
     
+    // Test Page : Simple Rest Controller which return HTML
     @GetMapping(path = "/test")
     @ResponseBody
     public String test() {
 
-        logger.info("/login - User: {}", service.getLoggedUserName());
+        logger.info("/test - User: {}", service.getLoggedUserName());
 
         return "<H1>Test</H1><HR>Test page is running...";
 
     }
-	
+
 }

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.*;
 import com.pokebible.validator.OnInsertGroup;
+import javax.persistence.EmbeddedId;
 
 @Entity
 public class Pokemon {
@@ -22,7 +23,7 @@ public class Pokemon {
     */
 
     private static final Logger logger = LoggerFactory.getLogger(Pokemon.class);
-
+    
     // Pokemon Type: NORMAL, GRASS, ... 
     public enum Type 
     {
@@ -105,7 +106,7 @@ public class Pokemon {
     }
     
     @NotBlank (message="This field is required.")
-    @Pattern(regexp = "^(?!NONE$).*$",  message="This field is required.")
+    @Pattern(regexp = "^(?!NONE$).*$",  message="NONE is not possible for type 1 .")
     private String type1;
     
     public String getType1() {
@@ -169,28 +170,11 @@ public class Pokemon {
     public String getPictureUrl() {
         return "/images/pokemons/"+getNumber()+".png";
     }
-    public String getPictureHtmlTag() {
-        return "<img src='"+getPictureUrl()+"' height='30'/>";
-    }
 
     public String getType() {
         return getType1() + ", " + getType2();
     }
  
-    public void setType(String type) {
-        if (type==null||type.equals("")) {
-            setType1("");
-            setType2("");
-        }
-        if (type.indexOf(',')!=-1) {
-            setType1(type.substring(0, type.indexOf(',')));
-            setType2(type.substring(type.indexOf(',')+1,type.length()));
-        } else {
-            setType1(type);
-            setType2("");        	
-        }
-    }
-
     public String toString(){
         return "("+this.number+") "+this.name+" - "+this.getType();
     }
@@ -203,13 +187,6 @@ public class Pokemon {
     	//logger.debug("Contructor - No args");
     }
     
-    public Pokemon(String num, String name, String type) {
-        setNumber(num);
-        setName(name);
-        setType(type);
-        logger.debug("Contructor - 3 args - {}", this);
-    }    
-
     public Pokemon(String num, String nameEn, Type type1, Type type2) {
         setNumber(num);
         setName(name);

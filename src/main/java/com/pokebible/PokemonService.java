@@ -1,5 +1,7 @@
 package com.pokebible;
 
+import com.pokebible.actuator.PokebibleMetrics;
+import com.pokebible.actuator.PokebibleMetrics.Counters;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.util.Collections;
@@ -34,31 +36,10 @@ public class PokemonService {
     @Autowired
     private PokemonRepository repository;
 
-    // Actuator Metrics
-    private final MeterRegistry meterRegistry;
-    public Counter counterRead;
-    public Counter counterCreate;
-    public Counter counterUpdate;
-    public Counter counterDelete;
-    
-    public static PokemonService serviceReference; // reference that can be used by Java Class which cannot autowired (Try also...)
+    @Autowired
+    private PokebibleMetrics metrics;
 
-    public PokemonService(MeterRegistry meterRegistry) {
-
-        logger.debug("Constructor");
-
-        logger.info("Starting Actuator (Metrics Initialization)...");
-        this.meterRegistry = meterRegistry;
-        //http://localhost:8085/actuator/metrics/com.fizou.pokebible.counter?availableTags=type%3Aread
-        counterRead = Counter.builder("com.fizou.pokebible.counter") // Using the fluent API
-                .tag("type", "read")
-                .description("The number of request to find pokemons")
-                .register(meterRegistry);
-        counterCreate = this.meterRegistry.counter("com.fizou.pokebible.counter", "type", "create"); 
-        counterUpdate = this.meterRegistry.counter("com.fizou.pokebible.counter", "type", "update"); 
-        counterDelete = this.meterRegistry.counter("com.fizou.pokebible.counter", "type", "delete"); 
-
-    }
+   public static PokemonService serviceReference; // reference that can be used by Java Class which cannot autowired (Try also...)
          
     @PostConstruct
     private void init() {
@@ -70,9 +51,9 @@ public class PokemonService {
 
         logger.debug("Searching Logged UserName...");
 
-        String userName = "";
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+        String userName = "";
         if (auth != null) {
             userName=auth.getName();
 	} else {
@@ -87,7 +68,7 @@ public class PokemonService {
     // Return The User Name of logged user
     public Boolean isPokemonNumberExist(String pokemonNumber) {
 
-        logger.debug("Searching pokemon with this number: "+pokemonNumber);
+        logger.debug("Is there a Pokemon existing with this number: "+pokemonNumber);
 
         List<Pokemon> pokemons = repository.findByNumber(pokemonNumber);
         logger.debug("Number of pokemon founded: "+pokemons.size());
@@ -96,17 +77,27 @@ public class PokemonService {
             result = true;
         }
         logger.debug("Result: "+result);
+
+        metrics.increment(Counters.DATABASE_ACCESS);
+
         return result;
     }
     
     //
-    // get pageable pokemon List 
+    // Get Pokemon List 
     //
-    //
-    public Page<Pokemon> findPaginated(int pageNumber, int pageSize, String pageSortField, String pageSortDirection, String pageFilter) {
+    public List<Pokemon> findPokemon() {
+
+        logger.debug("Find all Pokemons");
+
+        metrics.increment(Counters.DATABASE_ACCESS);
+
+        return repository.findAllByOrderByNumberAsc();
+    }
+
+    public Page<Pokemon> findPokemonPaginated(int pageNumber, int pageSize, String pageSortField, String pageSortDirection, String pageFilter) {
         
         logger.info("Searching pokemon to display for the current page...");
-        counterRead.increment(1.0);
 
         logger.debug("Criteria - pageNumber: "+pageNumber);
         logger.debug("Criteria - pageSize: "+pageSize);
@@ -143,6 +134,8 @@ public class PokemonService {
         logger.debug("Result - getTotalElements: {}",  pokemonPage.getTotalElements());
         logger.debug("Result - getTotalPages: {}",  pokemonPage.getTotalPages());
         
+        metrics.increment(Counters.DATABASE_ACCESS);
+
         return pokemonPage;
     }
 

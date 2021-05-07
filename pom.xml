@@ -5,7 +5,7 @@
 
 	<groupId>com.pokebible</groupId>
 	<artifactId>pokebible</artifactId>
-	<version>1.0.14-SNAPSHOT</version>
+	<version>1.0.15-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Pokebible</name>
@@ -44,7 +44,6 @@
                     <artifactId>spring-boot-starter-tomcat</artifactId>
                     <scope>provided</scope>
 		</dependency>
-                <!-- -->
                                 
                 <!-- hot swapping, disable cache for template, enable live reload -->
 		<dependency>
@@ -90,11 +89,29 @@
                     <type>jar</type>
                 </dependency>
                 
-		<!-- Spring REST API -->
+		<!-- Spring REST API : Automatic Generation is comment as we have the same in our Rest Controller with controls) -->
                 <dependency>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-data-rest</artifactId>
                 </dependency>
+                <!-- -->
+                
+                <!-- Spring REST API Secure JWT -->
+                <dependency>
+                    <groupId>io.jsonwebtoken</groupId>
+                    <artifactId>jjwt</artifactId>
+                    <version>0.9.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.auth0</groupId>
+                    <artifactId>auth0</artifactId>
+                    <version>1.5.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.auth0</groupId>
+                    <artifactId>auth0-spring-security-api</artifactId>
+                    <version>1.0.0</version>
+                </dependency>                
 
                 <!-- Swagger UI for REST API -->
                 <dependency>

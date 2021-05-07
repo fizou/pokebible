@@ -1,11 +1,7 @@
 package com.pokebible.security;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.fluent.Form;
-import org.apache.http.client.fluent.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,9 +17,10 @@ import org.springframework.stereotype.Component;
 public class AuthenticationProviderImpl implements AuthenticationProvider {
 
     /*
-     * Custom authentification based on: 
-     *    Give the ROLE_USER to user/password credential
-     *    Give the ROLE_ADMIN to admin/password credential
+     * Custom authentification method based on username/password credential provided
+     *
+     *    Give the ROLE_ADMIN to admin/password 
+     *    Give the ROLE_USER to user/password 
      * 
      */
 
@@ -33,26 +30,29 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
     public Authentication authenticate(Authentication auth) throws AuthenticationException {
         
         String username = auth.getName();
-        String password = auth.getCredentials().toString();
+        String password = "";
+        if (auth.getCredentials()!=null) password=auth.getCredentials().toString();
         
-        logger.info("Username: "+username);
-        logger.info("Password: "+password);
+        logger.debug("Username: "+username);
+        logger.debug("Password: "+password);
         
+        // Call external IDP here...
+
+        // For this project it is hardcoded
         if ("user".equals(username) && "password".equals(password)) {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
-            logger.info("Role affected: ROLE_USER");
+            logger.debug("Role: ROLE_USER");
             return new UsernamePasswordAuthenticationToken(username, password, grantedAuths);
         } else if ("admin".equals(username) && "password".equals(password)) {
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             grantedAuths.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-            logger.info("Role affected: ROLE_ADMIN");
+            logger.debug("Role: ROLE_ADMIN");
             return new UsernamePasswordAuthenticationToken(username, password, grantedAuths);
         } else {
-            logger.error("Access Refused: User Unknown");
+            logger.warn("Access refused: Username/password ("+username+"/"+password+") is unknown");
             throw new BadCredentialsException("External system authentication failed");
         }
-        
 
     }
 

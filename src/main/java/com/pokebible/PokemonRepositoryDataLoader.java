@@ -16,14 +16,15 @@ public class PokemonRepositoryDataLoader implements CommandLineRunner {
 
     public PokemonRepositoryDataLoader(PokemonRepository repository) {
         
-        logger.debug("Constructor");
+        logger.info("Starting Pokemon database (Pokemon List Initialization)...");
         this.repository = repository;
+        
     }
 
     @Override
     public void run(String... strings) throws Exception {
 
-        logger.info("Filling Pokemon database...");
+        logger.debug("Filling Pokemon database...");
         
     	this.repository.save(new Pokemon("001","Bulbasaur",Pokemon.Type.GRASS,Pokemon.Type.POISON,"Bulbizarre"));
     	this.repository.save(new Pokemon("002","Ivysaur",Pokemon.Type.GRASS,Pokemon.Type.POISON,"Herbizarre"));

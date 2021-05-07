@@ -2,6 +2,7 @@ package com.pokebible.healthcheck;
 
 import com.pokebible.PokemonRepository;
 import com.pokebible.PokemonService;
+import com.pokebible.actuator.PokebibleMetrics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,15 @@ import org.springframework.stereotype.Component;
  *   http://localhost:8085/actuator/metrics/com.fizou.pokebible.counter?availableTags=type%3Aread
  */
 @Component("metrics")
-public class Metrics extends AbstractHealthIndicator {
+public class HealthIndicatorMetrics extends AbstractHealthIndicator {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExternalService.class);
+    private static final Logger logger = LoggerFactory.getLogger(HealthIndicatorExternalService.class);
 
     @Autowired
     private PokemonRepository repository;
     
     @Autowired
-    private PokemonService service;
+    private PokebibleMetrics metrics;
 
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
@@ -36,25 +37,12 @@ public class Metrics extends AbstractHealthIndicator {
         logger.info("Starting Metrics HealthCheck...");
 
         try {
-            
-            long NumberOfPokemon = repository.count();
-            logger.debug("NumberOfPokemon:"+repository.count());
-            Double counterRead=service.counterRead.count();
-            logger.debug("counterRead:"+counterRead);
-            Double counterCreate=service.counterCreate.count();
-            logger.debug("counterCreate:"+counterCreate);
-            Double counterUpdate=service.counterUpdate.count();
-            logger.debug("counterUpdate:"+counterUpdate);
-            Double counterDelete=service.counterDelete.count();
-            logger.debug("counterDelete:"+counterDelete);
-            
+                        
             logger.debug("HealthCheck Metrics UP");
             builder.up()
-                .withDetail("NumberOfPokemon", ""+NumberOfPokemon)
-                .withDetail("PokemonRead", ""+counterRead)
-                .withDetail("PokemonCreate", ""+counterCreate)
-                .withDetail("PokemonUpdate", ""+counterUpdate)
-                .withDetail("PokemonDelete", ""+counterDelete)
+                .withDetail("NumberOfPokemon", ""+repository.count())
+                .withDetail(PokebibleMetrics.Counters.DATABASE_ACCESS.getCounterName(), ""+metrics.get(PokebibleMetrics.Counters.DATABASE_ACCESS))
+                .withDetail(PokebibleMetrics.Counters.API_ACCESS.getCounterName(), ""+metrics.get(PokebibleMetrics.Counters.API_ACCESS))
                 ;
         } catch (Exception e) {
             logger.error("HealthCheck Metrics Down: "+e);

@@ -28,28 +28,28 @@
             <tr>
               <th style="width: 10%;"></th>
               <th style="width: 10%;">
-                    <a th:if="(${sortField!='Number'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Number', sortDirection='asc', searchString=${searchString})}">
+                    <a th:if="(${sortField!='Number'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Number', sortDirection='asc', searchField=${searchField}, searchString=${searchString})}">
                         Number 
                     </a>
-                    <a th:if="(${sortField=='Number'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i> Number</NOBR></a>
+                    <a th:if="(${sortField=='Number'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchField=${searchField}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i> Number</NOBR></a>
               </th>
               <th style="width: 40%;">
-                    <a th:if="(${sortField!='Name'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Name', sortDirection='asc', searchString=${searchString})}">
+                    <a th:if="(${sortField!='Name'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Name', sortDirection='asc', searchField=${searchField}, searchString=${searchString})}">
                         Name 
                     </a>
-                    <a th:if="(${sortField=='Name'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Name</NOBR></a>
+                    <a th:if="(${sortField=='Name'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchField=${searchField}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Name</NOBR></a>
               </th>
               <th style="width: 30%;">
                   Type (
-                    <a th:if="(${sortField!='Type1'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Type1', sortDirection='asc', searchString=${searchString})}">
+                    <a th:if="(${sortField!='Type1'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Type1', sortDirection='asc', searchField=${searchField}, searchString=${searchString})}">
                         Type1 
                     </a>
-                    <a th:if="(${sortField=='Type1'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Type1</NOBR></a>
+                    <a th:if="(${sortField=='Type1'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchField=${searchField}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Type1</NOBR></a>
                   ,
-                    <a th:if="(${sortField!='Type2'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Type2', sortDirection='asc', searchString=${searchString})}">
+                    <a th:if="(${sortField!='Type2'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField='Type2', sortDirection='asc', searchField=${searchField}, searchString=${searchString})}">
                         Type2 
                     </a>
-                    <a th:if="(${sortField=='Type2'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Type2</NOBR></a>
+                    <a th:if="(${sortField=='Type2'})" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}, sortField=${sortField}, sortDirection=${sortDirectionReverse}, searchField=${searchField}, searchString=${searchString})}"><NOBR><i th:class="${sortDirectionReverse=='asc'} ? 'fas fa-sort-down' : 'fas fa-sort-up'"></i>Type2</NOBR></a>
                   )
               </th>
               <th style="width: 20%;" sec:authorize="hasRole('ROLE_ADMIN')">
@@ -87,7 +87,7 @@
         <nav th:if="${pokemonPage.totalPages > 0}" aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
-                    <a class="page-link" href="#" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.previousOrFirstPageable.getPageNumber}+1, sortField=${sortField}, sortDirection=${sortDirection}, searchString=${searchString})}">
+                    <a class="page-link" href="#" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.previousOrFirstPageable.getPageNumber}+1, sortField=${sortField}, sortDirection=${sortDirection}, searchField=${searchField}, searchString=${searchString})}">
                         Previous
                     </a>
                 </li>
@@ -100,13 +100,13 @@
                         </li>
                     </li>
                     <li class="page-item" th:if="${pokemonPage.Number+1!=pageNumber}" >
-                        <a class="page-link" th:text=${pageNumber} th:href="@{/home(size=${pokemonPage.size}, page=${pageNumber}, sortField=${sortField}, sortDirection=${sortDirection}, searchString=${searchString})}">
+                        <a class="page-link" th:text=${pageNumber} th:href="@{/home(size=${pokemonPage.size}, page=${pageNumber}, sortField=${sortField}, sortDirection=${sortDirection}, searchField=${searchField}, searchString=${searchString})}">
                             0
                         </a>
                     </li>
                 </th:block>
                 <li class="page-item">
-                    <a class="page-link" href="#" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}+1, sortField=${sortField}, sortDirection=${sortDirection}, searchString=${searchString})}">
+                    <a class="page-link" href="#" th:href="@{/home(size=${pokemonPage.size}, page=${pokemonPage.nextOrLastPageable.getPageNumber}+1, sortField=${sortField}, sortDirection=${sortDirection}, searchField=${searchField}, searchString=${searchString})}">
                         Next
                     </a>
                 </li>

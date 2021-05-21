@@ -12,31 +12,34 @@ import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 
-//
-// Application: Main Class of SpringBoot - Everything Start Here ;)
-//
-// Notes for Tomcat run instead spring boot jar launch :
-// 1) put <packaging>war</packaging> in pom.xml 
-// 2) Uncomment following dependency in pom.xml
-// <dependency>
-//  <groupId>org.springframework.boot</groupId>
-//  <artifactId>spring-boot-starter-tomcat</artifactId>
-//  <scope>provided</scope>
-// </dependency>
-// 3) Uncomment this code
-//  @SpringBootApplication
-//  public class Application extends SpringBootServletInitializer {
-// 4) Comment this code
-//  @SpringBootApplication
-//  public class Application {
-// 5) To Run in war mode on Tomcat in NETBEANS 
-// 5.1 Create a Tomcat Server
-// 5.2 Select Tomcat Server in Run Menu
-// 5.3 Indicate /pokebible in Context Path
-// 5.4 Restart Netbeans interface
-// 6) To reRun in jar without in NETBEANS 
-// 6.1 Undo the Change (You can let the POM dependency)
-// 6.2 Restart Netbeans interface
+/**
+ *
+ * Application: Main Class of SpringBoot - Everything Start Here ;) 
+ *
+ * Notes for Tomcat run instead spring boot jar launch :
+ *      1) put <packaging>war</packaging> in pom.xml 
+ *      2) Uncomment following dependency in pom.xml
+ *         <dependency>
+ *           <groupId>org.springframework.boot</groupId>
+ *           <artifactId>spring-boot-starter-tomcat</artifactId>
+ *           <scope>provided</scope>
+ *          </dependency>
+ *      3) Uncomment this code
+ *          @SpringBootApplication
+ *          public class Application extends SpringBootServletInitializer {
+ *      4) Comment this code
+ *          @SpringBootApplication
+ *          public class Application {
+ *      5) To Run in war mode on Tomcat in NETBEANS 
+ *          5.1 Create a Tomcat Server
+ *          5.2 Select Tomcat Server in Run Menu
+ *          5.3 Indicate /pokebible in Context Path
+ *          5.4 Restart Netbeans interface
+ *     6) To reRun in jar without in NETBEANS 
+ *          6.1 Undo the Change (You can let the POM dependency)
+ *          6.2 Restart Netbeans interface
+ * 
+ */
     
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {

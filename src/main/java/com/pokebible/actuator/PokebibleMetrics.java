@@ -13,12 +13,12 @@ public class PokebibleMetrics {
 
     /**
      *
-     * Declaration and Method to Work with Actuator Metrics 
+     * Declaration of Pokebible Metrics (database.access, api.access, ...) and Method to Work with Actuator Metrics 
      * 
      * Metric are acessible on 
      * http://localhost:8085/actuator/metrics
-     * http://localhost:8085/actuator/metrics/com.fizou.pokebible.counters.database
-     * http://localhost:8085/actuator/metrics/com.fizou.pokebible.counters.database?availableTags=type%3Aread
+     * http://localhost:8085/actuator/metrics/com.fizou.pokebible.counters.database.access
+     * http://localhost:8085/actuator/metrics/com.fizou.pokebible.counters.database.access?availableTags=type%3Aread
      *
      */
     private static final Logger logger = LoggerFactory.getLogger(PokebibleMetrics.class);
@@ -71,7 +71,7 @@ public class PokebibleMetrics {
     public enum Counters
     {
         // Counters Declaration
-        DATABASE_ACCESS("database"),     
+        DATABASE_ACCESS("database.access"),     
         API_ACCESS("api.access"),     
 
         ;         

@@ -1,6 +1,5 @@
 package com.pokebible.healthcheck;
 
-import com.pokebible.PokemonRepository;
 import com.pokebible.PokemonService;
 import com.pokebible.actuator.PokebibleMetrics;
 import org.slf4j.Logger;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 
- * Healtcheck : Diplay Pokebible Metrics 
+ * Healtcheck : Diplay Pokebible Metrics in metrics section
  * 
  * in HealthCheck: 
  *   http://localhost:8085/actuator/health - Ex "metrics":{"status":"UP","details":{"NumberOfPokemon":"151","counterRead":"3.0" ... }
@@ -24,10 +23,10 @@ import org.springframework.stereotype.Component;
 public class HealthIndicatorMetrics extends AbstractHealthIndicator {
 
     private static final Logger logger = LoggerFactory.getLogger(HealthIndicatorExternalService.class);
-
-    @Autowired
-    private PokemonRepository repository;
     
+    @Autowired
+    private PokemonService service;
+
     @Autowired
     private PokebibleMetrics metrics;
 
@@ -40,7 +39,7 @@ public class HealthIndicatorMetrics extends AbstractHealthIndicator {
                         
             logger.debug("HealthCheck Metrics UP");
             builder.up()
-                .withDetail("NumberOfPokemon", ""+repository.count())
+                .withDetail("NumberOfPokemon", ""+service.count())
                 .withDetail(PokebibleMetrics.Counters.DATABASE_ACCESS.getCounterName(), ""+metrics.get(PokebibleMetrics.Counters.DATABASE_ACCESS))
                 .withDetail(PokebibleMetrics.Counters.API_ACCESS.getCounterName(), ""+metrics.get(PokebibleMetrics.Counters.API_ACCESS))
                 ;

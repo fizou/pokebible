@@ -13,23 +13,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+/*
+ * Manage Security with ROLE to authorise the page/ressource access of the application
+ *  
+ *  Docs
+ *    http://docs.spring.io/spring-boot/docs/current/reference/html/howto-security.html
+ *    Switch off the Spring Boot security configuration
+ * 
+ */
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapter {
     
-    /*
-     * Manage Security with ROLE to authorise the page/ressource access of the application
-     *  
-     *  Docs
-     *    http://docs.spring.io/spring-boot/docs/current/reference/html/howto-security.html
-     *    Switch off the Spring Boot security configuration
-     * 
-     */
-
     private static final Logger logger = LoggerFactory.getLogger(WebSecurityConfigurerAdapterImpl.class);
 
     private static final String ROLE_ADMIN = "ROLE_ADMIN";
@@ -61,7 +60,7 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
             "/v2/api-docs",
             // -- Database H2 console - Target NOT accessible by anonymous. Only Admin have access.
             "/h2-console/**",
-            // -- Actuator : health / metric - Target only HealthCheck is accessible by anonymous. Only Admin have access to the rest.
+            // -- Actuator : health / metric - Target only HealthCheck is accessible by anonymous. Only Admin have access to the metric.
             "/actuator/health",
             //"/actuator/**",
     }; 

@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Implementation of PokemonNumberConstraint interface
- * 
+ *
+ * Implementation of PokemonNumberConstraint interface to create new annotation @PokemonNumberConstraint before PokemonNumber property in Pokemon.java do do specific control on it.
+ *
  */
 public class PokemonNumberUniqueValidator implements ConstraintValidator<PokemonNumberUniqueConstraint, String> {
 
@@ -88,22 +89,3 @@ public class PokemonNumberUniqueValidator implements ConstraintValidator<Pokemon
     }
 
 }
-/*
-public class PokemonNumValidator implements PokemonNumConstraint<PokemonNumValidator, String> {
-
-    //private PokemonRepository pokemonRepository;
-
-    //public PokemonNumValidator(PokemonRepository pokemonRepository) {
-    //    this.pokemonRepository = pokemonRepository;
-    //}
-
-    @Override
-    public void initialize(PokemonNumConstraint num) {
-    }
-
-    @Override
-    public boolean isValid(String num, ConstraintValidatorContext cxt) {
-    }
-
-}
-*/   

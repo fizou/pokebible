@@ -1,15 +1,14 @@
 package com.pokebible.restapi;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
@@ -23,16 +22,18 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
  *
- * This is the master Class of RZST API Authentification
+ * This is the master Entity of REST API Authentification
  * 
  * - Provide a Credentials object to permit the transmission of username/password in JSON in the body of generateToken controller/filter method
- * - Provide CreateToken / VerifyToken Methods access by Filters to put or Retreive 'Authorization: Bearer xxxx...' token in HttpRequest
+ * - Provide CreateToken / VerifyToken methods access by Filters to put or retreive 'Authorization: Bearer xxxx...' token in Header of HttpRequest/HtttResponse
  * 
  */
-public class Credentials {
+@JsonPropertyOrder({"username", "password"})
+public class ApiCredentials {
     
-    private static final Logger logger = LoggerFactory.getLogger(Credentials.class);
+    private static final Logger logger = LoggerFactory.getLogger(ApiCredentials.class);
 
+    @ApiModelProperty(position = 0)
     private String username;
     public String getUsername() {
         return username;
@@ -41,6 +42,7 @@ public class Credentials {
         this.username = username;
     }
 
+    @ApiModelProperty(position = 1)
     private String password;
     public String getPassword() {
         return password;
@@ -49,7 +51,7 @@ public class Credentials {
         this.password = password;
     }
 
-    public Credentials(HttpServletRequest request) {
+    public ApiCredentials(HttpServletRequest request) {
         
         // Try to read param of the request to find username=admin&password=password in GET url or POST body
         this.username = request.getParameter("username");

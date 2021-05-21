@@ -13,16 +13,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+/*
+ * Custom authentification method based on username/password credential provided
+ *
+ *    Give the ROLE_ADMIN to admin/password 
+ *    Give the ROLE_USER to user/password 
+ * 
+ */
+
 @Component
 public class AuthenticationProviderImpl implements AuthenticationProvider {
-
-    /*
-     * Custom authentification method based on username/password credential provided
-     *
-     *    Give the ROLE_ADMIN to admin/password 
-     *    Give the ROLE_USER to user/password 
-     * 
-     */
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationProviderImpl.class);
     

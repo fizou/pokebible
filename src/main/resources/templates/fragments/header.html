@@ -74,7 +74,15 @@
                 <input type="hidden" name="sortField" id="sortField"  th:value="${sortField}"/>
                 <input type="hidden" name="sortFieldDirection" id="sortFieldDirection" th:value="${sortFieldDirection}"/>
                 <input class="form-control mr-sm-2" name="searchString" id="searchString" th:value="${searchString}" type="search" placeholder="Search" aria-label="Search"/>
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                <select class="form-control mr-sm-2" name="searchField" id="searchField">
+                    <option value="Name" th:selected="${searchField}=='Name'">Name</option>
+                    <option value="Number" th:selected="${searchField}=='Number'">Number</option>
+                    <option value="Type" th:selected="${searchField}=='Type'">Type</option>
+                    <option value="Type1" th:selected="${searchField}=='Type1'">Type1</option>
+                    <option value="Type2" th:selected="${searchField}=='Type2'">Type2</option>
+                </select>
+
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>                
 
             <ul class="navbar-nav my-2 my-lg-0">

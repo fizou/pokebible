@@ -1,10 +1,5 @@
 package com.pokebible.validator;
 
-/**
- * Interface to create new annotation @PokemonNumberConstraint in front of PokemonNumber in Pokemon.java do do control on it.
- *
- * @author olfize
- */
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,6 +8,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+/**
+ *
+ * Interface to create new annotation @PokemonNumberConstraint before PokemonNumber property in Pokemon.java do do specific control on it.
+ *
+ */
 @Documented
 @Constraint(validatedBy = PokemonNumberUniqueValidator.class)
 @Target({ ElementType.METHOD, ElementType.FIELD })

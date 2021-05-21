@@ -24,13 +24,29 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ *
+ * Web Controller: All Website Pages... 
+ *
+ * - / : Root page (redirecton /home)
+ * 
+ * - /home : Main Page (List of pokemon)
+ * - /detail : Detail of one pokemon 
+ * 
+ * - CRUD /get/{id} / add /update /delete/{id}
+ * 
+ * - /login : Display credentials login page
+ * 
+ * - /help : Help on how to login with thymleaf template 
+ * - /test : test page hardcoded
+ * - /monitoring : test page hardcoded with translation
+ * 
+ */
+
 @Controller
 public class Controllers {
 	
     private static final Logger logger = LoggerFactory.getLogger(Controllers.class);
-
-    @Autowired
-    private PokemonRepository repository;
 
     @Autowired
     private PokemonService service;
@@ -51,32 +67,40 @@ public class Controllers {
             @RequestParam("size") Optional<Integer> size,
             @RequestParam("sortField") Optional<String> sortField,
             @RequestParam("sortDirection") Optional<String> sortDirection,
+            @RequestParam("searchField") Optional<String> searchField,
             @RequestParam("searchString") Optional<String> searchString,
             Model model) {
 
-        logger.info("/home - User: {} is diplaying pokemon list with filter SearchString: {}",  service.getLoggedUserName(), searchString);
+        logger.info("/home - User: {} is diplaying pokemon list",  service.getLoggedUserName());
 
         // Param
-        logger.debug("Param - page: {}",  page);
-        logger.debug("Param - size: {}",  size);
-        logger.debug("Param - sortField: {}",  sortField);
-        logger.debug("Param - sortDirection: {}",  sortDirection);
-        logger.debug("Param - searchString: {}",  searchString);
+        logger.debug("Param - page: {}", page);
+        logger.debug("Param - size: {}", size);
+        logger.debug("Param - sortField: {}", sortField);
+        logger.debug("Param - sortDirection: {}", sortDirection);
+        logger.debug("Param - searchField: {}", searchField);
+        logger.debug("Param - searchString: {}", searchString);
 
         // Pagination
         int currentPage = page.orElse(1);
-        if (currentPage==0) currentPage=1; //security
+        if (currentPage==0) currentPage=1;
         logger.debug("Calculated - currentPage: {}",  currentPage);
         int pageSize = size.orElse(9);
+        if (pageSize==0) pageSize=9; 
         logger.debug("Calculated - pageSize: {}",  pageSize);
         String pageSortField = sortField.orElse("Number");
+        if (pageSortField.equals("")) pageSortField="Number";
         logger.debug("Calculated - pageSortField: {}",  pageSortField);
         String pageSortDirection = sortDirection.orElse("asc");
+        if (pageSortDirection.equals("")) pageSortDirection="asc";
         logger.debug("Calculated - pageSortDirection: {}",  pageSortDirection);
-        String pageFilter = searchString.orElse("");
-        logger.debug("Calculated - pageFilter: '{}'",  pageFilter);
+        String pageSearchField = searchField.orElse("Name");
+        if (pageSearchField.equals("")) pageSearchField="Name";
+        logger.debug("Calculated - pageSearchField: '{}'",  pageSearchField);
+        String pageSearchString = searchString.orElse("");
+        logger.debug("Calculated - pageSearchString: '{}'",  pageSearchString);
 
-        Page<Pokemon> pokemonPage = service.findPokemonPaginated(currentPage, pageSize, pageSortField, pageSortDirection, pageFilter);
+        Page<Pokemon> pokemonPage = service.findAllPaginated(currentPage, pageSize, pageSortField, pageSortDirection, pageSearchField, pageSearchString);
 
         model.addAttribute("pokemonPage", pokemonPage);
         logger.debug("Pagination Result - pokemonPage: {}",  pokemonPage);
@@ -101,11 +125,13 @@ public class Controllers {
         model.addAttribute("sortField", pageSortField);
         logger.debug("attribute - sortField: {}",  pageSortField);
         model.addAttribute("sortDirection", pageSortDirection);
-        logger.debug("attribute - sortDirection: {}",  sortDirection);
+        logger.debug("attribute - sortDirection: {}",  pageSortDirection);
         model.addAttribute("sortDirectionReverse", pageSortDirection.equals("asc") ? "desc" : "asc");
         logger.debug("attribute - sortDirectionReverse: {}", pageSortDirection.equals("asc") ? "desc" : "asc");
-        model.addAttribute("searchString", pageFilter);
-        logger.debug("attribute - pageFilter: '{}'",  pageFilter);
+        model.addAttribute("searchField", pageSearchField);
+        logger.debug("attribute - searchField: {}",  pageSearchField);
+        model.addAttribute("searchString", pageSearchString);
+        logger.debug("attribute - searchString: {}",  pageSearchString);
         
         // Error on Add / Update. Comming here by a redirect  
         logger.debug("attribute - org.springframework.validation.BindingResult.pokemon: '{}'",  model.getAttribute("org.springframework.validation.BindingResult.pokemon"));
@@ -125,13 +151,12 @@ public class Controllers {
     }
     
     // DETAIL POKEMON
-
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable String id, Model model) {
 
-        logger.info("/detail - User {} is diplaying id {} ... ",  service.getLoggedUserName(), id);
+        logger.info("/detail/{} - User {} ... ", id, service.getLoggedUserName());
         
-        Pokemon pokemon = repository.findById(new Long(id)).get();
+        Pokemon pokemon = service.findById(new Long(id));
 
         logger.debug("Founded pokemon to display {} ", pokemon);
                 
@@ -142,14 +167,13 @@ public class Controllers {
     }    
 
     // CRUD POKEMON
-    
     @RequestMapping("/get/{id}")
     @ResponseBody
     public Pokemon get(@PathVariable (name="id") long id) {
         
-        logger.info("/get - User {} is getting data for id {} ... ",  service.getLoggedUserName(), id);
+        logger.info("/get/{id} - User {} ", id, service.getLoggedUserName());
 
-        Pokemon pokemon = repository.findById(id).get();
+        Pokemon pokemon = service.findById(id);
         
         return pokemon;
     
@@ -158,7 +182,7 @@ public class Controllers {
     @RequestMapping(value="/add", method = RequestMethod.POST)
     public String add(@Validated(com.pokebible.validator.OnInsertGroup.class) @ModelAttribute("pokemon") Pokemon pokemon, BindingResult result, RedirectAttributes redirectAttributes) {
     
-        logger.info("/add - User {} is creating pokemon {} ... ",  service.getLoggedUserName(), pokemon);
+        logger.info("/add - User {} is creating Pokemon: {}",  service.getLoggedUserName(), pokemon);
         
         if(result.hasErrors()) {
             
@@ -178,7 +202,7 @@ public class Controllers {
             return "redirect:/home";
             //return "home";
         } else {
-            repository.save(pokemon);
+            service.save(pokemon);
             logger.info("Pokemon added successfully - Redirect home");
             redirectAttributes.addFlashAttribute("toastTitle", "Success");
             redirectAttributes.addFlashAttribute("toastMessage", ""+pokemon.getName()+" ("+pokemon.getNumber()+") added");
@@ -191,7 +215,7 @@ public class Controllers {
     @RequestMapping(value="/update", method = RequestMethod.POST)
     public String update(@Valid @ModelAttribute("pokemon") Pokemon pokemon, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
     
-        logger.info("/update - User {} is updating {} ... ", service.getLoggedUserName(), pokemon);
+        logger.info("/update - User {} is updating Pokemon: {} ... ", service.getLoggedUserName(), pokemon);
         
         if(result.hasErrors()) {
             logger.info("Cannot update pokemon  - Go back home");
@@ -208,7 +232,7 @@ public class Controllers {
             return "redirect:/home";
             //return "home";
         } else {
-            repository.save(pokemon);
+            service.save(pokemon);
             logger.info("Pokemon updated successfully - Redirect home");
             redirectAttributes.addFlashAttribute("toastTitle", "Success");
             redirectAttributes.addFlashAttribute("toastMessage", ""+pokemon.getName()+" ("+pokemon.getNumber()+") updated.");
@@ -221,16 +245,16 @@ public class Controllers {
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable (name="id") long id, RedirectAttributes redirectAttributes) {
         
-        logger.info("/delete - User {} is deleting id {} ... ", service.getLoggedUserName(), id);
+        logger.info("/delete/{id} - User {} ", id, service.getLoggedUserName());
 
-        Pokemon pokemon = repository.findById(id).get();
+        Pokemon pokemon = service.findById(id);
 
         logger.debug("Found pokemon to delete {} ", pokemon);
 
+        service.delete(id);
+
         redirectAttributes.addFlashAttribute("toastTitle", "Success");
         redirectAttributes.addFlashAttribute("toastMessage", ""+pokemon.getName()+" ("+pokemon.getNumber()+") deleted");
-
-        repository.delete(pokemon);
 
         logger.info("Pokemon deleted successfully - Redirect home");
         

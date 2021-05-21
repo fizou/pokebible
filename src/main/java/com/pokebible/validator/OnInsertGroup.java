@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.pokebible.validator;
 
 import javax.validation.groups.Default;
 
 /**
  *
- * @author olfize
+ * Declare OnInsertGroup used to know the context of validation (INSERT or update)
+ *
  */
 public interface OnInsertGroup extends Default {
     

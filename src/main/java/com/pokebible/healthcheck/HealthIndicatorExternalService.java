@@ -3,14 +3,13 @@ package com.pokebible.healthcheck;
 import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
 /**
  * 
- * Healtcheck : Specific indicator
+ * Healtcheck : Display the result of the test of an fake external url in externalservice section.
  * 
  */
 @Component("externalservice")

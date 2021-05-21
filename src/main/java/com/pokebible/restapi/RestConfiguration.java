@@ -1,60 +1,82 @@
 package com.pokebible.restapi;
 
-import com.google.common.base.Predicates;
 import com.pokebible.Pokemon;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.core.mapping.ExposureConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.web.util.UrlPathHelper;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
-//
-// Application: Configuration of REST API and Swagger
-//
-    
+/**
+ *
+ * Configuration of REST API and Swagger-ui
+ *
+ */
+
 @Configuration
 public class RestConfiguration implements RepositoryRestConfigurer {
 
-    private static final Logger log = LoggerFactory.getLogger(RestConfiguration.class);
+    private static final Logger logger = LoggerFactory.getLogger(RestConfiguration.class);
+
+    @Autowired
+    private Environment env;
+
 
     // Activate Id in REST API response 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
 
-        log.info("Starting REST API...");
+        logger.info("Starting REST API on "+env.getProperty("spring.data.rest.base-path")+"/api ...");
 
         config.exposeIdsFor(Pokemon.class);
     }
-
+    
     // Activate Swagger Interface on http://server/swagger-ui/
     @Configuration
     @EnableSwagger2WebMvc
     @Import(SpringDataRestConfiguration.class)
     public class SwaggerConfig {                                    
 
+        @Bean
+        public Docket api() { 
+            
+            logger.info("Starting Swagger UI...");
+
+            return new Docket(DocumentationType.SWAGGER_2)  
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()))
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.regex(env.getProperty("spring.data.rest.base-path")+"/api.*"))
+                //.paths(PathSelectors.regex("(?!"+env.getProperty("spring.data.rest.base-path")+"/api/profile).+")) // Eliminate /api/profile api
+                .build() 
+                .apiInfo(apiInfo())
+            ;
+        }
+
+        // Global description of API
         ApiInfo apiInfo() {
             return new ApiInfoBuilder()
                 .title("PokeBible API")
@@ -67,21 +89,30 @@ public class RestConfiguration implements RepositoryRestConfigurer {
                 .build();
         }
 
-        @Bean
-        public Docket api() { 
-            
-            log.info("Starting Swagger UI...");
+        // Activate JWT Protection for Swagger
+        private ApiKey apiKey() { 
+            return new ApiKey("JWT Token", "Authorization", "header"); 
+        }
+        
+        private SecurityContext securityContext() { 
+            return SecurityContext.builder().securityReferences(defaultAuth()).build(); 
+        } 
 
-            return new Docket(DocumentationType.SWAGGER_2)  
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.regex("/api.*"))
-                .build() 
-                .apiInfo(apiInfo())
-            ;
+        private List<SecurityReference> defaultAuth() { 
+            //AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything"); 
+            //AuthorizationScope[] authorizationScopes = new AuthorizationScope[1]; 
+            //authorizationScopes[0] = authorizationScope; 
+            //return Arrays.asList(new SecurityReference("JWT Token", authorizationScopes)); 
+            
+            return Arrays.asList(new SecurityReference("JWT Token", 
+                new AuthorizationScope[]{
+                   //new AuthorizationScope("global", "accessEverything")
+                }
+            )); 
         }
 
     }
+
 }
 
 

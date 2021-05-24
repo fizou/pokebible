@@ -1,7 +1,7 @@
 package com.pokebible.healthcheck;
 
 import com.pokebible.PokemonService;
-import com.pokebible.actuator.PokebibleMetrics;
+import com.pokebible.actuator.Metric;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class HealthIndicatorMetrics extends AbstractHealthIndicator {
     private PokemonService service;
 
     @Autowired
-    private PokebibleMetrics metrics;
+    private Metric metrics;
 
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
@@ -40,8 +40,8 @@ public class HealthIndicatorMetrics extends AbstractHealthIndicator {
             logger.debug("HealthCheck Metrics UP");
             builder.up()
                 .withDetail("NumberOfPokemon", ""+service.count())
-                .withDetail(PokebibleMetrics.Counters.DATABASE_ACCESS.getCounterName(), ""+metrics.get(PokebibleMetrics.Counters.DATABASE_ACCESS))
-                .withDetail(PokebibleMetrics.Counters.API_ACCESS.getCounterName(), ""+metrics.get(PokebibleMetrics.Counters.API_ACCESS))
+                .withDetail(Metric.Type.DATABASE_ACCESS.getCounterName(), ""+metrics.get(Metric.Type.DATABASE_ACCESS))
+                .withDetail(Metric.Type.API_ACCESS.getCounterName(), ""+metrics.get(Metric.Type.API_ACCESS))
                 ;
         } catch (Exception e) {
             logger.error("HealthCheck Metrics Down: "+e);

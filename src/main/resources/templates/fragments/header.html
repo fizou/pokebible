@@ -48,13 +48,13 @@
                         Tools
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="nav-link" th:href="@{/monitoring}">Monitoring</a>
+                        <a class="nav-link" th:href="@{/actuator/health}">Healthcheck</a>
+                        <a class="nav-link" th:href="@{/actuator/metrics/com.fizou.pokebible.counters.database.access}">Metrics</a>
+                        <a class="nav-link" th:href="@{/actuator/info}">Version Information</a>
                         <div class="dropdown-divider"></div>
                         <a class="nav-link" th:href="@{/h2-console}">Admin Database H2</a>
                         <div class="dropdown-divider"></div>
-                        <a class="nav-link" th:href="@{/actuator/health}">Healthcheck</a>
-                        <a class="nav-link" th:href="@{/actuator/metrics/com.fizou.pokebible.counters.database.read}">Metrics</a>
-                        <a class="nav-link" th:href="@{/actuator/info}">Version Information</a>
+                        <a class="nav-link" th:href="@{/monitoring}">Monitoring</a>
                     </div>
                 </li>
                  <li class="nav-item dropdown active">
@@ -65,7 +65,7 @@
                         <a class="dropdown-item" th:href="@{/swagger-ui/#/Pokemon%20Entity}">Swagger API interface</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" th:href="@{/v2/api-docs}">JSON Description</a>
-                        <a class="dropdown-item" th:href="@{/api/profile/pokemons}">ALPS Description</a>
+                        <!--a class="dropdown-item" th:href="@{/api/profile/pokemons}">ALPS Description</a-->
                     </div>
                 </li>
             </ul>
@@ -87,13 +87,13 @@
 
             <ul class="navbar-nav my-2 my-lg-0">
                 <li class="nav-item active">
-                    <a class="dropdown-item" th:href="@{/help}">Help</a>
+                    <a class="nav-link" th:href="@{/help}">Help</a>
                 </li>
                 <li class="nav-item active" sec:authorize="isAuthenticated()">
-                    <a class="dropdown-item" th:href="@{/logout}">Logout</a>
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
                 </li>
                 <li class="nav-item active" sec:authorize="!isAuthenticated()">
-                    <a class="dropdown-item" th:href="@{/login}">Sign-in</a>
+                    <a class="nav-link" th:href="@{/login}">Sign-in</a>
                 </li>
             </ul>
 

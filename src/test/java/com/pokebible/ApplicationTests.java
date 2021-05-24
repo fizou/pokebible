@@ -63,6 +63,13 @@ public class ApplicationTests {
         logger.info("ApplicationTests - *** Display Result pokemon {}", pokemon);
         assertTrue(pokemons.size()!=0);
 
+        Pokemon pokemon1 = service.findByNumber("131");
+        Pokemon pokemon2 = service.findByNumber("149");
+        logger.info("ApplicationTests - *** Fight {} vs {}", pokemon1, pokemon2);
+        Pokemon pokemonWinner = service.fight(pokemon1, pokemon2);
+        logger.info("ApplicationTests - *** Display Result Pokemon Winner {}", pokemonWinner);
+        
+        
         logger.debug("ApplicationTests - End");
     }
 

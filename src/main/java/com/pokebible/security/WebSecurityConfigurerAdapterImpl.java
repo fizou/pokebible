@@ -53,7 +53,7 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
             "/help", "/test", "/monitoring",
             // -- Rest API - Target NOT accessible by anonymous. Only token generation is accessible for every one
             //"/api/**",
-            "/api/generateToken",
+            "/api/auth/generateToken",
             // -- Swagger ui - Target accessible by anonymous
             "/swagger-ui/**",
             "/swagger-resources/**",
@@ -116,7 +116,7 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
                 .exceptionHandling().authenticationEntryPoint(basicAuthenticationEntryPointImpl) // In case of an unauthenticated user try to call protected ressource go to this class 
                 .and()
                 // Rest API Authentification
-                .addFilterBefore(new FilterGenerateToken("/api/generateToken", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new FilterGenerateToken("/api/auth/generateToken", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new FilterRestApiAuthentication(), UsernamePasswordAuthenticationFilter.class)
                 ;        
     }

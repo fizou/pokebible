@@ -1,18 +1,14 @@
 package com.pokebible;
 
-import com.pokebible.actuator.PokebibleMetrics;
-import com.pokebible.actuator.PokebibleMetrics.Counters;
-import java.util.ArrayList;
-import java.util.Collections;
+import com.pokebible.actuator.Metric;
+import com.pokebible.actuator.Metric.Type;
 import java.util.List;
-import java.util.Comparator;
 import java.util.Optional;
 import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,14 +32,13 @@ public class PokemonService {
     private PokemonRepository repository;
 
     @Autowired
-    private PokebibleMetrics metrics;
+    private Metric metrics;
 
-   public static PokemonService serviceReference; // reference that can be used by Java Class which cannot autowired (Try also...)
-         
-    @PostConstruct
-    private void init() {
-        serviceReference=this;
-    }
+   //public static PokemonService serviceReference; // reference that can be used by Java Class which cannot autowired (Try also...)
+    //@PostConstruct
+    //private void init() {
+    //    serviceReference=this;
+    //}
     
     //
     // CRUD Operation Find All, Find by Id, Save, Delete 
@@ -52,7 +47,7 @@ public class PokemonService {
 
         logger.debug("Find all Pokemons order by Number Asc");
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         return repository.findAllByOrderByNumberAsc();
     }
@@ -61,7 +56,7 @@ public class PokemonService {
         
         logger.debug("Find all Pokemons with pagination");
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         logger.debug("Criteria - pageNumber: "+pageNumber);
         logger.debug("Criteria - pageSize: "+pageSize);
@@ -93,7 +88,7 @@ public class PokemonService {
             pokemonPage = repository.findAll(pageable);
         } else {
             if (pageSearchField.equalsIgnoreCase("Number")) {
-                pokemonPage = repository.findByNumberContainingIgnoreCase(pageSearchString, pageable);
+                pokemonPage = repository.findByNumberEqualsIgnoreCase(pageSearchString, pageable);
             } else if (pageSearchField.equalsIgnoreCase("Type1")) {
                 pokemonPage = repository.findByType1ContainingIgnoreCase(pageSearchString, pageable);
             } else if (pageSearchField.equalsIgnoreCase("Type2")) {
@@ -126,7 +121,7 @@ public class PokemonService {
 
         logger.debug("Find Pokemon by id: {}", id);
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         Optional<Pokemon> pokemon = repository.findById(id);
         if (pokemon.isPresent()) {
@@ -142,7 +137,7 @@ public class PokemonService {
 
         logger.debug("Find Pokemon by name: {}", name);
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         List<Pokemon> pokemons = repository.findByNameContainingIgnoreCaseOrderByNumberAsc(name);
         
@@ -156,9 +151,9 @@ public class PokemonService {
 
         logger.debug("Find Pokemon by number: {}", number);
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
-        List<Pokemon> pokemons = repository.findByNumberContainingIgnoreCaseOrderByNumberAsc(number);
+        List<Pokemon> pokemons = repository.findByNumberEqualsIgnoreCaseOrderByNumberAsc(number);
         
         logger.debug("Result: {}", pokemons.size());
         
@@ -174,7 +169,7 @@ public class PokemonService {
 
         long count=repository.count();
         
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         logger.debug("Count Pokemon: {}",count);
         
@@ -186,7 +181,7 @@ public class PokemonService {
 
         logger.debug("Save Pokemon: {}", pokemon);
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         return repository.save(pokemon);
     }
@@ -195,7 +190,7 @@ public class PokemonService {
 
         logger.debug("Delete Pokemon: {}", id);
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         repository.deleteById(id);
     }
@@ -207,7 +202,7 @@ public class PokemonService {
 
         logger.debug("Is there a Pokemon existing with this number: "+pokemonNumber);
 
-        List<Pokemon> pokemons = repository.findByNumberContainingIgnoreCaseOrderByNumberAsc(pokemonNumber);
+        List<Pokemon> pokemons = repository.findByNumberEqualsIgnoreCaseOrderByNumberAsc(pokemonNumber);
         logger.debug("Number of pokemon founded: "+pokemons.size());
         boolean result = false;
         if (!pokemons.isEmpty()) {
@@ -215,7 +210,7 @@ public class PokemonService {
         }
         logger.debug("Result: "+result);
 
-        metrics.increment(Counters.DATABASE_ACCESS);
+        metrics.increment(Type.DATABASE_ACCESS);
 
         return result;
     }
@@ -240,5 +235,126 @@ public class PokemonService {
         
         return userName;
     }
+    
+    public Pokemon fight(Pokemon pokemon1, Pokemon pokemon2) {
+       
+        //Rule 1: pokemon1 is always the winner
+        //Pokemon pokemon = pokemon1;
+        //return pokemon;
+
+        //Rules 2: 
+        //    - We are taking the type1 of pokemon1 for attack
+        //    - We are checking multiplier for this attack type against type1 of pokemon2
+        //    - We are modify the multiplier for this attack type against type2 of pokemon2 (If pokemon2 has one)
+        //
+        //    - THEN we are taking the type2 of pokemon1 for attack and keep the best multiplier (type1 or type2)
+        //
+        //    - We do the same for pokemon2 as attacker
+        //    - We compare multiplier of pokemon 1 and pokemon 2
+        //    - We Declare winner (if tied, same multiplier, randomize winner)
+        //
+        logger.info("Battle "+pokemon1.toString()+" vs "+pokemon2.toString());
+        
+        double multiplier1 = getMultiplierFromTableEffect(pokemon1.getType1(),pokemon2.getType1());
+        logger.debug("multiplierA1 ("+pokemon1.getType1()+" vs "+pokemon2.getType1()+"): "+multiplier1);
+        multiplier1 = multiplier1 * getMultiplierFromTableEffect(pokemon1.getType1(),pokemon2.getType2());
+        logger.debug("multiplierA2 ("+pokemon1.getType1()+" vs "+pokemon2.getType2()+"): "+multiplier1);
+        if (!pokemon1.getType2().equals("NONE")) {
+            double multiplier = getMultiplierFromTableEffect(pokemon1.getType2(),pokemon2.getType1());
+            logger.debug("multiplierA3 ("+pokemon1.getType2()+" vs "+pokemon2.getType1()+"): "+multiplier);
+            multiplier = multiplier * getMultiplierFromTableEffect(pokemon1.getType2(),pokemon2.getType2());
+            logger.debug("multiplierA4 ("+pokemon1.getType2()+" vs "+pokemon2.getType2()+"): "+multiplier);
+            if (multiplier>multiplier1) multiplier1=multiplier;
+        }
+        
+        double multiplier2 = getMultiplierFromTableEffect(pokemon2.getType1(),pokemon1.getType1());
+        logger.debug("multiplierB1 ("+pokemon2.getType1()+" vs "+pokemon1.getType1()+"): "+multiplier2);
+        multiplier2 = multiplier2 * getMultiplierFromTableEffect(pokemon2.getType1(),pokemon1.getType2());
+        logger.debug("multiplierB2 ("+pokemon2.getType1()+" vs "+pokemon1.getType2()+"): "+multiplier2);
+        if (!pokemon2.getType2().equals("NONE")) {
+            double multiplier = getMultiplierFromTableEffect(pokemon2.getType2(),pokemon1.getType1());
+            logger.debug("multiplierB3 ("+pokemon2.getType2()+" vs "+pokemon1.getType1()+"): "+multiplier);
+            multiplier = multiplier * getMultiplierFromTableEffect(pokemon2.getType2(),pokemon1.getType2());
+            logger.debug("multiplierB4 ("+pokemon2.getType2()+" vs "+pokemon1.getType2()+"): "+multiplier);
+            if (multiplier>multiplier2) multiplier2=multiplier;
+        }
+
+        logger.debug("multiplier1 ("+pokemon1.getType()+" vs "+pokemon2.getType()+"): "+multiplier1);
+        logger.debug("multiplier2 ("+pokemon2.getType()+" vs "+pokemon1.getType()+"): "+multiplier2);
+        Pokemon winner;
+        if (multiplier1>multiplier2) {
+            winner=pokemon1;
+        } else if (multiplier1<multiplier2) {
+            winner=pokemon2;
+        } else { // multiplier1==multiplier2
+            int randomWinnerNumber = (int)Math.floor(Math.random()*(2)+1);
+            logger.debug("Random winner: "+randomWinnerNumber);
+            if (randomWinnerNumber==1){
+                winner=pokemon1;
+            } else {
+                winner=pokemon2;
+            }
+        }
+        logger.info("Winner "+winner.toString());
+        return winner;
+       
+    }
+    
+    public double getMultiplierFromTableEffect(String attackType, String defenderType) {
+        EffectType attackTypeEnum = EffectType.valueOf(attackType);
+        if (defenderType.equals("NONE")) return 1;
+        EffectType defenderTypeEnum = EffectType.valueOf(defenderType);
+        
+        return tableEffect[defenderTypeEnum.ordinal()][attackTypeEnum.ordinal()].getEffect();
+    }
+
+    // taken and adpat from str
+    private enum EffectType {
+        NORMAL, FIGHTING, FLYING, POISON, GROUND, ROCK, BUG, GHOST, STEEL, FIRE, WATER, GRASS, ELECTRIC, PSYCHIC, ICE, DRAGON, DARK, FAIRY
+    }
+    
+    // Contains the values for what type advantage will deal in extra damage 
+    public enum EffectLevel {
+        INEFFECTIVE(0.0), WEAK(0.5), NORMAL(1.0), STRONG(2.0);
+
+        private double value;
+
+        EffectLevel(final double newValue) {
+            value = newValue;
+        }
+
+        public double getEffect() {
+            return value;
+        }
+    }
+    
+    private static final EffectLevel norm = EffectLevel.NORMAL;
+    private static final EffectLevel weak = EffectLevel.WEAK;
+    private static final EffectLevel str  = EffectLevel.STRONG;
+    private static final EffectLevel inef = EffectLevel.INEFFECTIVE;
+    private static final EffectLevel tableEffect[][] =
+    {        //                                                 ATT
+             // norm  fght  fly   pois  grnd  rock  bug   ghst  stel  fire  wter  grss  elec  psyc  ice   drag  dark  fair
+    /* norm */ {norm, str , norm, norm, norm, norm, norm, inef, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm}, /* norm */
+    /* fght */ {norm, norm, str , norm, norm, norm, norm, inef, norm, norm, norm, norm, norm, norm, norm, norm, norm, str }, /* fght */
+    /* fly  */ {norm, weak, norm, norm, inef, str , weak, norm, norm, norm, norm, weak, str , norm, str , norm, norm, norm}, /* fly  */
+    /* pois */ {norm, weak, norm, weak, str , norm, weak, norm, norm, norm, norm, weak, norm, str , norm, norm, norm, weak}, /* pois */
+    /* grnd */ {norm, norm, norm, weak, norm, weak, norm, norm, norm, norm, str , str , inef, norm, str , norm, norm, norm}, /* grnd */
+    /* rock */ {weak, str , weak, weak, str , norm, norm, norm, norm, norm, str , str , norm, norm, norm, norm, norm, norm}, /* rock */
+    /* bug  */ {norm, weak, str , norm, weak, str , norm, norm, norm, str , norm, weak, norm, norm, norm, norm, norm, norm}, /* bug  */
+    /* ghst */ {inef, inef, norm, weak, norm, norm, weak, norm, norm, norm, norm, norm, norm, norm, norm, norm, str , norm}, /* ghst */
+/* DEF stel */ {weak, str , weak, inef, str , weak, weak, weak, weak, str , norm, weak, norm, weak, weak, weak, weak, norm}, /* stel DEF */
+    /* fire */ {norm, norm, norm, norm, str , str , weak, norm, weak, weak, str , weak, norm, norm, weak, norm, norm, weak}, /* fire */
+    /* wter */ {norm, norm, norm, norm, norm, norm, norm, norm, weak, weak, weak, str , str , norm, weak, norm, norm, norm}, /* wter */
+    /* grss */ {norm, norm, str , str , weak, norm, str , norm, norm, str , weak, weak, weak, norm, str , norm, norm, norm}, /* grss */
+    /* elec */ {norm, norm, weak, norm, str , norm, norm, norm, weak, norm, norm, norm, weak, norm, norm, norm, norm, norm}, /* elec */
+    /* psyc */ {norm, weak, norm, norm, norm, norm, str , str , norm, norm, norm, norm, norm, weak, norm, norm, str , norm}, /* psyc */
+    /* ice  */ {norm, str , norm, norm, norm, str , norm, norm, str , str , norm, norm, norm, norm, weak, norm, norm, norm}, /* ice  */
+    /* drag */ {norm, norm, norm, norm, norm, norm, norm, norm, norm, weak, weak, weak, weak, norm, str , str , norm, str }, /* drag */
+    /* dark */ {norm, str , norm, norm, norm, str , weak, norm, norm, norm, norm, norm, norm, inef, norm, norm, weak, str }, /* dark */
+    /* fair */ {norm, weak, norm, str,  norm, norm, weak, norm, str , norm, norm, norm, norm, norm, norm, inef, norm, weak}  /* fair */
+             // norm  fght  fly   pois  grnd  rock  bug   ghst  stel  fire  wter  grss  elec  psyc  ice   drag  dark  fair
+    };       //                                                 ATT
+    
     
 }

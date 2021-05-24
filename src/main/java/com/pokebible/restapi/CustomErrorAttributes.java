@@ -9,8 +9,8 @@ package com.pokebible.restapi;
     "status": 500,
     "statusLabel": "Internal Server Error",
     "message": "This is a real big mistake....",
-    "errors": "...",
-    "path": "/api/generateToken",
+    "errors": "[ { ... } ]",
+    "path": "/api/auth/generateToken",
     "version": "1.0",
     "debug": "com.pokebible.restapi.RestControllers: ..."  
   }

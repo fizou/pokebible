@@ -10,19 +10,21 @@ import javax.validation.Payload;
 
 /**
  *
- * Interface to create new annotation @PokemonNumberConstraint before PokemonNumber property in Pokemon.java do do specific control on it.
+ * Interface to create new annotation 
+ * @EnableNotMatchConstraint 
+ * before Pokemon CLASS in Pokemon.java 
+ * to do do specific control on the fact that a field NOT match another field (In our case type2 muste NOT match type1)
  *
  */
-@Documented
-@Constraint(validatedBy = PokemonNumberUniqueValidator.class)
-@Target({ ElementType.METHOD, ElementType.FIELD })
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PokemonNumberUniqueConstraint {
+@Constraint(validatedBy = NotMatchValidator.class)
+@Documented
+public @interface EnableNotMatchConstraint {
 
-    String message() default "Error on Unique constraint.";
+    String message() default "Fields must match!";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

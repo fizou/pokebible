@@ -3,7 +3,6 @@ package com.pokebible.restapi;
 import com.pokebible.Pokemon;
 import java.util.Arrays;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
-import org.springframework.web.util.UrlPathHelper;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -99,10 +97,6 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         } 
 
         private List<SecurityReference> defaultAuth() { 
-            //AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything"); 
-            //AuthorizationScope[] authorizationScopes = new AuthorizationScope[1]; 
-            //authorizationScopes[0] = authorizationScope; 
-            //return Arrays.asList(new SecurityReference("JWT Token", authorizationScopes)); 
             
             return Arrays.asList(new SecurityReference("JWT Token", 
                 new AuthorizationScope[]{

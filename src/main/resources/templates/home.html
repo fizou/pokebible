@@ -153,13 +153,14 @@
                     </div>
                     <div class="form-group col-md-8">
                         <label for="email" class="col-form-label">Type 2 (Optionnal)</label>
-                        <select id="ModalNewType2" th:field="*{type2}" class="form-control">
+                        <select id="ModalNewType2" th:field="*{type2}" th:class="${#fields.hasErrors('type2')} ? 'form-control is-invalid' : 'form-control'">>
                             <!---option value="">Select a type</option-->
                             <option th:each="type : ${pokemon.AllTypes}"
                                     th:value="${type.Name}"
                                     th:text="${type.Label}">
                             </option>
                         </select>
+                        <span id="ModalNewType2Error" th:if="${#fields.hasErrors('type2')}" th:errors="*{type2}" class="invalid-feedback d-block"></span>
                     </div>
                 </div>
           </div>
@@ -211,13 +212,14 @@
                     </div>
                     <div class="form-group col-md-8">
                         <label for="email" class="col-form-label">Type 2 (Optionnal)</label>
-                        <select id="ModalEditType2" th:field="*{type2}" class="form-control" >
+                        <select id="ModalEditType2" th:field="*{type2}" th:class="${#fields.hasErrors('type2')} ? 'form-control is-invalid' : 'form-control'" >
                             <!---option value="">Select a type</option-->
                             <option th:each="type : ${pokemon.AllTypes}"
                                     th:value="${type.Name}"
                                     th:text="${type.Label}">
                             </option>
                         </select>
+                        <span id="ModalEditType2Error" th:if="${#fields.hasErrors('type2')}" th:errors="*{type2}" class="invalid-feedback d-block"></span>
                     </div>
                 </div>
           </div>
@@ -306,66 +308,27 @@
         if(modalEditHasErrors) { 
             $("#ModalEdit").modal("show");
         }
-
-/*
-        $(function() {
-          $("#ModalNewForm").validate({
-                    rules: {
-                        number: {
-                            required: true,
-                            number: true,
-                            minlength: 4,
-                            maxlength: 4
-                        },
-                        action: "required"
-                    },
-                    messages: {
-                        number: {
-                            required: "This field is required.",
-                            number: "This field must be numeric like 001, 151, ...",
-                            minlength: "This field must be set with at least 3 numeric characters.",
-                            minlength: "This field must be set with a maximum of 3 numeric characters."
-                        },
-                        action: "Please provide some data"
-                    },
-				errorElement: "em",
-				errorPlacement: function ( error, element ) {
-					// Add the `help-block` class to the error element
-					error.addClass( "help-block" );
-
-					if ( element.prop( "type" ) === "checkbox" ) {
-						error.insertAfter( element.parent( "label" ) );
-					} else {
-						error.insertAfter( element );
-					}
-				},
-				highlight: function ( element, errorClass, validClass ) {
-					$( element ).parents( ".col-md-8" ).addClass( "has-error" ).removeClass( "has-success" );
-				},
-				unhighlight: function (element, errorClass, validClass) {
-					$( element ).parents( ".col-md-8" ).addClass( "has-success" ).removeClass( "has-error" );
-				}
-            });
-        });
-*/
+        
         // New Button
         $('#newButton').on('click', function(event) {
             console.log("Home - newButton - click");
 
-            //reset Field
+            // Reset Field
             $('#ModalNewId').val("");
             $('#ModalNewNumber').val("");
             $('#ModalNewName').val("");
-            $('#ModalNewType1').val("");
-            $('#ModalNewType2').val("");
+            $('#ModalNewType1').val("NONE");
+            $('#ModalNewType2').val("NONE");
 
-            //reset previous errors on modal
+            // Reset previous errors on modal
             $('#ModalNewNumber').removeClass("is-invalid");
             $('#ModalNewNumberError').text("");
             $('#ModalNewName').removeClass("is-invalid");
             $('#ModalNewNameError').text("");
             $('#ModalNewType1').removeClass("is-invalid");
             $('#ModalNewType1Error').text("");
+            $('#ModalNewType2').removeClass("is-invalid");
+            $('#ModalNewType2Error').text("");
 
             // Show Edit Modal
             $('#ModalNew').modal();
@@ -385,20 +348,22 @@
                 console.log("Home - editButton - pokemon="+pokemon);
                 console.log(pokemon);
                 
-                //set Field
+                // Set Field
                 $('#ModalEditId').val(pokemon.id);
                 $('#ModalEditNumber').val(pokemon.number);
                 $('#ModalEditName').val(pokemon.name);
                 $('#ModalEditType1').val(pokemon.type1);
                 $('#ModalEditType2').val(pokemon.type2);
 
-                //reset previous errors
+                // Reset previous errors
                 $('#ModalEditNumber').removeClass("is-invalid");
                 $('#ModalEditNumberError').text("");
                 $('#ModalEditName').removeClass("is-invalid");
                 $('#ModalEditNameError').text("");
                 $('#ModalEditType1').removeClass("is-invalid");
                 $('#ModalEditType1Error').text("");
+                $('#ModalEditType2').removeClass("is-invalid");
+                $('#ModalEditType2Error').text("");
 
                 // Show Edit Modal
                 $('#ModalEdit').modal();
@@ -430,8 +395,99 @@
             });
         });
 
+       // Take the end on form submit to do JS/AJAX control instead post form to server (comment this block NEW/UPDATE if you want to go back to old mechanism) 
+        $( "#ModalNewForm" ).submit(function( event ) {
+            console.log("Home - ModalNewForm.submit() Handler");
+            var postData="{\"name\": \""+$('#ModalNewName').val()+"\", \"number\": \""+$('#ModalNewNumber').val()+"\", \"type1\": \""+$('#ModalNewType1').val()+"\", \"type2\": \""+$('#ModalNewType2').val()+"\"}";
+            console.log("Home - ModalNewForm.submit() Handler -  call rest API control with data: "+postData);
+            $.ajax({
+                url: "/api/pokemons", // No token needed as your are normally identify
+                type : 'POST', // Create
+                data: postData,
+                contentType : 'application/json',
+                success : function(data, status){ 
+                    console.log("Home - ModalNewForm.submit() Handler - Control Success - Status: " + status + " - Data: ", data);
+                    // ReForce Submision while waiting control results
+                    //event.currentTarget.submit();
+                    window.location.href='/home';
+                },
+                error : function(data, status, error){
+                    console.log("Home - ModalNewForm.submit() Handler - Control Error - Status: " + status + " - Data: ", data);
+                    // Reset previous errors on modal
+                    $('#ModalNewNumber').removeClass("is-invalid");
+                    $('#ModalNewNumberError').text("");
+                    $('#ModalNewName').removeClass("is-invalid");
+                    $('#ModalNewNameError').text("");
+                    $('#ModalNewType1').removeClass("is-invalid");
+                    $('#ModalNewType1Error').text("");
+                    $('#ModalNewType2').removeClass("is-invalid");
+                    $('#ModalNewType2Error').text("");
+                    // Set error field with data return
+                    // Response Sample : {"timestamp":"2021/05/23 13:11:26","status":400,"statusLabel":"Bad Request","message":"Validation failed for object='pokemon'. Error count: 1","errors":[{"codes":["EnableNotMatchConstraint.pokemon.type2","EnableNotMatchConstraint.type2","EnableNotMatchConstraint.java.lang.String","EnableNotMatchConstraint"],"arguments":[{"codes":["pokemon.type2","type2"],"arguments":null,"defaultMessage":"type2","code":"type2"}],"defaultMessage":"Fields type2 and type1 must not match.","objectName":"pokemon","field":"type2","rejectedValue":"NORMAL","bindingFailure":false,"code":"EnableNotMatchConstraint"}],"version":"1.0"
+                    const obj=JSON.parse(data.responseText);
+                    console.log("Home - ModalNewForm.submit() Handler - Control Error - Code: " + obj.status + " - " + obj.statusLabel);
+                    for (i=0; i<obj.errors.length; i++) {
+                        var fieldName=obj.errors[i].field.capitalize();
+                        console.log("Home - ModalNewForm.submit() Handler - Control Error - Field: " + fieldName+" - Message: "+obj.errors[i].defaultMessage);
+                        $('#ModalNew'+fieldName).addClass("is-invalid");
+                        if (!$('#ModalNew'+fieldName+'Error').length) $('#ModalNew'+fieldName).after($('<div id="ModalNew'+fieldName+'Error" class="invalid-feedback d-block"></div>'));
+                        $('#ModalNew'+fieldName+'Error').html($('#ModalNew'+fieldName+'Error').html()+obj.errors[i].defaultMessage+"<br/>");
+                    }
+                }
+            });
+            // Cancel Submision while waiting control results
+            event.preventDefault();
+        });        
 
+        $( "#ModalEditForm" ).submit(function( event ) {
+            console.log("Home - ModalEditForm.submit() Handler");
+            var postData="{\"id\": \""+$('#ModalEditId').val()+"\", \"name\": \""+$('#ModalEditName').val()+"\", \"number\": \""+$('#ModalEditNumber').val()+"\", \"type1\": \""+$('#ModalEditType1').val()+"\", \"type2\": \""+$('#ModalEditType2').val()+"\"}";
+            console.log("Home - ModalEditForm.submit() Handler -  call rest API control with data: "+postData);
+            $.ajax({
+                url: "/api/pokemons/"+$('#ModalEditId').val(), // No token needed as your are normally identify
+                type : 'PUT', // Update
+                data: postData,
+                contentType : 'application/json',
+                success : function(data, status){ 
+                    console.log("Home - ModalEditForm.submit() Handler - Control Success - Status: " + status + " - Data: ", data);
+                    // ReForce Submision while waiting control results
+                    //event.currentTarget.submit();
+                    window.location.href='/home';
+                },
+                error : function(data, status, error){
+                    console.log("Home - ModalEditForm.submit() Handler - Control Error - Status: " + status + " - Data: ", data);
+                    // Reset previous errors on modal
+                    $('#ModalEditNumber').removeClass("is-invalid");
+                    $('#ModalEditNumberError').text("");
+                    $('#ModalEditName').removeClass("is-invalid");
+                    $('#ModalEditNameError').text("");
+                    $('#ModalEditType1').removeClass("is-invalid");
+                    $('#ModalEditType1Error').text("");
+                    $('#ModalEditType2').removeClass("is-invalid");
+                    $('#ModalEditType2Error').text("");
+                    // Set error field with data return
+                    // Response Sample : {"timestamp":"2021/05/23 13:11:26","status":400,"statusLabel":"Bad Request","message":"Validation failed for object='pokemon'. Error count: 1","errors":[{"codes":["EnableNotMatchConstraint.pokemon.type2","EnableNotMatchConstraint.type2","EnableNotMatchConstraint.java.lang.String","EnableNotMatchConstraint"],"arguments":[{"codes":["pokemon.type2","type2"],"arguments":null,"defaultMessage":"type2","code":"type2"}],"defaultMessage":"Fields type2 and type1 must not match.","objectName":"pokemon","field":"type2","rejectedValue":"NORMAL","bindingFailure":false,"code":"EnableNotMatchConstraint"}],"version":"1.0"
+                    const obj=JSON.parse(data.responseText);
+                    console.log("Home - ModalNewForm.submit() Handler - Control Error - Code: " + obj.status + " - " + obj.statusLabel);
+                    for (i=0; i<obj.errors.length; i++) {
+                        var fieldName=obj.errors[i].field.capitalize();
+                        console.log("Home - ModalEditForm.submit() Handler - Control Error - Field: " + fieldName+" - Message: "+obj.errors[i].defaultMessage);
+                        $('#ModalEdit'+fieldName).addClass("is-invalid");
+                        if (!$('#ModalEdit'+fieldName+'Error').length) $('#ModalEdit'+fieldName).after($('<div id="ModalEdit'+fieldName+'Error" class="invalid-feedback d-block"></div>'));
+                        $('#ModalEdit'+fieldName+'Error').html($('#ModalEdit'+fieldName+'Error').html()+obj.errors[i].defaultMessage+"<br/>");
+                    }
+                }
+            });
+            // Cancel Submision while waiting control results
+            event.preventDefault();
+        });    
+        
     });
+    
+    // Add capitalize to String prototype to upcase first Letter of string value (Sample: field in Field) by command: variable.Capitalize();
+    String.prototype.capitalize = function() {
+      return this.charAt(0).toUpperCase() + this.slice(1);
+    }
 
 </script>
 

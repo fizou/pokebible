@@ -1,10 +1,9 @@
 package com.pokebible;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.pokebible.validator.PokemonNumberUniqueConstraint;
+import com.pokebible.validator.EnableNotMatchConstraint;
+import com.pokebible.validator.NotMatch;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.*;
-import com.pokebible.validator.OnInsertGroup;
+import com.pokebible.validator.UniqueNumberConstraint;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 @Entity
+@EnableNotMatchConstraint
+@UniqueNumberConstraint
 @JsonPropertyOrder({"id", "number", "name", "type", "pictureUrl", "type1", "type1Label", "type1PictureUrl", "type2", "type2Label", "type2PictureUrl"})
 @JsonIgnoreProperties("allTypes") 
 public class Pokemon {
@@ -101,7 +102,6 @@ public class Pokemon {
     @NotBlank(message="This field is required.")
     @Length(min=3, max=3, message="Lenght must be 3.")
     @Pattern(regexp = "[0-9]+",  message="Only numeric format (001, 002, ...)  is accepted.")
-    @PokemonNumberUniqueConstraint(groups = OnInsertGroup.class) // Unique cosntraint on insert only. However we couldn't update the pokemon with its current number ;)
     @ApiModelProperty(position = 1)
     private String number;
     
@@ -166,6 +166,8 @@ public class Pokemon {
     }
 
     @Pattern(regexp = "(?:(?:^|, )(NONE|NORMAL|GRASS|FIRE|WATER|FIGHTING|FLYING|POISON|GROUND|ROCK|BUG|GHOST|ELECTRIC|PSYCHIC|ICE|DRAGON|DARK|STEEL|FAIRY))+$",  message="NONE, NORMAL, GRASS, FIRE, WATER, FIGHTING, FLYING, POISON, GROUND, ROCK, BUG, GHOST, ELECTRIC, PSYCHIC, ICE, DRAGON, DARK, STEEL, FAIRY are the only value possible for this field.")
+    //@PokemonType2vsType1Constraint
+    @NotMatch(field = "type1")
     @ApiModelProperty(position = 6)
     private String type2;
     
@@ -220,7 +222,7 @@ public class Pokemon {
     }
 
     public String toString(){
-        return "("+this.number+") "+this.name+" - "+this.getType();
+        return ""+this.number+"-"+this.name+" ("+this.getType()+")";
     }
     
     public Pokemon() {

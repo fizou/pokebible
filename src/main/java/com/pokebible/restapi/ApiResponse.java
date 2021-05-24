@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * This is the JSON custom Reponse of Pokebible REST API 
  * 
  */
-@JsonPropertyOrder({"timestamp", "status","statusLabel", "message", "path", "version", "debug" })
+@JsonPropertyOrder({"timestamp", "status", "statusLabel", "message", "path", "version", "debug" })
 public class ApiResponse {
     
     private static final Logger logger = LoggerFactory.getLogger(ApiResponse.class);

@@ -1,10 +1,7 @@
 package com.pokebible.restapi;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +15,8 @@ import org.slf4j.LoggerFactory;
     "status": 200,
     "statusLabel": "",
     "message": "Succesfull Authentication",
-    "path": "/api/generateToken",
+    "data": "[ { ... } ]",
+    "path": "/api/auth/generateToken",
     "version": "1.0",
     "debug": "" 
   }

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -180,7 +179,7 @@ public class Controllers {
     }
 
     @RequestMapping(value="/add", method = RequestMethod.POST)
-    public String add(@Validated(com.pokebible.validator.OnInsertGroup.class) @ModelAttribute("pokemon") Pokemon pokemon, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String add(@Valid @ModelAttribute("pokemon") Pokemon pokemon, BindingResult result, RedirectAttributes redirectAttributes) {
     
         logger.info("/add - User {} is creating Pokemon: {}",  service.getLoggedUserName(), pokemon);
         

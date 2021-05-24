@@ -18,8 +18,9 @@ http://localhost:8085/swagger-ui
 http://localhost:8085/v2/api-docs
 
 Rest Api:
-http://localhost:8085/api/generateToken?username=user&password=password
+http://localhost:8085/api/auth/generateToken?username=user&password=password
 http://localhost:8085/api/pokemons
+http://localhost:8085/api/search/findByName("Bu")
 
 
 +++ Release Note:
@@ -91,33 +92,45 @@ REFACTORING:
 - Comment all Classes 
 - Rework DEBUG/INFO information 
 
+*** Release 1.0.17-SNAPSHOT :
+
+FEATURE:
+* Add New Control constraint on Type 2!= Type1
+* Add Fight 1VS1 API
+* Add Search API (findAll / findBy...)  
+
+TECH:
+- Web control are done in JS by calling REST API 
+- No need of API Token if already identify in Web Browser
+- Unicity Constraint is now a global constraint on class
+
+ISSUES:
+- Fix Menu Link to /actuator/metrics/com.fizou.pokebible.counters.database.access
+- Fix Number unicity on update
+
+REFACTORING:
+- Separate Auth and Pokemon API in 2 REST Controllers
 
 +++ Backlog: 
 
-FEATURE:
-- Add Control constraint on Type 2!= Type1  
-- Manage FR & EN language
+FEATURE: Pokebible is an admin interface prioritize these features !
+
 - Page Statistics par type reprendre CRMDashboard + Webservices.
 - Page "About" Hardcoded on controller side with pokebible image in remplacmeent of monitoring with copyright fizou
 - Page "Fight" on controller side 
 - Page Stats on fight
-- Pokebible API will be access by an front office application to do battle (Find Random pokemon to Battle only based on Type table, Result)
+
+- Manage FR & EN language
+
+- Pokebible Fight API will be access by an front office application to do battle (Find Random pokemon to Battle only based on Type table, Result)
       Do it in Spring boot first, Then port it in angular and then port it Quarkus 123 or 1 3 2 
 - Add PC / ATT / DEF / ENDU
 - Add GENERATION and Evolution
 
 TECH:
-- Control with Jquery validate and or REST 
-  Create control webservice 
-  https://www.javacodegeeks.com/2012/02/spring-mvc-and-jquery-for-ajax-form.html
-  https://stackoverflow.com/questions/56344495/remote-ajax-call-from-jquery-validate-to-check-email-validity-not-working
-- REST enhancement
-  // DONE Rename PokemonRestApiApi en PokemonRest
-  // Rename PokemonRes en Pokemon
-  // add findbynumberNumber ???? ===> searchFilter / searchfield (name, number)
-  // add searchNumber ????
-  // add fight method...
+
 - protect web controller by role ? Done or not ?
+- Metrics restapi counter is not increment on generatetoken (pb on filter which not support metrics)
 - Migrate 1 control in Service to see ?
 - Increment detail metrics for read, update, delete for all database operation
 - Logo at launch 
@@ -129,7 +142,7 @@ TECH:
         LOGGER.info("                         Powered by Quarkus");
 
 ISSUES:
-bug: http://localhost:8085/api/profile/pokemons proteger par token (Ne pas publier profile et comprendre a quoi çà sert)
+* bug: http://localhost:8085/api/profile/pokemons proteger par token (Ne pas publier profile et comprendre a quoi çà sert)
 
 REFACTORING
 - move CustomResponseAttributes format method to APIResponse ?

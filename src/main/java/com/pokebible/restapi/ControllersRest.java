@@ -2,7 +2,7 @@ package com.pokebible.restapi;
 
 import com.pokebible.Pokemon;
 import com.pokebible.PokemonService;
-import com.pokebible.actuator.PokebibleMetrics;
+import com.pokebible.actuator.Metric;
 import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.Api;
 import java.util.List;
@@ -12,17 +12,16 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
+import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,17 +49,14 @@ import org.springframework.web.util.UrlPathHelper;
  * - DELETE /api/pokemons/{id} deletePokemon 
  * - PATCH /api/pokemons/{id} savePokemon    
  * 
- * -  /api/generateToken to manage role 
- * -  /api/testApi to test token and access
- * 
  */
 
-@Api(tags = "Pokemon Rest")
+@Api(tags = "Pokemon")
 //@RepositoryRestController
 @RestController
-public class RestControllers {
+public class ControllersRest {
 	
-    private static final Logger logger = LoggerFactory.getLogger(RestControllers.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllersRest.class);
 
     private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
@@ -68,7 +64,7 @@ public class RestControllers {
     private PokemonService service;
   
     @Autowired
-    private PokebibleMetrics metrics;
+    private Metric metrics;
     
     // GET /api/pokemons findAllPokemon
     @GetMapping("/api/pokemons") // Omit /api/... has we are in RepositoryRestController
@@ -83,7 +79,7 @@ public class RestControllers {
 
         logger.info("/api/pokemons (GET) - User: {}", service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
 
         // Param
         logger.debug("Param - page: {}",  page);
@@ -97,8 +93,8 @@ public class RestControllers {
         int currentPage = page.orElse(1);
         if (currentPage==0) currentPage=1;
         logger.debug("Calculated - currentPage: {}",  currentPage);
-        int pageSize = size.orElse(9);
-        if (pageSize==0) pageSize=9; 
+        int pageSize = size.orElse(999);
+        if (pageSize==0) pageSize=999; 
         logger.debug("Calculated - pageSize: {}",  pageSize);
         String pageSortField = sortField.orElse("Number");
         if (pageSortField.equals("")) pageSortField="Number";
@@ -120,6 +116,10 @@ public class RestControllers {
         }
  
         logger.debug("/api/pokemons (GET) - Result: {}", pokemons.size());
+
+        if (pokemons.size()==0) {
+            throw new ApiExceptionNotFound("No pokemon founded with this criteria");
+        }
         
         return ResponseEntity.ok(pokemons);
 
@@ -131,7 +131,7 @@ public class RestControllers {
 
         logger.info("/api/pokemons/{} (GET) - User: {}", id, service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
         
         Pokemon pokemon = service.findById(id);
         if (pokemon==null) {
@@ -148,11 +148,11 @@ public class RestControllers {
     // Save new 
     @PostMapping("/api/pokemons")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Pokemon> save(@Validated(com.pokebible.validator.OnInsertGroup.class) @RequestBody Pokemon pokemon) {
+    ResponseEntity<Pokemon> save(@Valid @RequestBody Pokemon pokemon) {
 
         logger.info("/api/pokemons (POST) - Pokemon: {} - User: {}", pokemon, service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
 
         pokemon =  service.save(pokemon);
         
@@ -163,11 +163,11 @@ public class RestControllers {
     
     // Save or update
     @PutMapping("/api/pokemons/{id}")
-    ResponseEntity<Pokemon> saveOrUpdate(@Validated(com.pokebible.validator.OnUpdateGroup.class) @RequestBody Pokemon pokemon, @PathVariable Long id) {
+    ResponseEntity<Pokemon> saveOrUpdate(@Valid @RequestBody Pokemon pokemon, @PathVariable Long id) {
 
         logger.info("/api/pokemons/{} (PUT) - User: {}", id, service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
         
         // Overide Json id by the one in url
         pokemon.setId(id);
@@ -187,7 +187,7 @@ public class RestControllers {
 
         logger.info("/api/pokemons/{} (PATCH) - User: {}", id, service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
         
         Pokemon pokemon = service.findById(id);
         if (pokemon==null) {
@@ -237,7 +237,7 @@ public class RestControllers {
 
         logger.info("/api/pokemons/{} (DELETE) - User: {}", id, service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
         
         Pokemon pokemon = service.findById(id);
         if (pokemon==null) {
@@ -256,53 +256,107 @@ public class RestControllers {
         );        
     }
 
-    // Test API with token
-    @GetMapping(path = "/api/test")
-    @ResponseBody
-    public ResponseEntity<ApiResponse> testApi(HttpServletRequest request) {
+    @GetMapping(path = "/api/search/findAll")
+    public ResponseEntity<List<Pokemon>> findAll(HttpServletRequest request) {
 
-        logger.info("/api/test - User: {}", service.getLoggedUserName());
+        logger.info("/api/search/findAll - User: {}", service.getLoggedUserName());
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        metrics.increment(Metric.Type.API_ACCESS);
         
-        //return "{\"message\":\"Your token is valid. Api engine is running and waiting your real requests...\"}";
-        
-        return ResponseEntity.ok(
-            new ApiResponse(
-                HttpServletResponse.SC_OK,
-                "Your token is valid. Rest Api engine is running and waiting your real requests...",
-                urlPathHelper.getPathWithinApplication((HttpServletRequest) request)
-            )
-        );        
+        List<Pokemon> pokemons = service.findAll();
+ 
+        logger.debug("/api/search/findAll - Result: {}", pokemons.size());
+
+        return ResponseEntity.ok(pokemons);
     }
-    
-    // Generate token to access API
-    @RequestMapping(
-        value="/api/generateToken",
-        method = RequestMethod.POST,
-        produces = { MediaType.APPLICATION_JSON_VALUE}
-    )
-    @ResponseBody
-    public ResponseEntity<ApiResponse> generateToken(@RequestBody ApiCredentials credentials, HttpServletRequest request) {
 
-        //
-        // Important this controller method is NOT called : The call to /api/generateToken is intercepted by FilterGenerateToken.class via WebSecurityConfigurerAdapterImpl
-        //
-        // It is just here to add a description and generate it automatically the Swagger-ui interface 
-        //
-        logger.info("/api/generateToken - User: {}", service.getLoggedUserName());
+    @GetMapping(path = "/api/search/findById")
+    public ResponseEntity<Pokemon> findById(HttpServletRequest request, @RequestParam Long id) {
 
-        metrics.increment(PokebibleMetrics.Counters.API_ACCESS);
+        logger.info("/api/search/findById - User: {}", service.getLoggedUserName());
+
+        metrics.increment(Metric.Type.API_ACCESS);
         
-        logger.debug("/api/generateToken - Credentials: {}", credentials);
+        Pokemon pokemon = service.findById(id);
+        if (pokemon==null) {
+            //throw new RuntimeException("Id not found: " +id);
+            throw new ApiExceptionNotFound("Id "+id+" not found");
+        }
+ 
+        logger.debug("/api/search/findById - Result: {}", id, pokemon);
 
+        return ResponseEntity.ok(pokemon);
+    }
+
+    @GetMapping(path = "/api/search/findByName")
+    public ResponseEntity<List<Pokemon>> findByName(HttpServletRequest request, @RequestParam String name) {
+
+        logger.info("/api/search/findByName - Name: {}, User: {}", name, service.getLoggedUserName());
+
+        metrics.increment(Metric.Type.API_ACCESS);
+        
+        List<Pokemon> pokemons = service.findByName(name);
+        if (pokemons.size()==0) {
+            //throw new RuntimeException("Id not found: " +id);
+            throw new ApiExceptionNotFound("Name "+name+" not found");
+        }
+ 
+        logger.debug("/api/search/findByName - Result: {}", pokemons.size());
+
+        return ResponseEntity.ok(pokemons);
+    }
+
+    @GetMapping(path = "/api/search/findByNumber")
+    public ResponseEntity<Pokemon> findByNumber(HttpServletRequest request, @RequestParam String number) {
+
+        logger.info("/api/search/findByNumber - Name: {}, User: {}", number, service.getLoggedUserName());
+
+        metrics.increment(Metric.Type.API_ACCESS);
+        
+        Pokemon pokemon = service.findByNumber(number);
+        if (pokemon==null) {
+            //throw new RuntimeException("Id not found: " +id);
+            throw new ApiExceptionNotFound("Number "+number+" not found");
+        }
+ 
+        logger.debug("/api/search/findByNumber - Result: {}", pokemon);
+
+        return ResponseEntity.ok(pokemon);
+    }
+
+    // Fight 1VS1 (return winner)
+    @GetMapping(path = "/api/battle/fight1VS1")
+    public ResponseEntity<Pokemon> fight(HttpServletRequest request, @RequestParam String pokemonNumber1, @RequestParam String pokemonNumber2) {
+
+        logger.info("/api/battle/fight1VS1 - User: {}", service.getLoggedUserName());
+
+        metrics.increment(Metric.Type.API_ACCESS);
+        
+        Pokemon pokemon1 = service.findByNumber(pokemonNumber1);
+        if (pokemon1==null) {
+            throw new ApiExceptionNotFound("Number "+pokemonNumber1+" not found");
+        }
+        Pokemon pokemon2 = service.findByNumber(pokemonNumber2);
+        if (pokemon2==null) {
+            throw new ApiExceptionNotFound("Number "+pokemonNumber2+" not found");
+        }
+        logger.debug("/api/battle/fight1VS1 - {} vs {} ", pokemon1, pokemon2);
+
+        Pokemon pokemonWinner = service.fight(pokemon1, pokemon2);
+        
+        logger.debug("/api/battle/fight1VS1 - winner is {} ", pokemonWinner);
+
+        return ResponseEntity.ok(pokemonWinner);
+
+/*
         return ResponseEntity.ok(
             new ApiResponse(
                 HttpServletResponse.SC_OK,
-                "Nothing to return... if you see that, there is an issue.",
+                ""+pokemon1.toString()+" VS "+pokemon2.toString()+" fight is finished: Winner is "+pokemonWinner,
                 urlPathHelper.getPathWithinApplication((HttpServletRequest) request)
             )
-        );        
-    }    
+        );
+*/
+    }
     
 }

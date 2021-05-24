@@ -23,15 +23,15 @@ import org.springframework.web.util.UrlPathHelper;
  * This filter ADD JWT TOKEN in Authorization request header if authentification is successfull
  * 
  * We arrive here by: 
- *  - GET http://localhost:8085/api/generateToken?username=user&password=password OR
- *  - POST http://localhost:8085/api/generateToken + username=user&password=password in body OR
- *  - POST http://localhost:8085/api/generateToken + {"username": "admin", "password": "password"} in body
+ *  - GET http://localhost:8085/api/auth/generateToken?username=user&password=password OR
+ *  - POST http://localhost:8085/api/auth/generateToken + username=user&password=password in body OR
+ *  - POST http://localhost:8085/api/auth/generateToken + {"username": "admin", "password": "password"} in body
  * 
- * Note: /api/generateToken is declare in WebSecurityConfigurerAdapterImpl Class (Declaration in RestControllers.java is just for documentation, see comment there)
+ * Note: /api/auth/generateToken is declare in WebSecurityConfigurerAdapterImpl Class (Declaration in RestControllers.java is just for documentation, see comment there)
  * 
     .anyRequest().authenticated()
     .and()
-    .addFilterBefore(new FilterGenerateToken("/api/generateToken", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+    .addFilterBefore(new FilterGenerateToken("/api/auth/generateToken", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
  * 
  */
 

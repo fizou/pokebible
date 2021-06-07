@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    
+<head th:replace="fragments/header :: header-head">
+    <title/>
+</head>
+
+<body>
+<!-- Header -->
+<div th:replace="fragments/header :: header-body"/>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="starter-template">
+        <h1>Dashboard</h1>
+    </div>
+    <div class="Server-template">
+        
+        <table width="100%">
+                <td width="50%">
+                        <div id='myDivChart1' style="width: 600px;height:250px">
+                          <canvas id="myChart1"></canvas>
+                        </div>
+                </td>
+                <td width="50%">
+                        <div id='myDivChart2' style="width: 250px;height:250px">
+                          <canvas id="myChart2"></canvas>
+                        </div>
+                </td>
+        </table>
+        
+        <script>
+            // External
+            //var apiServer="http://localhost:8085";
+            //var token="Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwic2NvcGVzIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjIyODMxNDUzfQ.TbyOlhVFUabH0KwluBcqq8E5kBUts5xujk5LAklH1GOiVoG6Ba2AIqPthXkVgggjfI5JlB__VNnRVJtUZ7B18Q";
+            
+            // Internal
+            var apiServer="";
+            var token="";
+
+            var pokemons;
+
+            $('document').ready( function(){
+
+                console.log("DashBoard - Init");
+
+                $.ajax({
+                    type : 'GET',
+                    url: apiServer+"/api/pokemons", 
+                    url: "/api/pokemons", 
+                          beforeSend: function(request) {
+                            if (token!="") request.setRequestHeader("Authorization", token);
+                          },
+                    contentType : 'application/json',
+                    success : function(dat, status){ 
+                        console.log("DashBoard - success - Status: " + status + " - Data: ", dat);
+
+                        pokemons=dat;
+
+                        console.log("DashBoard - success - pokemons.length: ", pokemons.length);
+                        console.log("DashBoard - success - pokemons[0]: ", pokemons[0]);
+                        console.log("DashBoard - success - pokemons[0]: " + pokemons[0].name);
+                        console.log("DashBoard - success - countByType('NORMAL'): " + countByType(pokemons, "NORMAL"));
+                        console.log("DashBoard - success - countByNbType('SIMPLE'): " + countByNbType(pokemons, "SIMPLE"));
+
+                        /********* Chart Pokemon by Type *************/
+                        const data1 = {
+                          labels: [
+                            //"NONE",     
+                            "NORMAL",     
+                            "GRASS",       
+                            "FIRE",         
+                            "WATER",       
+                            "FIGHTING", 
+                            "FLYING",     
+                            "POISON",     
+                            "GROUND",     
+                            "ROCK",         
+                            "BUG",           
+                            "GHOST",       
+                            "ELECTRIC", 
+                            "PSYCHIC",   
+                            "ICE",           
+                            "DRAGON",     
+                            "DARK",         
+                            "STEEL",       
+                            "FAIRY"  
+                          ],
+                          datasets: [{
+                            label: 'Pokemon by Type',
+                            data: [
+                                    //count1(pokemons, "NONE"),
+                                    countByType(pokemons, "NORMAL"),     
+                                    countByType(pokemons, "GRASS"),       
+                                    countByType(pokemons, "FIRE"),         
+                                    countByType(pokemons, "WATER"),       
+                                    countByType(pokemons, "FIGHTING"), 
+                                    countByType(pokemons, "FLYING"),     
+                                    countByType(pokemons, "POISON"),     
+                                    countByType(pokemons, "GROUND"),     
+                                    countByType(pokemons, "ROCK"),         
+                                    countByType(pokemons, "BUG"),           
+                                    countByType(pokemons, "GHOST"),       
+                                    countByType(pokemons, "ELECTRIC"), 
+                                    countByType(pokemons, "PSYCHIC"),   
+                                    countByType(pokemons, "ICE"),           
+                                    countByType(pokemons, "DRAGON"),     
+                                    countByType(pokemons, "DARK"),         
+                                    countByType(pokemons, "STEEL"),       
+                                    countByType(pokemons, "FAIRY")
+                                  ],  
+                            backgroundColor: [
+                              //'rgb(255, 255, 255)',
+                              'rgb(116, 124, 132)',
+                              'rgb(40, 160, 70)',
+                              'rgb(253, 161, 53)',
+                              'rgb(97, 181, 222)',
+                              'rgb(214, 75, 98)', //fi
+                              'rgb(115, 132, 213)',
+                              'rgb(218, 66, 189)',
+                              'rgb(205, 109, 52)',
+                              'rgb(198, 182, 106)',
+                              'rgb(156, 215, 49)',
+                              'rgb(132, 111, 197)',
+                              'rgb(252, 215, 84)',
+                              'rgb(254, 139, 121)',
+                              'rgb(125, 222, 222)',
+                              'rgb(44, 105, 182)',
+                              'rgb(85, 83, 100)',
+                              'rgb(48, 115, 141)',
+                              'rgb(248, 161, 220)'
+                            ],
+                            hoverOffset: 4
+                          }]
+                        };
+
+                        const config1 = {
+                          type: 'bar',
+                          data: data1,
+                          options: {}
+                        };		        
+
+                        var myChart1 = new Chart(
+                          document.getElementById('myChart1'),
+                          config1
+                        );
+
+                        /********* Chart Pokemon by Nb Type *************/
+                        const data2 = {
+                          labels: [
+                            "DOUBLE",     
+                            "SIMPLE"
+                          ],
+                          datasets: [{
+                            label: 'Pokemon by Number of Type',
+                            data: [
+                                    countByNbType(pokemons, "DOUBLE"),     
+                                    countByNbType(pokemons, "SIMPLE")
+                                  ],  
+                            backgroundColor: [
+                              'rgb(214, 75, 98)',
+                              'rgb(40, 160, 70)'
+                            ],
+                            hoverOffset: 4
+                          }]
+                        };
+
+                        const config2 = {
+                          type: 'pie',
+                          data: data2,
+                          options: {}
+                        };		        
+
+                        var myChart2 = new Chart(
+                          document.getElementById('myChart2'),
+                          config2
+                        );
+
+                    },
+                    error : function(data, status, error){
+
+                        console.log("DashBoard - success - Status: " + status + " - Data: ", data);
+                        console.log("DashBoard - success - Message: " + data.responseJSON.status + " - "+ data.responseJSON.statusLabel+ " - "+ data.responseJSON.message);
+
+                    }
+                });
+
+            });	
+
+
+            // Utility
+            function countByType(pokemons, type)
+            {
+                var counter=0;
+                for (var i=1;i<pokemons.length;i++) {
+                    if (type==pokemons[i].type1||type==pokemons[i].type2) {
+                            counter++;
+                    }
+                }	
+                console.log("DashBoard - countByType: "+ type +" - Count:" + counter);
+                return counter;
+            }
+
+            function countByNbType(pokemons, type)
+            {
+                var counter=0;
+                for (var i=1;i<pokemons.length;i++) {
+                    if (type=="SIMPLE"&&pokemons[i].type2=="NONE") {
+                        counter++;
+                    }
+                    if (type=="DOUBLE"&&pokemons[i].type2!="NONE") {
+                        counter++;
+                    }
+                }	
+                console.log("DashBoard - countByNbType: "+ type +" - Count:" + counter);
+                return counter;
+            }	
+
+        </script>
+        
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer-body"/>
+
+</body>
+</html>

@@ -19,9 +19,9 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.util.UrlPathHelper;
 
 /*
- * Handle HTTP 403 (Acces Denied security exception on LOGGED users) that go normaly to an error page
+ * Handle HTTP 403 (Acces Denied security exception on <<<<<LOGGED>>>>> users) that go normaly to an error page
  * 
- * Redirect to login page or write json error depending of it is an API or un web access that generate this error 
+ * Redirect to login page or write json error depending of it is an API or a web access that generate this error 
  * 
  */
 
@@ -56,21 +56,17 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
             
             // if error comes from API generate json error
             
-            //response.setStatus(HttpServletResponse.SC_FORBIDDEN, "");
-            //httpServletResponse.setContentType("application/json");
-            //httpServletResponse.getWriter().write("{\"status\":\""+HttpServletResponse.SC_FORBIDDEN+"\", \"message\":\"Your role does not permit to access this url.\"}");
-
-            //throw new ApiExceptionForbiden("Your role does not permit to access this url.");
-
             response = CustomResponseAttributes.format(
                     HttpServletResponse.SC_FORBIDDEN, 
-                    "Your role does not permit to access this url.", 
-                    urlPathHelper.getPathWithinApplication((HttpServletRequest) request),
+                    "Your role does not permit to access this service.", 
+                    request,
                     response
             );
 
         } else {
+            
             // if error comes from other Requests than /api/** go to login page
+            
             //httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
             response.sendRedirect(request.getContextPath() + "/login");
         }

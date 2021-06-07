@@ -5,6 +5,7 @@ import com.pokebible.PokemonService;
 import com.pokebible.actuator.Metric;
 import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.Api;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,6 +49,13 @@ import org.springframework.web.util.UrlPathHelper;
  * - PUT /api/pokemons/{id} savePokemon
  * - DELETE /api/pokemons/{id} deletePokemon 
  * - PATCH /api/pokemons/{id} savePokemon    
+ * 
+ * - GET /api/search/findXX : Find Pokemon All, By Id, Number, Name
+ * 
+ * - GET /api/battle/fight1VS1 : return winner of fight between 2 pokemons
+ * - GET /api/battle/bestCounter : return best pokemon counters of a pokemon
+ * 
+ * - GET /types : return the list of type with name, label, strongAgainst, vulnerableTo...
  * 
  */
 
@@ -127,7 +135,7 @@ public class ControllersRest {
      
     // Find by id
     @GetMapping("/api/pokemons/{id}")
-    ResponseEntity<Pokemon> findById(@PathVariable Long id, HttpServletResponse response) {
+    ResponseEntity<Pokemon> findById(@PathVariable Long id) {
 
         logger.info("/api/pokemons/{} (GET) - User: {}", id, service.getLoggedUserName());
 
@@ -183,7 +191,7 @@ public class ControllersRest {
     
     // Update
     @PatchMapping("/api/pokemons/{id}")
-    ResponseEntity<Pokemon> update(@RequestBody Map<String, String> map, @PathVariable Long id, HttpServletResponse response) {
+    ResponseEntity<Pokemon> update(@RequestBody Map<String, String> map, @PathVariable Long id) {
 
         logger.info("/api/pokemons/{} (PATCH) - User: {}", id, service.getLoggedUserName());
 
@@ -191,7 +199,6 @@ public class ControllersRest {
         
         Pokemon pokemon = service.findById(id);
         if (pokemon==null) {
-            //throw new RuntimeException("Id not found: " +id);
             throw new ApiExceptionNotFound("Id "+id+" not found");
         }
 
@@ -224,7 +231,6 @@ public class ControllersRest {
             logger.debug("/api/pokemons/{} (PATCH) - Result update: {}", id, pokemon);
             return ResponseEntity.ok(pokemon);
         } else {
-            //throw new RuntimeException("Error: " +violations.iterator().next().getMessage());
             throw new ApiExceptionBadRequest(violations.iterator().next().getMessage());
         }
 
@@ -273,7 +279,7 @@ public class ControllersRest {
     @GetMapping(path = "/api/search/findById")
     public ResponseEntity<Pokemon> findById(HttpServletRequest request, @RequestParam Long id) {
 
-        logger.info("/api/search/findById - User: {}", service.getLoggedUserName());
+        logger.info("/api/search/findById - Id: {} - User: {}", id, service.getLoggedUserName());
 
         metrics.increment(Metric.Type.API_ACCESS);
         
@@ -309,7 +315,7 @@ public class ControllersRest {
     @GetMapping(path = "/api/search/findByNumber")
     public ResponseEntity<Pokemon> findByNumber(HttpServletRequest request, @RequestParam String number) {
 
-        logger.info("/api/search/findByNumber - Name: {}, User: {}", number, service.getLoggedUserName());
+        logger.info("/api/search/findByNumber - Number: {}, User: {}", number, service.getLoggedUserName());
 
         metrics.increment(Metric.Type.API_ACCESS);
         
@@ -324,21 +330,36 @@ public class ControllersRest {
         return ResponseEntity.ok(pokemon);
     }
 
-    // Fight 1VS1 (return winner)
-    @GetMapping(path = "/api/battle/fight1VS1")
-    public ResponseEntity<Pokemon> fight(HttpServletRequest request, @RequestParam String pokemonNumber1, @RequestParam String pokemonNumber2) {
+    // Types
+    @GetMapping(path = "/api/types")
+    public ResponseEntity<List<Pokemon.Type>> types(HttpServletRequest request) {
 
-        logger.info("/api/battle/fight1VS1 - User: {}", service.getLoggedUserName());
+        logger.info("/api/types (GET) - User: {}", service.getLoggedUserName());
 
         metrics.increment(Metric.Type.API_ACCESS);
         
-        Pokemon pokemon1 = service.findByNumber(pokemonNumber1);
+        List<Pokemon.Type> types = service.getAllTypes();
+ 
+        logger.debug("/api/types - Result: {}", types.size());
+
+        return ResponseEntity.ok(types);
+    }
+
+    // Fight 1VS1 (return winner)
+    @GetMapping(path = "/api/battle/fight1VS1")
+    public ResponseEntity<Pokemon> fight(HttpServletRequest request, @RequestParam String number1, @RequestParam String number2) {
+
+        logger.info("/api/battle/fight1VS1 (GET) - number1: {} - number2: {} - User: {}", number1 , number2, service.getLoggedUserName());
+
+        metrics.increment(Metric.Type.API_ACCESS);
+        
+        Pokemon pokemon1 = service.findByNumber(number1);
         if (pokemon1==null) {
-            throw new ApiExceptionNotFound("Number "+pokemonNumber1+" not found");
+            throw new ApiExceptionNotFound("Number "+number1+" not found");
         }
-        Pokemon pokemon2 = service.findByNumber(pokemonNumber2);
+        Pokemon pokemon2 = service.findByNumber(number2);
         if (pokemon2==null) {
-            throw new ApiExceptionNotFound("Number "+pokemonNumber2+" not found");
+            throw new ApiExceptionNotFound("Number "+number2+" not found");
         }
         logger.debug("/api/battle/fight1VS1 - {} vs {} ", pokemon1, pokemon2);
 
@@ -348,15 +369,21 @@ public class ControllersRest {
 
         return ResponseEntity.ok(pokemonWinner);
 
-/*
-        return ResponseEntity.ok(
-            new ApiResponse(
-                HttpServletResponse.SC_OK,
-                ""+pokemon1.toString()+" VS "+pokemon2.toString()+" fight is finished: Winner is "+pokemonWinner,
-                urlPathHelper.getPathWithinApplication((HttpServletRequest) request)
-            )
-        );
-*/
+    }
+
+    // bestCounters : Return the list of 3 best counter
+    @GetMapping(path = "/api/battle/bestCounters")
+    public ResponseEntity<List<Pokemon>> bestCounters(HttpServletRequest request, @RequestParam String number) {
+
+        logger.info("/api/battle/bestCounters (GET) - Number: {} - User: {}", number, service.getLoggedUserName());
+
+        metrics.increment(Metric.Type.API_ACCESS);
+        
+        List<Pokemon> pokemons = service.bestCounters(number);
+ 
+        logger.debug("/api/battle/bestCounters - Result: {}", pokemons.size());
+
+        return ResponseEntity.ok(pokemons);
     }
     
 }

@@ -18,7 +18,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.util.UrlPathHelper;
 
 /*
- * Handle HTTP 403 (Acces Denied security exception on ANONYMOUS users) that go normaly to an error page
+ * Handle HTTP 403 (Acces Denied security exception on <<<<<ANONYMOUS>>>>> users) that go normaly to an error page
  * 
  * Redirect to login page or write json error depending of it is an API or un web access that generate this error 
  * 
@@ -28,8 +28,6 @@ import org.springframework.web.util.UrlPathHelper;
 public class BasicAuthenticationEntryPointImpl extends BasicAuthenticationEntryPoint  {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicAuthenticationEntryPointImpl.class);
-
-    private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
 
     RequestMatcher customFilterUrl = new AntPathRequestMatcher("/api/**");
     
@@ -52,16 +50,16 @@ public class BasicAuthenticationEntryPointImpl extends BasicAuthenticationEntryP
         logger.warn("User '" + userName + "' attempted to access the protected URL: ("+request.getMethod()+")" + request.getRequestURI());
 
         if (customFilterUrl.matches(request)) {
-            // if error comes from API go to error page to generate json error
-            //response.setStatus(HttpServletResponse.SC_UNAUTHORIZED, "");
-            //response.setContentType("application/json");
-            //response.getWriter().write("{\"status\":\""+HttpServletResponse.SC_UNAUTHORIZED+"\", \"message\":\"You must be authenticated to access this url. Please provide a valid token.\"}");
             
-            response = CustomResponseAttributes.format(HttpServletResponse.SC_UNAUTHORIZED, "You must be authenticated to access this url. Please provide a valid token.", urlPathHelper.getPathWithinApplication((HttpServletRequest) request), response);
+            // if error comes from API go to error page to generate json error
+            
+            response = CustomResponseAttributes.format(HttpServletResponse.SC_UNAUTHORIZED, "You must be authenticated to access this service. Please provide a valid token.", request, response);
 
 
         } else {
+            
             // if error comes from other Requests than /api/** go to login page
+            
             //httpServletResponse.sendRedirect(httpServletRequest.getContextPath() + "/403");
             response.sendRedirect(request.getContextPath() + "/login");
         }

@@ -1,5 +1,6 @@
 package com.pokebible;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.pokebible.validator.EnableNotMatchConstraint;
@@ -25,7 +26,7 @@ import org.springframework.data.domain.Pageable;
 @EnableNotMatchConstraint
 @UniqueNumberConstraint
 @JsonPropertyOrder({"id", "number", "name", "type", "pictureUrl", "type1", "type1Label", "type1PictureUrl", "type2", "type2Label", "type2PictureUrl"})
-@JsonIgnoreProperties("allTypes") 
+@JsonIgnoreProperties("types") 
 public class Pokemon {
  
    /*
@@ -40,8 +41,10 @@ public class Pokemon {
 
     private static final Logger logger = LoggerFactory.getLogger(Pokemon.class);
     
-    // Pokemon Type: NORMAL, GRASS, ... 
-    public enum Type 
+    // Pokemon Type: NORMAL, GRASS, ...  
+    @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+    @JsonPropertyOrder({"name", "label", "picture", "strongAgainst", "vulnerableTo"})
+    public static enum Type 
     {
 
         NONE(""),     
@@ -70,16 +73,159 @@ public class Pokemon {
             this.label = label;
         }
 
+        @ApiModelProperty(position = 0)
+        public String getName() {
+            return name();
+        }
+
+        @ApiModelProperty(position = 1)
         public String getLabel() {
             return label;
         }
 
-        public String getName() {
-            return name();
+        @ApiModelProperty(position = 2)
+        public String getPicture() {
+            return "/images/types/"+getName().toLowerCase()+".png";
         }
+                
+        @ApiModelProperty(position = 3)
+        public ArrayList<String> getStrongAgainst() {
+            //logger.debug("getStrongAgainst - Type: "+this.getName());
+            //logger.debug("getStrongAgainst - Ordinal: "+this.ordinal());
+            ArrayList<String> result = new ArrayList<String>();
+
+            for (int i=1;i<Type.values().length;i++) {
+                //logger.debug("getStrongAgainst - i: "+i);
+                //logger.debug("getStrongAgainst - Type.values(): "+Type.values()[i]);
+                EffectLevel effectLevel = EffectTable[i][this.ordinal()];
+                //logger.debug("getStrongAgainst - effectLevel: "+effectLevel);
+                Double effect = effectLevel.getMultiplier();
+                //logger.debug("getStrongAgainst - effect: "+effect);
+                if (effect>1) {
+                    result.add(""+Type.values()[i]);
+                    //logger.debug("getStrongAgainst - result int: "+result);
+                }
+            }
+            //logger.debug("getStrongAgainst - "+this.getName()+" - result: "+result);
+            return result;
+        }
+
+        @ApiModelProperty(position = 4)
+        public ArrayList<String> getVulnerableTo() {
+            //logger.debug("getVulnerableTo - Type: "+this.getName());
+            //logger.debug("getVulnerableTo - Ordinal: "+this.ordinal());
+            ArrayList<String> result = new ArrayList<String>();
+
+            for (int i=1;i<Type.values().length;i++) {
+                //logger.debug("getVulnerableTo - i: "+i);
+                //logger.debug("getVulnerableTo - Type.values(): "+Type.values()[i]);
+                EffectLevel effectLevel = EffectTable[this.ordinal()][i];
+                //logger.debug("getVulnerableTo - effectLevel: "+effectLevel);
+                Double effect = effectLevel.getMultiplier();
+                //logger.debug("getVulnerableTo - effect: "+effect);
+                if (effect>1) {
+                    result.add(""+Type.values()[i]);
+                    //logger.debug("getStrongAgainst - result int: "+result);
+                }
+            }
+            //logger.debug("getVulnerableTo - "+this.getName()+" - result: "+result);
+            return result;
+        }
+        
+        // getEffect with Simple Type     
+        public static EffectLevel getEffect(String attackerType, String defenderType) {
+            Type attackTypeEnum = Type.valueOf(attackerType);
+            Type defenderTypeEnum = Type.valueOf(defenderType);
+
+            return EffectTable[defenderTypeEnum.ordinal()][attackTypeEnum.ordinal()];
+            
+        }
+
+        // getEffect with Double Type     
+        //    - We are taking the type1 of attacker
+        //    - We are calculate multiplierType1 for type1 of attacker against type1 of defender
+        //    - We are modify (*) this multiplierType1 for type1 of attacker against type2 of defender (If defender has one)
+        //    - THEN we are calculate multiplierType2 based on the type2 of attacker, redo the same with type1 and type2 of defender and keep the best multiplier (multiplierType1 or multiplierType2)
+        public static EffectLevel getEffect(String attackerType1, String attackerType2, String defenderType1, String defenderType2) {
+            
+            double result=0;
+            
+            double multiplierType1 = getEffect(attackerType1, defenderType1).getMultiplier();
+            //logger.debug("multiplierA1 ("+attackerType1+" vs "+defenderType1+"): "+multiplierType1);
+            multiplierType1 = multiplierType1 * getEffect(attackerType1, defenderType2).getMultiplier();
+            //logger.debug("multiplierA2 ("+attackerType1+" vs "+defenderType2+"): "+multiplierType1);
+            double multiplierType2 = getEffect(attackerType2, defenderType1).getMultiplier();
+            //logger.debug("multiplierA3 ("+attackerType2+" vs "+defenderType1+"): "+multiplierType2);
+            multiplierType2 = multiplierType2 * getEffect(attackerType2, defenderType2).getMultiplier();
+            //logger.debug("multiplierA4 ("+attackerType2+" vs "+defenderType2+"): "+multiplierType2);
+            if (multiplierType2>multiplierType1) multiplierType1=multiplierType2;
+            
+            result=multiplierType1;
+            
+            if (result <= EffectLevel.INEFFECTIVE.getMultiplier()) return EffectLevel.INEFFECTIVE;
+            if (result <= EffectLevel.WEAK.getMultiplier()) return EffectLevel.WEAK;
+            if (result <= EffectLevel.NORMAL.getMultiplier()) return EffectLevel.NORMAL;
+            if (result <= EffectLevel.STRONG.getMultiplier()) return EffectLevel.STRONG;
+            return EffectLevel.SUPEREFFECTIVE;
+            
+        }
+
+        // getEffect with 2 Pokemons
+        public static EffectLevel getEffect(Pokemon attackerPokemon, Pokemon defenderPokemon) {
+
+            return getEffect(attackerPokemon.type1, attackerPokemon.type2, defenderPokemon.type1, defenderPokemon.type2);
+            
+        }
+        
+        // Deliver the effect of attack and the multiplierType2 associated 
+        public enum EffectLevel {
+            INEFFECTIVE(0.25), WEAK(0.5), NORMAL(1.0), STRONG(2.0), SUPEREFFECTIVE(4.0);
+
+            private double value;
+
+            EffectLevel(final double newValue) {
+                value = newValue;
+            }
+
+            public double getMultiplier() {
+                return value;
+            }
+        }
+
+        private static final EffectLevel norm = EffectLevel.NORMAL;
+        private static final EffectLevel weak = EffectLevel.WEAK;
+        private static final EffectLevel str  = EffectLevel.STRONG;
+        private static final EffectLevel inef = EffectLevel.INEFFECTIVE;
+        private static final EffectLevel[][] EffectTable =
+        {        //                                                 ATT
+                 // none  norm  grss  fire  wter  fght  fly   pois  grnd  rock  bug   ghst  elec  psyc  ice   drag  dark  stel  fair
+        /* none */ {norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm, norm}, /* none */
+        /* norm */ {norm, norm, norm, norm, norm, str , norm, norm, norm, norm, norm, inef, norm, norm, norm, norm, norm, norm, norm}, /* norm */
+        /* grss */ {norm, norm, weak, str , weak, norm, str , str , weak, norm, str , norm, weak, norm, str , norm, norm, norm, norm}, /* grss */
+        /* fire */ {norm, norm, weak, weak, str , norm, norm, norm, str , str , weak, norm, norm, norm, weak, norm, norm, weak, weak}, /* fire */
+        /* wter */ {norm, norm, str , weak, weak, norm, norm, norm, norm, norm, norm, norm, str , norm, weak, norm, norm, weak, norm}, /* wter */
+        /* fght */ {norm, norm, norm, norm, norm, norm, str , norm, norm, norm, norm, inef, norm, str , norm, norm, norm, norm, str }, /* fght */
+        /* fly  */ {norm, norm, weak, norm, norm, weak, norm, norm, inef, str , weak, norm, str , norm, str , norm, norm, norm, norm}, /* fly  */
+        /* pois */ {norm, norm, weak, norm, norm, weak, norm, weak, str , norm, weak, norm, norm, str , norm, norm, norm, norm, weak}, /* pois */
+        /* grnd */ {norm, norm, str , norm, str , norm, norm, weak, norm, weak, norm, norm, inef, norm, str , norm, norm, norm, norm}, /* grnd */
+    /* DEF rock */ {norm, weak, str , norm, str , str , weak, weak, str , norm, norm, norm, norm, norm, norm, norm, norm, str , norm}, /* rock DEF */
+        /* bug  */ {norm, norm, weak, str , norm, weak, str , norm, weak, str , norm, norm, norm, norm, norm, norm, norm, norm, norm}, /* bug  */
+        /* ghst */ {norm, inef, norm, norm, norm, inef, norm, weak, norm, norm, weak, str , norm, norm, norm, norm, str , norm, norm}, /* ghst */
+        /* elec */ {norm, norm, norm, norm, norm, norm, weak, norm, str , norm, norm, norm, weak, norm, norm, norm, norm, weak, norm}, /* elec */
+        /* psyc */ {norm, norm, norm, norm, norm, weak, norm, norm, norm, norm, str , str , norm, weak, norm, norm, str , norm, norm}, /* psyc */
+        /* ice  */ {norm, norm, norm, str , norm, str , norm, norm, norm, str , norm, norm, norm, norm, weak, norm, norm, str , norm}, /* ice  */
+        /* drag */ {norm, norm, weak, weak, weak, norm, norm, norm, norm, norm, norm, norm, weak, norm, str , str , norm, norm, str }, /* drag */
+        /* dark */ {norm, norm, norm, norm, norm, str , norm, norm, norm, norm, str , norm, norm, inef, norm, norm, weak, norm, str }, /* dark */
+        /* stel */ {norm, weak, weak, str , norm, str , weak, inef, str , weak, weak, weak, norm, weak, weak, weak, weak, weak, norm}, /* stel */
+        /* fair */ {norm, norm, norm, norm, norm, weak, norm, str,  norm, norm, weak, norm, norm, norm, norm, inef, norm, str , weak}  /* fair */
+                 // none  norm  grss  fire  wter  fght  fly   pois  grnd  rock  bug   ghst  elec  psyc  ice   drag  dark  stel  fair
+        };       //                                                 ATT
+        
+
     }
-    public ArrayList<Type> getAllTypes() {
-        ArrayList<Type> listType = new ArrayList<Type>();
+    
+    public static List<Type> getTypes() {
+        List<Type> listType = new ArrayList<Type>();
         for(Type type : Type.values())
         {
             listType.add(type);

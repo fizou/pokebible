@@ -23,6 +23,9 @@
     <link rel="stylesheet" th:href="@{/css/all.min.css}"/>
     <script type="text/javascript" th:src="@{/js/all.min.js}"></script>
 
+    <!-- Chart for Dashboard -->
+    <script th:src="@{/js/chart.min.js}"></script>
+
     <!-- This project -->
     <link rel="stylesheet" th:href="@{/css/main.css}" href="/css/main.css" />
     <script type="text/javascript" th:src="@{/js/global.js}"></script>
@@ -38,10 +41,16 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" th:href="@{/}"><img th:src='@{/images/logo.jpg}' height='25px'/> PokeBible</a>
+            <a class="navbar-brand" th:href="@{/}"><img th:src='@{/images/logo.jpg}' width='25px' height='25px'/> PokeBible</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item active">
                     <a class="nav-link" th:href="@{/home}" href="#">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/dashboard}" href="#">Dashboard<span class="sr-only"></span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/battle}" href="#">Battle<span class="sr-only"></span></a>
                 </li>
                 <li class="nav-item dropdown active" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -49,7 +58,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="nav-link" th:href="@{/actuator/health}">Healthcheck</a>
-                        <a class="nav-link" th:href="@{/actuator/metrics/com.fizou.pokebible.counters.database.access}">Metrics</a>
+                        <a class="nav-link" th:href="@{/actuator/metrics/com.pokebible.counters.database.access}">Metrics</a>
                         <a class="nav-link" th:href="@{/actuator/info}">Version Information</a>
                         <div class="dropdown-divider"></div>
                         <a class="nav-link" th:href="@{/h2-console}">Admin Database H2</a>

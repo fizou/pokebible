@@ -17,8 +17,8 @@ public class Metric {
      * 
      * Metric are acessible on 
      * http://localhost:8085/actuator/metrics
-     * http://localhost:8085/actuator/metrics/com.fizou.pokebible.counters.database.access
-     * http://localhost:8085/actuator/metrics/com.fizou.pokebible.counters.database.access?availableTags=type%3Aread
+     * http://localhost:8085/actuator/metrics/com.pokebible.counters.database.access
+     * http://localhost:8085/actuator/metrics/com.pokebible.counters.database.access?availableTags=type%3Aread
      *
      */
     private static final Logger logger = LoggerFactory.getLogger(Metric.class);
@@ -39,7 +39,7 @@ public class Metric {
                         
     }
 
-    private final static String CounterPath = "com.fizou.pokebible.counters";
+    private final static String CounterPath = "com.pokebible.counters";
 
     public enum Type
     {

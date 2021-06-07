@@ -83,7 +83,7 @@ TECH:
 - Add API REST Error management
 - Add API REST Standard JSON message
 
-ISSUES:
+ISSUES FIX:
 - Fix Click on search without sort 
 - Fix No API display if context-path is set to /pokebible (tomcat run)
 
@@ -104,31 +104,44 @@ TECH:
 - No need of API Token if already identify in Web Browser
 - Unicity Constraint is now a global constraint on class
 
-ISSUES:
-- Fix Menu Link to /actuator/metrics/com.fizou.pokebible.counters.database.access
+ISSUES FIX:
+- Fix Menu Link to /actuator/metrics/com.pokebible.counters.database.access
 - Fix Number unicity on update
 
 REFACTORING:
 - Separate Auth and Pokemon API in 2 REST Controllers
 
+
+*** Release 1.0.18-SNAPSHOT :
+
+FEATURE:
+* Statistics Dashboard on pokemon types in Javascript Ajax Rest
+* Battle Cliff vs Sierra in Javascript Ajax Rest
+* New Rest API 
+    - GET /types : return the list of type with name, label, strongAgainst, vulnerableTo...
+    - GET /api/battle/bestCounter : return best pokemon counters of a pokemon
+
+TECH:
+- Authorize cors for javascript ajax calls (with token)
+
+ISSUES FIX:
+
+REFACTORING:
+- Rename param of fight Rest API from pokemonNumber1 to number1
+- Move Type Effect to Pokemon Enum Type Class
+
 +++ Backlog: 
 
 FEATURE: Pokebible is an admin interface prioritize these features !
 
-- Page Statistics par type reprendre CRMDashboard + Webservices.
 - Page "About" Hardcoded on controller side with pokebible image in remplacmeent of monitoring with copyright fizou
-- Page "Fight" on controller side 
-- Page Stats on fight
-
 - Manage FR & EN language
-
-- Pokebible Fight API will be access by an front office application to do battle (Find Random pokemon to Battle only based on Type table, Result)
-      Do it in Spring boot first, Then port it in angular and then port it Quarkus 123 or 1 3 2 
 - Add PC / ATT / DEF / ENDU
-- Add GENERATION and Evolution
+- Add Generation and Evolution
 
 TECH:
 
+- Build object for response battle : pokemon1 pokemon2 winner coef ?
 - protect web controller by role ? Done or not ?
 - Metrics restapi counter is not increment on generatetoken (pb on filter which not support metrics)
 - Migrate 1 control in Service to see ?
@@ -142,18 +155,15 @@ TECH:
         LOGGER.info("                         Powered by Quarkus");
 
 ISSUES:
-* bug: http://localhost:8085/api/profile/pokemons proteger par token (Ne pas publier profile et comprendre a quoi çà sert)
+- bug: http://localhost:8085/api/profile/pokemons proteger par token (Ne pas publier profile et comprendre a quoi çà sert)
 
 REFACTORING
 - move CustomResponseAttributes format method to APIResponse ?
-- Eliminate API Expception ?
 
 
 +++ Postpone out of Backlog:
-
 - Datatable with API (Do it a new Projet)
 - JSP Vue instead Theamleaf in NEW project (Not the future)
 - Add type image in new/edit type combo before label (Not compatible to all browser without js)
-- NOT RECOMMENDED Suppress path in type1PictureUrl pictureUrl ? or put complete link type1PictureUrl pictureUrl for REST
-    
+- NOT RECOMMENDED Suppress path in type1PictureUrl pictureUrl ? or put complete link type1PictureUrl pictureUrl for REST    
 

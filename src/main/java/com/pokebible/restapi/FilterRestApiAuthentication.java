@@ -48,7 +48,7 @@ public class FilterRestApiAuthentication extends GenericFilterBean {
         if (customFilterUrl.matches(httpServletRequest)) {
             // Verify authentification only on API request
             
-            logger.info("API token verification on " + urlPathHelper.getPathWithinApplication((HttpServletRequest) request));
+            logger.debug("API token verification on " + urlPathHelper.getPathWithinApplication((HttpServletRequest) request));
             Authentication authentication = ApiCredentials.verifyToken((HttpServletRequest) request);
             if (authentication!=null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -56,7 +56,7 @@ public class FilterRestApiAuthentication extends GenericFilterBean {
             } else {
                 // If user is already authenticate by his browser and try to access Api let him do it.
                 if  (SecurityContextHolder.getContext().getAuthentication()!=null) {
-                    logger.debug("Case 2 - Authentication with token failed BUT the user is already authenticated by browser login form");
+                    logger.debug("Case 2 - Authentication with token failed BUT the user is already authenticated in its browser");
                     //let him go role will be checked by security
                     // means you don't need to provide token when logged. Provide token Only if not logged anonymous
                 } else {

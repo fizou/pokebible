@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
  * in HealthCheck: 
  *   http://localhost:8085/actuator/health - Ex "metrics":{"status":"UP","details":{"NumberOfPokemon":"151","counterRead":"3.0" ... }
  * in Actuator Metrics: 
- *   http://localhost:8085/actuator/metrics/com.fizou.pokebible.counter
- *   http://localhost:8085/actuator/metrics/com.fizou.pokebible.counter?availableTags=type%3Aread
+ *   http://localhost:8085/actuator/metrics/com.pokebible.counter
+ *   http://localhost:8085/actuator/metrics/com.pokebible.counter?availableTags=type%3Aread
  */
 @Component("metrics")
 public class HealthIndicatorMetrics extends AbstractHealthIndicator {
@@ -33,18 +33,18 @@ public class HealthIndicatorMetrics extends AbstractHealthIndicator {
     @Override
     protected void doHealthCheck(Health.Builder builder) throws Exception {
         
-        logger.info("Starting Metrics HealthCheck...");
+        logger.info("HealthCheck - Retreive Application Metrics...");
 
         try {
                         
-            logger.debug("HealthCheck Metrics UP");
+            logger.debug("HealthCheck - Metrics UP");
             builder.up()
                 .withDetail("NumberOfPokemon", ""+service.count())
                 .withDetail(Metric.Type.DATABASE_ACCESS.getCounterName(), ""+metrics.get(Metric.Type.DATABASE_ACCESS))
                 .withDetail(Metric.Type.API_ACCESS.getCounterName(), ""+metrics.get(Metric.Type.API_ACCESS))
                 ;
         } catch (Exception e) {
-            logger.error("HealthCheck Metrics Down: "+e);
+            logger.error("HealthCheck - Metrics DOWN - Error: "+e);
             builder.down()
                 .withDetail("error", ""+e)
                 ;

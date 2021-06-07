@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /*
  * Manage Security with ROLE to authorise the page/ressource access of the application
@@ -89,7 +93,8 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
         http
                 .headers().disable() // if enable, it adds lot of high security parameter in header of response included X-Frame-Options: DENY ! 
 //                .headers().frameOptions().disable() // Deprecate :(
-                .cors().disable()    // put at disabled here (Can be overide in SimpleCORSFilter Class)  
+//                .cors().disable()    // put at disabled here (Can be overide in SimpleCORSFilter Class) 
+                .cors().and()
                 .csrf().disable()    // put at disabled to let H2-Console working (Almost it...) 
                 .authorizeRequests()
                 .antMatchers(WHITELIST_ANONYMOUS).permitAll() // these ressources are accessible by everyone (logged or not) 
@@ -119,6 +124,13 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
                 .addFilterBefore(new FilterGenerateToken("/api/auth/generateToken", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new FilterRestApiAuthentication(), UsernamePasswordAuthenticationFilter.class)
                 ;        
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
     }
 
     //Spring Boot autmatically authorise this already... Only for need for war tomcat run !

@@ -22,19 +22,19 @@ public class HealthIndicatorExternalService implements HealthIndicator {
 
     @Override
     public Health health() {
-        logger.info("Starting External Service HealthCheck...");
+        logger.info("HealthCheck - Checking External Service '{}' ...", URL);
         try {
             // check if url shortener service url is reachable
             Socket socket = new Socket(new java.net.URL(URL).getHost(),443);
 
-            logger.debug("HealthCheck External Service UP");
+            logger.debug("HealthCheck - External Service UP");
             return Health
                     .up()
                     .withDetail("url", URL)
                     .build();
         } catch (Exception e) {
             
-            logger.error("HealthCheck External Service Down Failed to connect to: {} : "+e, URL);
+            logger.error("HealthCheck - External Service DOWN - Failed to connect to: {} : "+e, URL);
             return Health
                     .down()
                     .withDetail("url", URL)

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    
+<head th:replace="fragments/header :: header-head">
+    <title/>
+</head>
+
+<body>
+<!-- Header -->
+<div th:replace="fragments/header :: header-body"/>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="Server-template">
+
+        <table border='0'>
+            <tr>
+                <td valign='top'>
+                    <div class="starter-template">
+                        <h1>Battle</h1>
+                    </div>
+                    <table border='0' width='527' style='background: no-repeat url("/images/battleground.jpg");'>
+                            <tr>
+                                <td valign='top' align='center'>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                </td>
+                            </tr>	
+                            <tr>
+                                <td valign='top' align='center'>
+                                    <div id='vsPokemonList'>
+                                        <table border='0' style="background-color:#FFFFFF;">
+                                            <tr>
+                                                <td valign='top' align='center' width='80'>
+                                                    <div id='vsPokemonType1' ><img height=25 src="http://localhost:8085/images/types/grass.png"/><img height=25 src="http://localhost:8085/images/types/poison.png"/></div>
+                                                </td>
+                                                <td valign='top' align='center' width='80'>
+                                                    <div id='vsPokemonType2' ><img height=25 src="http://localhost:8085/images/types/grass.png"/><img height=25 src="http://localhost:8085/images/types/poison.png"/></div>
+                                                </td>
+                                                <td valign='top' align='center' width='80'>
+                                                    <div id='vsPokemonType3' ><img height=25 src="http://localhost:8085/images/types/grass.png"/><img height=25 src="http://localhost:8085/images/types/poison.png"/></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top' align='center'>
+                                                    <div id='vsPokemonSelect1' ><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='vsPokemonSelect2' ><img height=40 src="http://localhost:8085/images/pokemons/002.png"/><br/>Ivysaur</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='vsPokemonSelect3' ><img height=40 src="http://localhost:8085/images/pokemons/003.png"/><br/>Venusaur</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top' align='center'>
+                                                    <div id='vsPokemonSelectNumber1' align='center' onClick="clickOnPokemonSelectNumber(this)">001</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='vsPokemonSelectNumber2' align='center' onClick="clickOnPokemonSelectNumber(this)">002</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='vsPokemonSelectNumber3' align='center' onClick="clickOnPokemonSelectNumber(this)">003</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <button style="margin-top: 3px;" onClick="selectVsPokemon()">Randomize</button>
+                                    </div>
+                                </td>
+                            </tr>	
+                            <tr>
+                                <td valign='top' align='center'>
+                                    <!--h2>&nbsp;<BR/>Vs</h2-->
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                </td>
+                            </tr>	
+                            <tr>
+                                <td valign='top'  align='center'>
+                                    <div id='vsPokemonList'>
+                                        <br/>
+                                        <table border='0' style="background-color:#FFFFFF;">
+                                            <tr>
+                                                <td valign='top' align='center' width='80'>
+                                                    <div id='myPokemonType1'><img height=25 src="http://localhost:8085/images/types/grass.png"/><img height=25 src="http://localhost:8085/images/types/poison.png"/></div>
+                                                </td>
+                                                <td valign='top' align='center' width='80'>
+                                                    <div id='myPokemonType2'><img height=25 src="http://localhost:8085/images/types/grass.png"/><img height=25 src="http://localhost:8085/images/types/poison.png"/></div>
+                                                </td>
+                                                <td valign='top' align='center' width='80'>
+                                                    <div id='myPokemonType3'><img height=25 src="http://localhost:8085/images/types/grass.png"/><img height=25 src="http://localhost:8085/images/types/poison.png"/></div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top' align='center'>
+                                                    <div id='myPokemonSelect1'><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='myPokemonSelect2'><img height=40 src="http://localhost:8085/images/pokemons/002.png"/><br/>Ivysaur</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='myPokemonSelect3'><img height=40 src="http://localhost:8085/images/pokemons/003.png"/><br/>Venusaur</div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign='top' align='center'>
+                                                    <div id='myPokemonSelectNumber1' onClick="clickOnPokemonSelectNumber(this)">001</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='myPokemonSelectNumber2' onClick="clickOnPokemonSelectNumber(this)">002</div>
+                                                </td>
+                                                <td valign='top' align='center'>
+                                                    <div id='myPokemonSelectNumber3' onClick="clickOnPokemonSelectNumber(this)">003</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <button style="margin-top: 3px;" onClick="battle()">Let'Go Battle!</button>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    &nbsp;<br>
+                                    <h2>Choose 3 pokemons</h2>
+                                    <h2>to help Sierra defeat Cliff</h2>
+                                </td>
+                            </tr>
+                    </table>
+
+                </td>
+                
+                <td valign='top'>
+                    <br/>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#battlePanelSelect" role="tab" aria-controls="home" aria-selected="true">Select List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#battlePanelEffectType" role="tab" aria-controls="profile" aria-selected="false">Type Effectiveness</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#battlePanelRecommanded" role="tab" aria-controls="profile" aria-selected="false">Recommanded</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#battlePanellogs" role="tab" aria-controls="contact" aria-selected="false">Battle Logs</a>
+                        </li>
+                    </ul>
+                        <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="battlePanelSelect" role="tabpanel" aria-labelledby="home-tab">
+                            <br/>
+                            <div id='allPokemonList' class="overflow-auto" style="width: 100%; height: 590px">
+                                <table border='0' width='100%'>
+                                    <tr>
+                                        <td valign='top' align='center'>
+                                            <div id='myPokemonList1'><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                        </td>
+                                        <td valign='top' align='center'>
+                                            <div id='myPokemonList2'><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                        </td>
+                                        <td valign='top' align='center'>
+                                            <div id='myPokemonList3'><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <br/>
+                            <div id='allTypeList'>
+                                <table border='0' width='100%'>
+                                    <tr>
+                                        <td valign='top' align='center'>
+                                            <div id='typeList1'><img height=40 src="http://localhost:8085/images/types/grass.png" style="height:25px;"/><br/>Grass</div>
+                                        </td>
+                                        <td valign='top' align='center'>
+                                            <div id='typeList2'><img height=40 src="http://localhost:8085/images/types/grass.png" style="height:25px;"/><br/>Grass</div>
+                                        </td>
+                                        <td valign='top' align='center'>
+                                            <div id='typeList3'><img height=40 src="http://localhost:8085/images/types/grass.png" style="height:25px;"/><br/>Grass</div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="battlePanelEffectType" role="tabpanel" aria-labelledby="profile-tab">
+                            <br/>
+                            <div id='divEffectList'>
+                            </div>
+                            <!--img src='/images/effect.png' width='527'-->
+                        </div>
+                        <div class="tab-pane fade" id="battlePanelRecommanded" role="tabpanel" aria-labelledby="profile-tab">
+                            <br/>
+                            <div id='divRecommandedList'>
+                            <table border='0' style="background-color:#FFFFFF;">
+                                <tr>
+                                    <td valign='top' align='center'>
+                                    </td>
+                                    <td valign='top' align='center'>
+                                    </td>
+                                    <td valign='top' align='left'>
+                                        Best Counters
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign='top' align='center'>
+                                        <div id='vsPokemonRecommanded1' ><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                    </td>
+                                    <td valign='top' align='center'>
+                                        &lt;
+                                    </td>
+                                    <td valign='top' align='left'>
+                                        <div id='vsPokemonsRecommanded1' ><img height=40 src="http://localhost:8085/images/pokemons/001.png"/><br/>Bulbasaur</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign='top' align='center'>
+                                        <div id='vsPokemonRecommanded2' ><img height=40 src="http://localhost:8085/images/pokemons/002.png"/><br/>Ivysaur</div>
+                                    </td>
+                                    <td valign='top' align='center'>
+                                        &lt;
+                                    </td>
+                                    <td valign='top' align='left'>
+                                        <div id='vsPokemonsRecommanded2' ><img height=40 src="http://localhost:8085/images/pokemons/002.png"/><br/>Ivysaur</div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign='top' align='center'>
+                                        <div id='vsPokemonRecommanded3' ><img height=40 src="http://localhost:8085/images/pokemons/003.png"/><br/>Venusaur</div>
+                                    </td>
+                                    <td valign='top' align='center'>
+                                        &lt;
+                                    </td>
+                                    <td valign='top' align='center'>
+                                        <div id='vsPokemonsRecommanded3' ><img height=40 src="http://localhost:8085/images/pokemons/003.png"/><br/>Venusaur</div>
+                                    </td>
+                                </tr>
+                            </table>
+                            </div>
+                            ...
+                        </div>
+                        <div class="tab-pane fade" id="battlePanellogs" role="tabpanel" aria-labelledby="contact-tab">
+                            <br/>
+                            <div id='battleLogs' align='center'>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+            <tr>
+        </table>
+        
+        <script>
+            // External
+            //var apiServer="http://localhost:8085";
+            //var token="Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwic2NvcGVzIjoiUk9MRV9VU0VSIiwiZXhwIjoxNjIyODMxNDUzfQ.TbyOlhVFUabH0KwluBcqq8E5kBUts5xujk5LAklH1GOiVoG6Ba2AIqPthXkVgggjfI5JlB__VNnRVJtUZ7B18Q";
+            
+            // Internal
+            var apiServer="";
+            var token="";
+
+            var pokemons;
+            var types;
+
+            $('document').ready( function() {
+
+                console.log("Pokebattle - Init");
+                getAllTypes();
+                getAllPokemons();
+                
+
+            });
+
+            function clickOnPokemonSelectNumber(element) {
+                console.log("Pokebattle - selectNumber - element: "+$(element).attr('id'), element);
+                pokemonSelected=$(element).attr('id').slice(-1);
+                for (var i=1;i<=3;i++){
+                    $("#myPokemonSelectNumber"+i).css("background-color", "white")
+                    $("#myPokemonSelectNumber"+i).css("background-color", "white")
+                }	  
+                $("#myPokemonSelectNumber"+pokemonSelected).css("background-color", "yellow")
+
+            }
+
+            // Vs Pokemon selection
+            var VsPokemonInitialized=false;
+            function selectVsPokemon() {
+
+                var vsPokemonSelect1 = pokemons[randomNumber(0, pokemons.length-1)];	
+                console.log("Pokebattle - selectVsPokemon - vsPokemonSelect1: " + vsPokemonSelect1.name);
+                console.log("Pokebattle - selectVsPokemon - vsPokemonSelect1: " + vsPokemonSelect1.type1);
+                console.log("Pokebattle - selectVsPokemon - vsPokemonSelect1: " + vsPokemonSelect1.type2);
+                // vsPokemonType1
+                if (vsPokemonSelect1.type2!="NONE") {
+                    $("#vsPokemonType1").html("<img height=25 src='http://localhost:8085/images/types/"+vsPokemonSelect1.type1.toLowerCase()+".png'/><img height=25 	src='http://localhost:8085/images/types/"+vsPokemonSelect1.type2.toLowerCase()+".png'/>");
+                } else {
+                    $("#vsPokemonType1").html("<img height=25 src='http://localhost:8085/images/types/"+vsPokemonSelect1.type1.toLowerCase()+".png'/>");
+                }
+                $("#vsPokemonSelect1").html("<img height=40 src='http://localhost:8085/images/pokemons/"+vsPokemonSelect1.number+".png'/><br/>"+vsPokemonSelect1.name+"");
+                $("#vsPokemonSelectNumber1").html(""+vsPokemonSelect1.number+"");
+                
+                var vsPokemonSelect2 = pokemons[randomNumber(0, pokemons.length-1)];	
+                console.log("Pokebattle - selectVsPokemon - vsPokemonSelect2: " + vsPokemonSelect2.name);
+                if (vsPokemonSelect2.type2!="NONE") {
+                    $("#vsPokemonType2").html("<img height=25 src='http://localhost:8085/images/types/"+vsPokemonSelect2.type1.toLowerCase()+".png'/><img height=25 	src='http://localhost:8085/images/types/"+vsPokemonSelect2.type2.toLowerCase()+".png'/>");
+                } else {
+                    $("#vsPokemonType2").html("<img height=25 src='http://localhost:8085/images/types/"+vsPokemonSelect2.type1.toLowerCase()+".png'/>");
+                }
+                $("#vsPokemonSelect2").html("<div id='vsPokemonSelect2' align='center'><img height=40 src='http://localhost:8085/images/pokemons/"+vsPokemonSelect2.number+".png'/><br/>"+vsPokemonSelect2.name+"");
+                $("#vsPokemonSelectNumber2").html(""+vsPokemonSelect2.number+"");
+
+                var vsPokemonSelect3 = pokemons[randomNumber(0, pokemons.length-1)];	
+                console.log("Pokebattle - selectVsPokemon - vsPokemonSelect3: " + vsPokemonSelect3.name);
+                if (vsPokemonSelect3.type2!="NONE") {
+                    $("#vsPokemonType3").html("<img height=25 src='http://localhost:8085/images/types/"+vsPokemonSelect3.type1.toLowerCase()+".png'/><img height=25 	src='http://localhost:8085/images/types/"+vsPokemonSelect3.type2.toLowerCase()+".png'/>");
+                } else {
+                    $("#vsPokemonType3").html("<img height=25 src='http://localhost:8085/images/types/"+vsPokemonSelect3.type1.toLowerCase()+".png'/>");
+                }
+                $("#vsPokemonSelect3").html("<img height=40 src='http://localhost:8085/images/pokemons/"+vsPokemonSelect3.number+".png'/><br/>"+vsPokemonSelect3.name+"");
+                $("#vsPokemonSelectNumber3").html(""+vsPokemonSelect3.number+"");
+
+                for (var i=1;i<=3;i++){
+                    $("#myPokemonSelect"+i).css("background-color", "white");
+                    $("#vsPokemonSelect"+i).css("background-color", "white");
+                    
+                    
+                    $("#vsPokemonRecommanded"+i).html($("#vsPokemonSelect"+i).html())
+
+                    console.log("Pokebattle - bestCounters - "+$("#vsPokemonSelectNumber"+i).html());
+                    
+
+                    $.ajax({
+                        type : 'GET',
+                        url: apiServer+"/api/battle/bestCounters", 
+                            beforeSend: function(request) {
+                                if (token!="") request.setRequestHeader("Authorization", token);
+                            },
+                        contentType : 'application/json',
+                            data: { 
+                              number: $("#vsPokemonSelectNumber"+i).html() 
+                            },
+                            context:{iteration:i}, 
+                        success : function(data, status){ 
+                            console.log("Pokebattle - bestCounters - success - Status: " + status + " - Data: ", data);
+
+                            console.log("Pokebattle - bestCounters - success - context - this.iteration: " + this.iteration);
+                            console.log("Pokebattle - bestCounters - success - bestCounters[0]: " + data[0].number);
+                            
+                            var pokemons=data;
+
+                            var selectorHtml="<table align='left'>";
+                            var breakLine=0;
+                            for (var i=0;i<pokemons.length;i++) {
+                                if (typeSelected==""||pokemons[i].type1==typeSelected||pokemons[i].type2==typeSelected) {
+                                    selectorHtml=selectorHtml+"<td>";
+                                    selectorHtml=selectorHtml+"<div id='myPokemonRecommandedList"+pokemons[i].number+"' align='center' onClick='selectMyPokemon(\""+pokemons[i].number+"\")'><img id='myPokemonImgRecommandedList"+i+"' height=40 src='http://localhost:8085/images/pokemons/"+pokemons[i].number+".png'/><br/>"+pokemons[i].name+"</div>";
+                                    selectorHtml=selectorHtml+"</td>";
+                                    breakLine++;
+                                    if (breakLine==6) {
+                                        selectorHtml=selectorHtml+"</tr><tr>";
+                                        breakLine=0;
+                                    }
+                                }
+                            }
+                            selectorHtml=selectorHtml+"</table>";
+
+                            $("#vsPokemonsRecommanded"+this.iteration).html(selectorHtml);
+
+                        },
+                        error : function(data, status, error){
+                            console.log("Pokebattle - bestCounters - error - Status: " + status + " - Data: ", data);
+                            console.log("Pokebattle - bestCounters - error - Message: " + data.responseJSON.status + " - "+ data.responseJSON.statusLabel+ " - "+ data.responseJSON.message);
+                        }
+                    });
+                    
+                }
+                
+                VsPokemonInitialized=true;
+
+            }
+
+            // Battle
+            function battle() {
+                console.log("Pokebattle - battle ");
+
+                var battleLogs="";
+                var fightWin=0;
+                var fightLost=0;
+
+                for (var i=1;i<=3;i++) {
+
+                    var myPokemon  = $("#myPokemonSelectNumber"+i).html();
+                    var vsPokemon  = $("#vsPokemonSelectNumber"+i).html();
+
+                    console.log("Pokebattle - battle - "+myPokemon+" Vs "+vsPokemon);
+
+                    $.ajax({
+                        type : 'GET',
+                        url: apiServer+"/api/battle/fight1VS1", 
+                            beforeSend: function(request) {
+                                if (token!="") request.setRequestHeader("Authorization", token);
+                            },
+                        contentType : 'application/json',
+                            data: { 
+                              number1: myPokemon, 
+                              number2: vsPokemon
+                            },
+                            context:{iteration:i, myPokemon:myPokemon, vsPokemon:vsPokemon}, 
+                        success : function(data, status){ 
+                            console.log("Pokebattle - battle - success - Status: " + status + " - Data: ", data);
+
+                            console.log("Pokebattle - battle - success - context - this.iteration: " + this.iteration);
+                            console.log("Pokebattle - battle - success - context - this.myPokemon: " + this.myPokemon);
+                            console.log("Pokebattle - battle - success - context - this.myPokemon: " + this.vsPokemon);
+                            console.log("Pokebattle - battle - success - winner: " + data.number);
+
+                            if (data.number==this.myPokemon) {
+                                $("#myPokemonSelect"+this.iteration).css("background-color", "green")
+                                $("#vsPokemonSelect"+this.iteration).css("background-color", "red")
+                                fightWin++;
+                                battleLogs=battleLogs+getPokemonByNumber(this.myPokemon).name+" Vs "+getPokemonByNumber(this.vsPokemon).name+": <br/>"+"+++ Sierra win with "+data.name+"<br/>";
+                            } else {
+                                $("#vsPokemonSelect"+this.iteration).css("background-color", "green")
+                                $("#myPokemonSelect"+this.iteration).css("background-color", "red")
+                                fightLost++;
+                                battleLogs=battleLogs+getPokemonByNumber(this.myPokemon).name+" Vs "+getPokemonByNumber(this.vsPokemon).name+": <br/>"+"--- Cliff win with "+data.name+"<br/>";
+                            }
+                            battleLogs=battleLogs+"&nbsp;<br/>";
+
+                            $("#battleLogs").html(battleLogs);	 
+
+                        },
+                        error : function(data, status, error){
+                            console.log("Pokebattle - battle - error - Status: " + status + " - Data: ", data);
+                            console.log("Pokebattle - battle - error - Message: " + data.responseJSON.status + " - "+ data.responseJSON.statusLabel+ " - "+ data.responseJSON.message);
+                        }
+                    });
+                }
+
+            }
+
+            function getPokemonByNumber(number) {
+                console.log("Pokebattle - getPokemonByNumber - number: "+number);
+                for (var i=0;i<pokemons.length;i++) {
+                    if (pokemons[i].number==number) {
+                        console.log("Pokebattle - getPokemonByNumber - result: "+pokemons[i]);
+                        return pokemons[i];
+                    }
+                }
+                console.log("Pokebattle - getPokemonByNumber - pokemon number not founded: "+number);
+            }
+            
+            function getAllPokemons() {
+                console.log("Pokebattle - getAllPokemons");
+                $.ajax({
+                    type : 'GET',
+                    url: apiServer+"/api/pokemons", 
+                        beforeSend: function(request) {
+                            if (token!="") request.setRequestHeader("Authorization", token);
+                        },
+                    contentType : 'application/json',
+                    success : function(data, status){ 
+                        console.log("Pokebattle - getAllPokemons - success - Status: " + status + " - Data: ", data);
+
+                        pokemons=data;
+
+                        console.log("Pokebattle - getAllPokemons - success - pokemons[0]: ", pokemons[0]);
+                        console.log("Pokebattle - getAllPokemons - success - pokemons[0].name: " + pokemons[0].name);
+
+                        var selectorHtml="<table align='center'>";
+                        var breakLine=0;
+                        for (var i=0;i<pokemons.length;i++) {
+                            if (typeSelected==""||pokemons[i].type1==typeSelected||pokemons[i].type2==typeSelected) {
+                                selectorHtml=selectorHtml+"<td>";
+                                selectorHtml=selectorHtml+"<div id='myPokemonList"+pokemons[i].number+"' align='center' onClick='selectMyPokemon(\""+pokemons[i].number+"\")'><img id='myPokemonImgList"+i+"' height=40 src='http://localhost:8085/images/pokemons/"+pokemons[i].number+".png'/><br/>"+pokemons[i].name+"</div>";
+                                selectorHtml=selectorHtml+"</td>";
+                                breakLine++;
+                                if (breakLine==6) {
+                                    selectorHtml=selectorHtml+"</tr><tr>";
+                                    breakLine=0;
+                                }
+                            }
+                        }
+                        selectorHtml=selectorHtml+"</table>";
+
+                        //console.log("Pokebattle - getAllPokemons - success - selectorHtml: ", selectorHtml);
+
+                        $("#allPokemonList").html(selectorHtml);
+
+                        if (VsPokemonInitialized!=true) { //first time Only
+                            selectVsPokemon();
+                            $("#myPokemonSelectNumber1").css("background-color", "yellow")
+                        }
+
+                    },
+                    error : function(data, status, error){
+                        console.log("Pokebattle - getAllPokemons - error - Status: " + status + " - Data: ", data);
+                        console.log("Pokebattle - getAllPokemons - error - Message: " + data.responseJSON.status + " - "+ data.responseJSON.statusLabel+ " - "+ data.responseJSON.message);
+                    }
+                });
+            }
+            
+            // My Pokemon selection
+            var pokemonSelected=1;
+            function selectMyPokemon(number) {
+                console.log("Pokebattle - selectMyPokemon - number: " + number);
+                $("#myPokemonSelectNumber"+pokemonSelected).css("background-color", "white")
+                for (var i=0;i<pokemons.length;i++) {
+                    if (number==pokemons[i].number) {
+                        console.log("Pokebattle - selectMyPokemon - pokemons[i].type2: " + pokemons[i].type2);
+                        if (pokemons[i].type2!="NONE") {
+                            $("#myPokemonType"+pokemonSelected).html("<img height=25 src='http://localhost:8085/images/types/"+pokemons[i].type1.toLowerCase()+".png'/><img height=25 src='http://localhost:8085/images/types/"+pokemons[i].type2.toLowerCase()+".png'/>");
+                        } else {
+                            $("#myPokemonType"+pokemonSelected).html("<img height=25 src='http://localhost:8085/images/types/"+pokemons[i].type1.toLowerCase()+".png'/>");
+                        }
+                        $("#myPokemonSelect"+pokemonSelected).html("<img height=40 src='http://localhost:8085/images/pokemons/"+number+".png'/><br/>"+pokemons[i].name+"");
+                        $("#myPokemonSelectNumber"+pokemonSelected).html(""+number+"");
+                    }
+                  }	
+                pokemonSelected++;
+                if (pokemonSelected>3) pokemonSelected=1;
+                $("#myPokemonSelectNumber"+pokemonSelected).css("background-color", "yellow")
+            }
+
+            function getAllTypes() {
+                console.log("Pokebattle - getAllTypes");
+                $.ajax({
+                    type : 'GET',
+                    url: apiServer+"/api/types", 
+                        beforeSend: function(request) {
+                            if (token!="") request.setRequestHeader("Authorization", token);
+                        },
+                    contentType : 'application/json',
+                    success : function(data, status){ 
+                        console.log("Pokebattle - getAllTypes - success - Status: " + status + " - Data: ", data);
+
+                        types=data;
+
+                        console.log("Pokebattle - getAllTypes - success - types[0]: ", types[2]);
+                        console.log("Pokebattle - getAllTypes - success - types[0].name: " + types[2].name);
+                        console.log("Pokebattle - getAllTypes - success - types[0].strongAgainst: " + types[2].strongAgainst[0]);
+
+                        var selectorHtml="<table align='center'>";
+                        for (var i=0;i<types.length;i++) {
+                            if (types[i].name!="NONE") {
+                                selectorHtml=selectorHtml+"<td>";
+                                selectorHtml=selectorHtml+"<div id='myTypeList"+i+"' align='center' onClick='selectMyType(\""+i+"\")'><img id='myTypeImgList"+i+"' height=25 src='http://localhost:8085/images/types/"+types[i].name.toLowerCase()+".png'/>";
+                                selectorHtml=selectorHtml+"</td>";
+                            }
+                        }
+                        selectorHtml=selectorHtml+"</table>"
+
+                        $("#allTypeList").html(selectorHtml);
+
+                        selectorHtml="<table align='center'>";
+                        selectorHtml=selectorHtml+"<tr>";
+                        selectorHtml=selectorHtml+"<td>";
+                        selectorHtml=selectorHtml+"<div id='typeEffectVulnerableTo"+i+"' align='right'>StrongAgainst&nbsp;";
+                        selectorHtml=selectorHtml+"</td>";
+                        selectorHtml=selectorHtml+"<td>";
+                        selectorHtml=selectorHtml+"<div id='typeEffect"+i+"' align='center'>&nbsp;";
+                        selectorHtml=selectorHtml+"</td>";
+                        selectorHtml=selectorHtml+"<td>";
+                        selectorHtml=selectorHtml+"<div id='typeEffectStrongAgainst"+i+"' align='left'>&nbsp;VulnerableTo";
+                        selectorHtml=selectorHtml+"</td>";
+                        selectorHtml=selectorHtml+"</tr>";
+                        for (var i=0;i<types.length;i++) {
+                            if (types[i].name!="NONE") {
+                                selectorHtml=selectorHtml+"<tr>";
+                                selectorHtml=selectorHtml+"<td align='right'>";
+                                for (var j=0;j<types[i].strongAgainst.length;j++) {
+                                    selectorHtml=selectorHtml+"&nbsp;<img id='myTypeImgStrongAgainst"+i+"' height=25 src='http://localhost:8085/images/types/"+types[i].strongAgainst[j].toLowerCase()+".png'/>";
+                                }
+                                selectorHtml=selectorHtml+"</td>";
+                                selectorHtml=selectorHtml+"<td>";
+                                selectorHtml=selectorHtml+"<div id='typeEffect"+i+"' align='center'>&nbsp;&lt;&nbsp;<img id='myTypeImgList"+i+"' height=35 src='http://localhost:8085/images/types/"+types[i].name.toLowerCase()+".png'/>&nbsp;&lt;&nbsp;";
+                                selectorHtml=selectorHtml+"</td>";
+                                selectorHtml=selectorHtml+"<td align='left'>";
+                                for (var j=0;j<types[i].vulnerableTo.length;j++) {
+                                    selectorHtml=selectorHtml+"<img id='myTypeImgVulnerableTo"+i+"' height=25 src='http://localhost:8085/images/types/"+types[i].vulnerableTo[j].toLowerCase()+".png'/>&nbsp;";
+                                }
+                                selectorHtml=selectorHtml+"</td>";
+                                selectorHtml=selectorHtml+"</tr>";
+                            }
+                        }
+                        selectorHtml=selectorHtml+"</table>"
+                        //console.log("Pokebattle - selectorHtml: " + selectorHtml);
+
+                        $("#divEffectList").html(selectorHtml);
+                        
+
+                    },
+                    error : function(data, status, error){
+                        console.log("Pokebattle - getAllTypes - error - Status: " + status + " - Data: ", data);
+                        console.log("Pokebattle - getAllTypes - error - Message: " + data.responseJSON.status + " - "+ data.responseJSON.statusLabel+ " - "+ data.responseJSON.message);
+                    }
+                });
+            }
+            
+            // My Type selection
+            var typeSelected="";
+            function selectMyType(number) {
+                console.log("Pokebattle - selectMyType - number: " + number);
+                for (var i=0;i<types.length;i++) {
+                    $("#myTypeList"+i).css("background-color", "white");
+                }
+                if (typeSelected!=types[number].name) {
+                    typeSelected=types[number].name;
+                    $("#myTypeList"+number).css("background-color", "yellow");
+                } else {
+                    typeSelected="";
+                }
+                getAllPokemons();
+            }
+            
+            
+            // Utility
+            function randomNumber(min, max) {
+                console.log("Pokebattle - randomNumber - min: "+min+" - max: "+max);
+                var result = Math.floor(Math.random() * (max - min + 1)) + min
+                console.log("Pokebattle - randomNumber - result: "+result);
+                return result;
+            }
+
+        </script>
+        
+    </div>
+
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer-body"/>
+
+</body>
+</html>        

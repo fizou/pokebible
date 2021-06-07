@@ -2,9 +2,11 @@ package com.pokebible.restapi;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.util.UrlPathHelper;
 
 /**
  *
@@ -29,31 +31,18 @@ public class CustomResponseAttributes {
     
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    public static HttpServletResponse format(int status, String message, String path, HttpServletResponse response) {
+    private static final UrlPathHelper urlPathHelper = new UrlPathHelper();
+    
+    public static HttpServletResponse format(int status, String message, HttpServletRequest request, HttpServletResponse response) {
 
         logger.debug("Format Rest Json response for "+status+" - "+message);
 
         response.setStatus(status, ""); 
         response.setContentType("application/json");
         
+        String path = urlPathHelper.getPathWithinApplication((HttpServletRequest) request);
+                
         ApiResponse apiResponse = new ApiResponse(status, message, path);        
-
-/*
-        String errorMessage = org.springframework.http.HttpStatus.resolve(status).name();
-        if (errorMessage.length()> 1 ) errorMessage = errorMessage.substring(0, 1).toUpperCase() + errorMessage.substring(1).toLowerCase(); // Capitalize First Letter Only
-
-        String body = "{ ";
-        if (errorMessage.equals("Ok")) {
-            body = "{ \"timestamp\": \""+dateFormat.format(new Date())+"\", \"status\": \""+status+"\", \"message\": \""+message+"\", \"path\": \""+path+"\", \"version\": \"1.0\"";
-        } else {
-            body = "{ \"timestamp\": \""+dateFormat.format(new Date())+"\", \"status\": \""+status+"\", \"error\": \""+errorMessage+"\", \"message\": \""+message+"\", \"path\": \""+path+"\", \"version\": \"1.0\"";
-        }
-        if (logger.isDebugEnabled()) {
-            body = body + ", \"debug\": \"\" }";
-        } else {
-            body = body + " }";
-        }
-*/
 
         logger.debug("Json Result: "+apiResponse.toJson());
         

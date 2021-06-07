@@ -7,7 +7,7 @@
         </goals>
         <properties>
             <run.jvmArguments>-noverify -XX:TieredStopAtLevel=1</run.jvmArguments>
-            <run.mainClass>com.fizou.crmheathcheck.Application</run.mainClass>
+            <run.mainClass>com.pokebible.Application</run.mainClass>
             <Env.SPRING_OUTPUT_ANSI_ENABLED>always</Env.SPRING_OUTPUT_ANSI_ENABLED>
         </properties>
     </action>

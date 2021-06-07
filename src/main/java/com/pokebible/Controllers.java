@@ -50,10 +50,12 @@ public class Controllers {
     @Autowired
     private PokemonService service;
     
+    private static final int PAGE_SIZE = 8;
+    
     @GetMapping(path = "/")
     public String root() {
         
-        logger.info("/ - User: {} ask server root",  service.getLoggedUserName());
+        logger.info("/ - User: {}",  service.getLoggedUserName());
 
         return "redirect:/home"; // Cancel the return of static/index.html resource and replace it by home controller
         
@@ -70,7 +72,7 @@ public class Controllers {
             @RequestParam("searchString") Optional<String> searchString,
             Model model) {
 
-        logger.info("/home - User: {} is diplaying pokemon list",  service.getLoggedUserName());
+        logger.info("/home - User: {} - page: {} - size: {} - sortField: {} - sortDirection: {} - searchField: {} - searchString: {}", service.getLoggedUserName(), page, size, sortField, sortDirection, searchField, searchString);
 
         // Param
         logger.debug("Param - page: {}", page);
@@ -84,8 +86,8 @@ public class Controllers {
         int currentPage = page.orElse(1);
         if (currentPage==0) currentPage=1;
         logger.debug("Calculated - currentPage: {}",  currentPage);
-        int pageSize = size.orElse(9);
-        if (pageSize==0) pageSize=9; 
+        int pageSize = size.orElse(PAGE_SIZE);
+        if (pageSize==0) pageSize=PAGE_SIZE; 
         logger.debug("Calculated - pageSize: {}",  pageSize);
         String pageSortField = sortField.orElse("Number");
         if (pageSortField.equals("")) pageSortField="Number";
@@ -153,7 +155,7 @@ public class Controllers {
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable String id, Model model) {
 
-        logger.info("/detail/{} - User {} ... ", id, service.getLoggedUserName());
+        logger.info("/detail/{} - User: {}", id, service.getLoggedUserName());
         
         Pokemon pokemon = service.findById(new Long(id));
 
@@ -170,7 +172,7 @@ public class Controllers {
     @ResponseBody
     public Pokemon get(@PathVariable (name="id") long id) {
         
-        logger.info("/get/{id} - User {} ", id, service.getLoggedUserName());
+        logger.info("/get/{id} - User: {}", id, service.getLoggedUserName());
 
         Pokemon pokemon = service.findById(id);
         
@@ -181,7 +183,7 @@ public class Controllers {
     @RequestMapping(value="/add", method = RequestMethod.POST)
     public String add(@Valid @ModelAttribute("pokemon") Pokemon pokemon, BindingResult result, RedirectAttributes redirectAttributes) {
     
-        logger.info("/add - User {} is creating Pokemon: {}",  service.getLoggedUserName(), pokemon);
+        logger.info("/add - Pokemon: {} - User: {}", pokemon, service.getLoggedUserName());
         
         if(result.hasErrors()) {
             
@@ -214,7 +216,7 @@ public class Controllers {
     @RequestMapping(value="/update", method = RequestMethod.POST)
     public String update(@Valid @ModelAttribute("pokemon") Pokemon pokemon, BindingResult result, Model model, RedirectAttributes redirectAttributes) {
     
-        logger.info("/update - User {} is updating Pokemon: {} ... ", service.getLoggedUserName(), pokemon);
+        logger.info("/update - Pokemon: {} - User: {}", pokemon, service.getLoggedUserName());
         
         if(result.hasErrors()) {
             logger.info("Cannot update pokemon  - Go back home");
@@ -244,7 +246,7 @@ public class Controllers {
     @RequestMapping("/delete/{id}")
     public String delete(@PathVariable (name="id") long id, RedirectAttributes redirectAttributes) {
         
-        logger.info("/delete/{id} - User {} ", id, service.getLoggedUserName());
+        logger.info("/delete/{id} - User: {}", id, service.getLoggedUserName());
 
         Pokemon pokemon = service.findById(id);
 
@@ -265,11 +267,27 @@ public class Controllers {
     @GetMapping(path = "/help")
     public String help() {
 
-        logger.info("/help - User {}", service.getLoggedUserName());
+        logger.info("/help - User: {}", service.getLoggedUserName());
 
         return "help";
     }
 
+    @GetMapping(path = "/dashboard")
+    public String dashboard() {
+
+        logger.info("/dashboard - User: {}", service.getLoggedUserName());
+
+        return "dashboard";
+    }
+    
+    @GetMapping(path = "/battle")
+    public String battle() {
+
+        logger.info("/battle - User: {}", service.getLoggedUserName());
+
+        return "battle";
+    }
+    
     @GetMapping(path = "/login")
     public String login() {
 

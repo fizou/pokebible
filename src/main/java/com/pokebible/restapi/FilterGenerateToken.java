@@ -72,7 +72,7 @@ public class FilterGenerateToken extends AbstractAuthenticationProcessingFilter 
  
         logger.info("Successful authentication on " + urlPathHelper.getPathWithinApplication((HttpServletRequest) request) + " - user: "+authResult.getName() + " - token:"+response.getHeader("Authorization"));
 
-        response = CustomResponseAttributes.format(HttpServletResponse.SC_OK, "Successful authentication. Check authorization header of this response to retreive token.", urlPathHelper.getPathWithinApplication((HttpServletRequest) request), response);
+        response = CustomResponseAttributes.format(HttpServletResponse.SC_OK, "Successful authentication. Check authorization header of this response to retreive token.", request, response);
                 
     }
 
@@ -86,7 +86,7 @@ public class FilterGenerateToken extends AbstractAuthenticationProcessingFilter 
         //response.setContentType("application/json");
         //response.getWriter().write("{\"Status\":\""+HttpServletResponse.SC_FORBIDDEN+"\", \"message\":\"Authentication failed: Wrong User or Password.\"}");
 
-        response = CustomResponseAttributes.format(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed. Wrong User or Password.", urlPathHelper.getPathWithinApplication((HttpServletRequest) request), response);
+        response = CustomResponseAttributes.format(HttpServletResponse.SC_UNAUTHORIZED, "Authentication failed. Wrong User or Password.", request, response);
 
     }    
 }

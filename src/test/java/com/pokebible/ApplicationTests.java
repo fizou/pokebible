@@ -21,56 +21,54 @@ public class ApplicationTests {
    
     @Test
     public void contextLoads() {
-        logger.debug("ApplicationTests - Begin");
+        logger.info("Begin Tests");
 
-        logger.info("ApplicationTests - Database Size ("+service.count()+")");
+        logger.info("Read database");
+        logger.info("-> Database size: "+service.count()+"");
         assertTrue(service.count()!=0);
 
-        logger.info("ApplicationTests - Insert Missing No");
-    	service.save(new Pokemon("000","Missing No",Pokemon.Type.NORMAL,Pokemon.Type.NORMAL,"Sans Numero"));
-        logger.info("ApplicationTests - *** Repository Size after insert("+service.count()+")");
+        Pokemon pokemon = new Pokemon("000", "Missing No", Pokemon.Type.NORMAL, Pokemon.Type.NONE, "Sans Numero");
+        logger.info("Save('"+pokemon+"')");
+    	service.save(pokemon);
+        logger.info("-> Database size after insert: "+service.count()+"");
         assertTrue(service.count()!=0);
 
-        logger.info("ApplicationTests - Read All Repository");
+        logger.info("Read all rows");
         int cpt=0;
         Iterator<Pokemon> iterator = service.findAll().iterator();
         while (iterator.hasNext()){
-            Pokemon pokemon = iterator.next();
-            logger.debug("ApplicationTests - "+pokemon.getNumber()+" "+pokemon.getName());
+            pokemon = iterator.next();
+            logger.info("-> "+pokemon.getNumber()+" "+pokemon.getName());
             cpt++;
         }
-        logger.info("ApplicationTests - *** Repository Size "+cpt);
+        logger.info("-> Database size: "+cpt);
         assertTrue(cpt!=0);
 
-        logger.info("ApplicationTests - findByName : Name Complete and case sensitive Name");
         String queryString="Bulbasaur";
-        logger.info("ApplicationTests - queryString: "+queryString);
+        logger.info("findByName('"+queryString+"') with complete Name");
         List<Pokemon> pokemons = service.findByName(queryString);
-        logger.info("ApplicationTests - *** Display Result size "+pokemons.size());
+        logger.info("-> Result size: "+pokemons.size());
         assertTrue(pokemons.size()!=0);
         
-        logger.info("ApplicationTests - findByNameContainingIgnoreCaseOrderByNumAsc : Partiel Name and no case sensitive");
         queryString="bulba";
-        logger.info("ApplicationTests - queryString: "+queryString);
+        logger.info("findByName('"+queryString+"') with Partiel name");
         pokemons = service.findByName(queryString);
-        logger.info("ApplicationTests - *** Display Result size "+pokemons.size());
+        logger.info("-> Result size: "+pokemons.size());
         assertTrue(pokemons.size()!=0);
 
-        logger.info("ApplicationTests - findByNumber");
         queryString="001";
-        logger.info("ApplicationTests - queryString: "+queryString);
-        Pokemon pokemon = service.findByNumber(queryString);
-        logger.info("ApplicationTests - *** Display Result pokemon {}", pokemon);
+        logger.info("findByNumber('"+queryString+"')");
+        pokemon = service.findByNumber(queryString);
+        logger.info("-> Result pokemon: {}", pokemon);
         assertTrue(pokemons.size()!=0);
 
         Pokemon pokemon1 = service.findByNumber("131");
         Pokemon pokemon2 = service.findByNumber("149");
-        logger.info("ApplicationTests - *** Fight {} vs {}", pokemon1, pokemon2);
+        logger.info("Fight {} vs {}", pokemon1, pokemon2);
         Pokemon pokemonWinner = service.fight(pokemon1, pokemon2);
-        logger.info("ApplicationTests - *** Display Result Pokemon Winner {}", pokemonWinner);
-        
-        
-        logger.debug("ApplicationTests - End");
+        logger.info("-> Result Winner: {}", pokemonWinner);
+                
+        logger.info("End Tests");
     }
 
 }

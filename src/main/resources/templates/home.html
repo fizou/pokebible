@@ -144,7 +144,7 @@
                         <label for="email" class="col-form-label">Type 1</label>
                         <select id="ModalNewType1"  th:field="*{type1}" th:class="${#fields.hasErrors('type1')} ? 'form-control is-invalid' : 'form-control'">
                             <!---option value="">Select a type</option-->
-                            <option th:each="type : ${pokemon.AllTypes}"
+                            <option th:each="type : ${pokemon.Types}"
                                     th:value="${type.Name}"
                                     th:text="${type.Label}">
                             </option>
@@ -155,7 +155,7 @@
                         <label for="email" class="col-form-label">Type 2 (Optionnal)</label>
                         <select id="ModalNewType2" th:field="*{type2}" th:class="${#fields.hasErrors('type2')} ? 'form-control is-invalid' : 'form-control'">>
                             <!---option value="">Select a type</option-->
-                            <option th:each="type : ${pokemon.AllTypes}"
+                            <option th:each="type : ${pokemon.Types}"
                                     th:value="${type.Name}"
                                     th:text="${type.Label}">
                             </option>
@@ -203,7 +203,7 @@
                         <label for="email" class="col-form-label">Type 1</label>
                         <select id="ModalEditType1" th:field="*{type1}" th:class="${#fields.hasErrors('type1')} ? 'form-control is-invalid' : 'form-control'" >
                             <!---option value="">Select a type</option-->
-                            <option th:each="type : ${pokemon.AllTypes}"
+                            <option th:each="type : ${pokemon.Types}"
                                     th:value="${type.Name}"
                                     th:text="${type.Label}">
                             </option>
@@ -214,7 +214,7 @@
                         <label for="email" class="col-form-label">Type 2 (Optionnal)</label>
                         <select id="ModalEditType2" th:field="*{type2}" th:class="${#fields.hasErrors('type2')} ? 'form-control is-invalid' : 'form-control'" >
                             <!---option value="">Select a type</option-->
-                            <option th:each="type : ${pokemon.AllTypes}"
+                            <option th:each="type : ${pokemon.Types}"
                                     th:value="${type.Name}"
                                     th:text="${type.Label}">
                             </option>

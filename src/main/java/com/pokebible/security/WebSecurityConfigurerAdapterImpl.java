@@ -62,6 +62,8 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
             "/swagger-ui/**",
             "/swagger-resources/**",
             "/v2/api-docs",
+            "/v3/api-docs",
+            "/v3/api-docs/**",            
             // -- Database H2 console - Target NOT accessible by anonymous. Only Admin have access.
             "/h2-console/**",
             // -- Actuator : health / metric - Target only HealthCheck is accessible by anonymous. Only Admin have access to the metric.
@@ -93,22 +95,21 @@ public class WebSecurityConfigurerAdapterImpl extends WebSecurityConfigurerAdapt
         http
                 .headers().disable() // if enable, it adds lot of high security parameter in header of response included X-Frame-Options: DENY ! 
 //                .headers().frameOptions().disable() // Deprecate :(
-//                .cors().disable()    // put at disabled here (Can be overide in SimpleCORSFilter Class) 
-                .cors().and()
-                .csrf().disable()    // put at disabled to let H2-Console working (Almost it...) 
+//                .cors().disable()    // Disable cors (Can be overided in SimpleCORSFilter Class) 
+                .cors().and()          // Autorize cors 
+                .csrf().disable()      // put at disabled to let H2-Console working (Almost it...) 
                 .authorizeRequests()
+                //.antMatchers("/home").hasAnyRole(USER_ROLE, ADMIN_ROLE) //replace by WHITELIST_ANONYMOUS
+                //.antMatchers("/api/generateToken").permitAll() // WHITELIST_ANONYMOUS
                 .antMatchers(WHITELIST_ANONYMOUS).permitAll() // these ressources are accessible by everyone (logged or not) 
                 .antMatchers(WHITELIST_USER).hasAuthority(ROLE_USER) // these ressources are accessible only by people logged as User Role
                 .antMatchers(WHITELIST_ADMIN).hasAuthority(ROLE_ADMIN) // these ressources are accessible only by people logged as Admin Role
                 .antMatchers(HttpMethod.GET, "/api/**").hasAnyRole("USER", "ADMIN")  // Secure Default API with Role
-                //.antMatchers(HttpMethod.GET, "/api/**").hasAuthority(ROLE_ADMIN)  
                 .antMatchers(HttpMethod.PATCH, "/api/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
-                
-                //.antMatchers("/home").hasAnyRole(USER_ROLE, ADMIN_ROLE)
-                //.antMatchers("/api/generateToken").permitAll() // this ressource is accessible by everyone To let them log themseft via rest API ;)
+                .antMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
 
                 .anyRequest().authenticated() // other resources need to be logged as USER or ADMIN
                 .and()

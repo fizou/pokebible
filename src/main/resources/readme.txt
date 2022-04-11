@@ -43,26 +43,32 @@ http://localhost:8085/api/search/findByName("Bu")
 
 *** Release 1.0.14-SNAPSHOT :
 
+FEATURE:
 * Add Pagination, Sort and Fix search
 * Add HealthCheck page with actuator 
 
+TECH:
 - No More Type Key display in Upcase on interface. Type Label is used. (the Key Type in UPCASE is only used in the Database)
 - Put Field in Red in case of error
 - Fix transparency instead white background on pictos
 - Display Toaster in case of error 
 - Fix redirection model attribute in case of insert / update
 
+ISSUES FIX:
 - Fix context-path of element 
 - Retest in tomcat mode
 
 
 *** Release 1.0.15-SNAPSHOT :
 
+FEATURE:
 * Secure REST API with JWT Token and role (only admin can update pokemon via API)
 * Add counter metrics to healthcheck, actuator metrics, and prometheus
 
+TECH:
 - Create Rest Controller with 1 custom findPokemon method
 
+REFACTORING:
 - Remove Pokemon<pictureHtmlTag> method
 - Remove Pokemon<setType> method
 
@@ -130,7 +136,24 @@ REFACTORING:
 - Rename param of fight Rest API from pokemonNumber1 to number1
 - Move Type Effect to Pokemon Enum Type Class
 
-+++ Backlog: 
+*** Release 1.0.19-SNAPSHOT :
+
+FEATURE:
+
+TECH:
+
+ISSUES FIX:
+
+REFACTORING:
+
+
++++ Backlog:
+
+add cell spacing in 3 pokemon table
+add space before help sierra
+add Evolution feature 
+restric bestcounter to best evolution if type is the same
+sign in with picto (anonymous - silouette - user Sacha - admin prof chen) 
 
 FEATURE: Pokebible is an admin interface prioritize these features !
 

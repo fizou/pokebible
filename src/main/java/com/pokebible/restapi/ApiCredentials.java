@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -19,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  *
@@ -33,7 +34,7 @@ public class ApiCredentials {
     
     private static final Logger logger = LoggerFactory.getLogger(ApiCredentials.class);
 
-    @ApiModelProperty(position = 0)
+//    @ApiModelProperty(position = 0)
     private String username;
     public String getUsername() {
         return username;
@@ -42,7 +43,7 @@ public class ApiCredentials {
         this.username = username;
     }
 
-    @ApiModelProperty(position = 1)
+//    @ApiModelProperty(position = 1)
     private String password;
     public String getPassword() {
         return password;
@@ -125,6 +126,9 @@ public class ApiCredentials {
             // Eliminate 'Bearer ' string in case of API user put it in Authorisation Field
             token=token.replaceAll("Bearer ","");
 
+            // Clear Actual Session
+            SecurityContextHolder.clearContext();
+            
             // Parse the token.
             String user=null;
             Collection authorities=null;

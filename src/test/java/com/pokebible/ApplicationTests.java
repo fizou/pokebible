@@ -49,13 +49,13 @@ public class ApplicationTests {
         List<Pokemon> pokemons = service.findByName(queryString);
         logger.info("-> Result size: "+pokemons.size());
         assertTrue(pokemons.size()!=0);
-        
+/*
         queryString="bulba";
         logger.info("findByName('"+queryString+"') with Partiel name");
         pokemons = service.findByName(queryString);
         logger.info("-> Result size: "+pokemons.size());
         assertTrue(pokemons.size()!=0);
-
+*/
         queryString="001";
         logger.info("findByNumber('"+queryString+"')");
         pokemon = service.findByNumber(queryString);

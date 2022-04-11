@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.*;
 import com.pokebible.validator.UniqueNumberConstraint;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -73,22 +73,22 @@ public class Pokemon {
             this.label = label;
         }
 
-        @ApiModelProperty(position = 0)
+//        @ApiModelProperty(position = 0)
         public String getName() {
             return name();
         }
 
-        @ApiModelProperty(position = 1)
+//        @ApiModelProperty(position = 1)
         public String getLabel() {
             return label;
         }
 
-        @ApiModelProperty(position = 2)
+//        @ApiModelProperty(position = 2)
         public String getPicture() {
             return "/images/types/"+getName().toLowerCase()+".png";
         }
                 
-        @ApiModelProperty(position = 3)
+//        @ApiModelProperty(position = 3)
         public ArrayList<String> getStrongAgainst() {
             //logger.debug("getStrongAgainst - Type: "+this.getName());
             //logger.debug("getStrongAgainst - Ordinal: "+this.ordinal());
@@ -110,7 +110,7 @@ public class Pokemon {
             return result;
         }
 
-        @ApiModelProperty(position = 4)
+//        @ApiModelProperty(position = 4)
         public ArrayList<String> getVulnerableTo() {
             //logger.debug("getVulnerableTo - Type: "+this.getName());
             //logger.debug("getVulnerableTo - Ordinal: "+this.ordinal());
@@ -235,7 +235,7 @@ public class Pokemon {
         
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @ApiModelProperty(position = 0)
+//    @ApiModelProperty(position = 0)
     private long id;
 
     public long getId() {
@@ -248,7 +248,7 @@ public class Pokemon {
     @NotBlank(message="This field is required.")
     @Length(min=3, max=3, message="Lenght must be 3.")
     @Pattern(regexp = "[0-9]+",  message="Only numeric format (001, 002, ...)  is accepted.")
-    @ApiModelProperty(position = 1)
+//    @ApiModelProperty(position = 1)
     private String number;
     
     public String getNumber() {
@@ -259,7 +259,7 @@ public class Pokemon {
     }
 
     @NotBlank (message="This field is required.")
-    @ApiModelProperty(position = 2)
+//    @ApiModelProperty(position = 2)
     private String name;
     
     public String getName() {
@@ -272,7 +272,7 @@ public class Pokemon {
     @NotBlank (message="This field is required.")
     //@Pattern(regexp = "^(?!NONE$).*$",  message="NONE is not possible for this field.")
     @Pattern(regexp = "(?:(?:^|, )(NORMAL|GRASS|FIRE|WATER|FIGHTING|FLYING|POISON|GROUND|ROCK|BUG|GHOST|ELECTRIC|PSYCHIC|ICE|DRAGON|DARK|STEEL|FAIRY))+$",  message="NORMAL, GRASS, FIRE, WATER, FIGHTING, FLYING, POISON, GROUND, ROCK, BUG, GHOST, ELECTRIC, PSYCHIC, ICE, DRAGON, DARK, STEEL, FAIRY are the only value possible for this field.")
-    @ApiModelProperty(position = 3)
+//    @ApiModelProperty(position = 3)
     private String type1;
     
     public String getType1() {
@@ -283,7 +283,7 @@ public class Pokemon {
         }
     }
 
-    @ApiModelProperty(position = 4)
+//    @ApiModelProperty(position = 4)
     public String getType1Label() {
         try {
             return Type.valueOf(getType1()).label;
@@ -292,7 +292,7 @@ public class Pokemon {
             return getType1();            
         }
     }
-    @ApiModelProperty(position = 5)
+//    @ApiModelProperty(position = 5)
     public String getType1PictureUrl() {
         return "/images/types/"+getType1().toLowerCase()+".png";
     }
@@ -314,7 +314,7 @@ public class Pokemon {
     @Pattern(regexp = "(?:(?:^|, )(NONE|NORMAL|GRASS|FIRE|WATER|FIGHTING|FLYING|POISON|GROUND|ROCK|BUG|GHOST|ELECTRIC|PSYCHIC|ICE|DRAGON|DARK|STEEL|FAIRY))+$",  message="NONE, NORMAL, GRASS, FIRE, WATER, FIGHTING, FLYING, POISON, GROUND, ROCK, BUG, GHOST, ELECTRIC, PSYCHIC, ICE, DRAGON, DARK, STEEL, FAIRY are the only value possible for this field.")
     //@PokemonType2vsType1Constraint
     @NotMatch(field = "type1")
-    @ApiModelProperty(position = 6)
+//    @ApiModelProperty(position = 6)
     private String type2;
     
     public String getType2() {
@@ -324,7 +324,7 @@ public class Pokemon {
             return type2;
         }
     }
-    @ApiModelProperty(position = 7)
+//    @ApiModelProperty(position = 7)
     public String getType2Label() {
         try {
             return Type.valueOf(getType2()).label;
@@ -333,7 +333,7 @@ public class Pokemon {
             return getType2();
         }
     }
-    @ApiModelProperty(position = 8)
+//    @ApiModelProperty(position = 8)
     public String getType2PictureUrl() {
         return "/images/types/"+getType2().toLowerCase()+".png";
     }
@@ -352,7 +352,7 @@ public class Pokemon {
         }
     }
     
-    @ApiModelProperty(position = 9)
+//    @ApiModelProperty(position = 9)
     public String getType() {
         if (getType2().equals(Type.NONE.getName())) {
             return getType1();
@@ -362,7 +362,7 @@ public class Pokemon {
         }  
     }
  
-    @ApiModelProperty(position = 10)
+//    @ApiModelProperty(position = 10)
     public String getPictureUrl() {
         return "/images/pokemons/"+getNumber()+".png";
     }

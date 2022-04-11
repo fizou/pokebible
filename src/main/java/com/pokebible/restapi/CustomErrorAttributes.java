@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.error.ErrorAttributeOptions;
 
 @Component
 public class CustomErrorAttributes extends DefaultErrorAttributes {
@@ -36,10 +37,12 @@ public class CustomErrorAttributes extends DefaultErrorAttributes {
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     @Override
-    public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+    //public Map<String, Object> getErrorAttributes(WebRequest webRequest, boolean includeStackTrace) {
+    public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options) {
 
         // Let Spring handle the error first, we will modify later :)
-        Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
+        //Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, includeStackTrace);
+        Map<String, Object> errorAttributes = super.getErrorAttributes(webRequest, options);
 
         // Rewrite response with selected field from errorAttributes
         LinkedHashMap<String, Object> errorAttributesOverride = new LinkedHashMap<String, Object>();

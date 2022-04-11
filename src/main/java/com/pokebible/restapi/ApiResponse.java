@@ -2,7 +2,7 @@ package com.pokebible.restapi;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.ApiModelProperty;
+//import io.swagger.annotations.ApiModelProperty;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,7 +21,7 @@ public class ApiResponse {
     
     private static final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
-    @ApiModelProperty(position = 0)
+//    @ApiModelProperty(position = 0)
     private String timestamp;
     public String getTimestamp() {
         return timestamp;
@@ -30,7 +30,7 @@ public class ApiResponse {
         this.timestamp = timestamp;
     }
 
-    @ApiModelProperty(position = 1)
+//    @ApiModelProperty(position = 1)
     private String status;
     public String getStatus() {
         return status;
@@ -39,7 +39,7 @@ public class ApiResponse {
         this.status = status;
     }
 
-    @ApiModelProperty(position = 2)
+//    @ApiModelProperty(position = 2)
     private String statusLabel;
     public String getStatusLabel() {
         return statusLabel;
@@ -48,7 +48,7 @@ public class ApiResponse {
         this.statusLabel = statusLabel;
     }
 
-    @ApiModelProperty(position = 3)
+//    @ApiModelProperty(position = 3)
     private String message;
     public String getMessage() {
         return message;
@@ -57,7 +57,7 @@ public class ApiResponse {
         this.message = message;
     }
 
-    @ApiModelProperty(position = 4)
+//    @ApiModelProperty(position = 4)
     private String path;
     public String getPath() {
         return path;
@@ -66,7 +66,7 @@ public class ApiResponse {
         this.path = path;
     }
 
-    @ApiModelProperty(position = 5)
+//    @ApiModelProperty(position = 5)
     private String version;
     public String getVersion() {
         return version;
@@ -75,7 +75,7 @@ public class ApiResponse {
         this.version = version;
     }
 
-    @ApiModelProperty(position = 6)
+//    @ApiModelProperty(position = 6)
     private String debug;
     public String getDebug() {
         return debug;

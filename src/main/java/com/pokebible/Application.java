@@ -18,9 +18,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 /**
  *
- * Application: Main Class of SpringBoot - Everything Start Here ;) 
+ * Application: Main Class of Pokebible SpringBoot Project - Everything Start Here ;) 
  *
- * Notes for Tomcat run instead spring boot jar launch :
+ * This project is build by default as a jar with embeded Tomcat
+ * 
+ * Notes to run it as war inside a real Tomcat :
  *      1) put <packaging>war</packaging> in pom.xml 
  *      2) Uncomment following dependency in pom.xml
  *         <dependency>
@@ -39,8 +41,8 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  *          5.2 Select Tomcat Server in Run Menu
  *          5.3 Indicate /pokebible in Context Path
  *          5.4 Restart Netbeans interface
- *     6) To reRun in jar without in NETBEANS 
- *          6.1 Undo the Change (You can let the POM dependency)
+ *     6) To goback on jar format in NETBEANS 
+ *          6.1 Undo the code changes (You can let the POM dependency)
  *          6.2 Restart Netbeans interface
  * 
  */

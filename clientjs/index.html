@@ -1,0 +1,67 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JS PokeBible Client</title>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- Jquery -->
+    <script type="text/javascript" src="http://localhost:8085/js/jquery.min.js"></script>
+    <script type="text/javascript" src="http://localhost:8085/js/jquery.validate.min.js"></script>
+        
+</head>
+<body>
+
+    <h1>JS PokeBible Client</h1>
+    <hr/>
+    This is a sample Html page to access API via javascript (see browser log)...
+
+    <script>
+  	  	
+        // Credentials (Use swagger to get valid token http://localhost:8085/swagger-ui/4.10.3/index.html#/Auth/generateToken) and place it below
+        var apiServer="http://localhost:8085";
+        var token="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsInNjb3BlcyI6IlJPTEVfQURNSU4iLCJleHAiOjE3NDk3NTkxMzh9.XR4KDjU3bNXjY7zKr87m4p9Osu4waaSNfXq4kyQjrrOrUxDinmRrBP1ZTOO3aCUeqgZnD4VtGpUZC6w9Ay2fcQ";
+
+        var pokemons;
+        var types;
+
+        $('document').ready( function() {
+
+                console.log("JS PokeBible Client - Init");
+                getAllPokemons();
+
+        });
+
+        function getAllPokemons() {
+            console.log("JS PokeBible Client - getAllPokemons");
+            $.ajax({
+                type : 'GET',
+                //url: "http://localhost:8085/api/pokemons", 
+                url: apiServer+"/api/pokemons", 
+                    beforeSend: function(request) {
+                        if (token!="") request.setRequestHeader("Authorization", token);
+                    },
+                contentType : 'application/json',
+                success : function(data, status){ 
+                    console.log("JS PokeBible Client - getAllPokemons - success - Status: " + status + " - Data: ", data);
+
+                    pokemons=data;
+
+                    console.log("JS PokeBible Client - getAllPokemons - success - pokemons[0]: ", pokemons[0]);
+                    console.log("JS PokeBible Client - getAllPokemons - success - pokemons[0].name: " + pokemons[0].name);
+
+                    setTimeout(function() {
+                        getAllPokemons()
+                    } , 5000);
+
+                },
+                error : function(data, status, error){
+                    console.log("JS PokeBible Client - getAllPokemons - error - Status: " + status + " - Data: ", data);
+                    console.log("JS PokeBible Client - getAllPokemons - error - Message: " + data.responseJSON.status + " - "+ data.responseJSON.statusLabel+ " - "+ data.responseJSON.message);
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

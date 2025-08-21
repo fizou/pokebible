@@ -3,7 +3,7 @@ Pokebible is a Spring-Boot DEMO application included Tymleaf, Security, Jpa, Res
 
 All is included in the same application as sample, for real implementation cut it in several projects.
 
-2005/06/02 Edit: Still working but project made in 2017... So using technologies from this age, use it as retro-programming project only ;)
+2025/06/02 Edit: Still working but project made in 2017... So using technologies from this age, use it as retro-programming project only ;)
 
 ## Screenshots
 
